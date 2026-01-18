@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\NoBadWords;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateNoteRequest extends FormRequest
@@ -24,7 +25,7 @@ class UpdateNoteRequest extends FormRequest
     {
         return [
             // Data Pesan
-            'content' => 'required|string',
+            'content' => ['required', 'string', new NoBadWords],
             'recipient' => 'required|string|max:255',
             'initial_name' => 'nullable|string|max:255', // Pengganti is_anonymous
 

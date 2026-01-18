@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Note;
 use App\Models\NoteReply;
+use App\Rules\NoBadWords;
 use Illuminate\Http\Request;
 
 class NoteReplyController extends Controller
@@ -18,7 +19,7 @@ class NoteReplyController extends Controller
             'music_track_id' => 'required',
             'music_track_name' => 'required',
             'music_artist_name' => 'required',
-            'content' => 'nullable|string|max:500',
+            'content' => ['nullable', 'string', 'max:500', new NoBadWords],
             'initial_name' => 'nullable|string|max:50',
         ]);
 
