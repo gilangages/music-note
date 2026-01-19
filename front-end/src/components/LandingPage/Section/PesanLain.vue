@@ -5,14 +5,18 @@ import { alertError } from "../../../lib/alert";
 import { formatTime, isEdited } from "../../../lib/dateFormatter";
 import { useCardTheme } from "../../../lib/useCardTheme";
 import { useNow } from "@vueuse/core";
+import Swal from "sweetalert2";
+import { computed } from "vue";
+import { useRouter } from "vue-router";
 
 //useTheme
 const { getTheme, getSelectedTheme } = useCardTheme();
+
 // --- STATE ---
 const notes = ref([]);
 const scrollContainer = ref(null);
 const currentAudio = ref(new Audio()); // State Audio Player
-const currentTime = ref(0); // <--- 1. TAMBAHKAN INI
+const currentTime = ref(0);
 
 // Modal & Preview
 const showModal = ref(false);
@@ -20,11 +24,11 @@ const selectedNote = ref(null);
 const isVinylSpinning = ref(false);
 const showImagePreview = ref(false);
 const previewImageUrl = ref("");
-// const selectedTheme = getSelectedTheme(selectedNote); // Hapus baris ini karena selectedNote masih null saat init, logic theme di handle di template via getTheme(note.id) atau computed
-const now = useNow({ interval: 60000 });
 
-// Helper computed untuk theme modal (opsional, tapi biar konsisten dengan FillContent)
-import { computed } from "vue";
+const now = useNow({ interval: 60000 });
+const router = useRouter();
+
+// Helper computed untuk theme modal
 const selectedTheme = computed(() => {
   return getSelectedTheme(selectedNote.value);
 });
@@ -34,7 +38,6 @@ async function fetchNoteGlobal() {
   try {
     const response = await noteListGlobal();
     const responseBody = await response.json();
-    console.log(responseBody);
 
     if (response.ok) {
       notes.value = responseBody.data;
@@ -46,6 +49,69 @@ async function fetchNoteGlobal() {
     console.error(error);
   }
 }
+
+// --- LOGIC PLAY AUDIO (DIPUSATKAN DISINI) ---
+const playAudio = (item) => {
+  // Reset audio player state
+  currentAudio.value.pause();
+  currentAudio.value.currentTime = 0;
+
+  let streamUrl = null;
+
+  // Cek Priority: ID (Proxy Backend) -> Preview URL (Fallback)
+  if (item.music_track_id) {
+    streamUrl = `${import.meta.env.VITE_APP_PATH}/stream/${item.music_track_id}`;
+  } else if (item.music_preview_url) {
+    streamUrl = item.music_preview_url;
+  }
+
+  if (streamUrl) {
+    currentAudio.value.src = streamUrl;
+    currentAudio.value.volume = 0.5;
+    currentAudio.value.loop = true;
+
+    // Set listener update waktu
+    currentAudio.value.ontimeupdate = () => {
+      currentTime.value = currentAudio.value.currentTime;
+    };
+
+    // Play
+    console.log("Memutar:", streamUrl);
+    currentAudio.value.play().catch((e) => console.error("Gagal play audio:", e));
+  }
+};
+
+// --- FUNGSI REPLY ---
+const handleReplyClick = () => {
+  // PERBAIKAN: JANGAN panggil closeModalDetail() disini.
+  // Biarkan modal tetap terbuka di background SweetAlert.
+
+  Swal.fire({
+    title: "Ingin membalas pesan ini?",
+    text: "Kamu perlu login atau daftar dulu untuk mengirim lagu balasan! 🎵",
+    icon: "info",
+    showCancelButton: true,
+    confirmButtonColor: "#9a203e",
+    cancelButtonColor: "#333",
+    confirmButtonText: "Gas, Login!",
+    cancelButtonText: "Nanti dulu",
+    // --- TAMBAHAN PENTING: Fix Z-Index ---
+    didOpen: () => {
+      const container = Swal.getContainer();
+      if (container) {
+        // Paksa z-index Alert jadi 100.000 (di atas modal yang 9.999)
+        container.style.zIndex = "100000";
+      }
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Jika user mau login, baru kita tutup modalnya (opsional, router push biasanya otomatis handle)
+      closeModalDetail();
+      router.push("/login");
+    }
+    // Jika "Nanti dulu", kita tidak perlu melakukan apa-apa (modal tetap terbuka & musik tetap jalan)
+  });
+};
 
 // --- SCROLL LOGIC ---
 const scroll = (direction) => {
@@ -59,45 +125,15 @@ const scroll = (direction) => {
   }
 };
 
-// --- MODAL & AUDIO LOGIC ---
+// --- MODAL LOGIC ---
 const openModalDetail = (note) => {
   selectedNote.value = note;
   showModal.value = true;
-  currentTime.value = 0; // <--- 2. RESET WAKTU SAAT BUKA
+  currentTime.value = 0;
 
-  // LOGIKA BARU: Gunakan Proxy URL dari Backend kita sendiri
-  // Pastikan note punya ID lagu
-  if (note.music_track_id) {
-    // URL Backend Laravel
-    // Sesuaikan base URL API kamu, misal: http://localhost:8000/api/stream/
-    const streamUrl = `${import.meta.env.VITE_APP_PATH || "http://localhost:8000/api"}/stream/${note.music_track_id}`;
-
-    console.log("Memutar via Proxy:", streamUrl);
-
-    currentAudio.value.src = streamUrl;
-    currentAudio.value.volume = 0.5;
-    currentAudio.value.loop = true;
-
-    // <--- 3. TAMBAHKAN EVENT LISTENER INI (PENTING AGAR ANIMASI JALAN)
-    currentAudio.value.ontimeupdate = () => {
-      currentTime.value = currentAudio.value.currentTime;
-    };
-    // ------------------------------------------------------------------
-
-    currentAudio.value.play().catch((e) => {
-      console.error("Gagal play audio:", e);
-    });
-  } else if (note.music_preview_url) {
-    // Fallback: Kalau data lama banget yg gapunya ID tapi punya URL (meski mungkin basi)
-    currentAudio.value.src = note.music_preview_url;
-
-    // <--- TAMBAHKAN JUGA DI SINI UTK FALLBACK
-    currentAudio.value.ontimeupdate = () => {
-      currentTime.value = currentAudio.value.currentTime;
-    };
-
-    currentAudio.value.play().catch((e) => console.log(e));
-  }
+  // PERBAIKAN: Panggil playAudio SEKALI SAJA.
+  // Hapus duplikasi logika audio yang sebelumnya ada disini.
+  playAudio(note);
 
   nextTick(() => {
     setTimeout(() => {
@@ -109,18 +145,16 @@ const openModalDetail = (note) => {
 const closeModalDetail = () => {
   isVinylSpinning.value = false;
 
-  // 4. STOP AUDIO & RESET
+  // Stop Audio & Reset
   currentAudio.value.pause();
-  currentAudio.value.currentTime = 0; // Reset player audio
-  currentTime.value = 0; // <--- 4. RESET VARIABLE STATE
-  currentAudio.value.loop = false; // Matikan loop saat tutup
-
-  // Hapus listener biar ga memory leak (opsional tapi good practice)
-  currentAudio.value.ontimeupdate = null;
+  currentAudio.value.currentTime = 0;
+  currentTime.value = 0;
+  currentAudio.value.loop = false;
+  currentAudio.value.ontimeupdate = null; // Bersihkan listener
 
   setTimeout(() => {
     showModal.value = false;
-    selectedNote.value = null;
+    selectedNote.value = null; // Ini yang bikin gambar hilang kalau dipanggil sembarangan
   }, 100);
 };
 
@@ -452,6 +486,77 @@ onMounted(async () => {
                     (diedit)
                   </span>
                 </span>
+              </div>
+
+              <div class="border-t border-white/10 pt-6">
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="text-[#e5e5e5] text-sm font-bold uppercase tracking-widest flex items-center gap-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2">
+                      <path d="M9 18l6-6-6-6" />
+                    </svg>
+                    Resonansi Balasan ({{ selectedNote?.replies?.length || 0 }})
+                  </h3>
+
+                  <button
+                    @click="handleReplyClick"
+                    class="text-xs bg-[#9a203e] hover:bg-[#7a1830] text-white px-3 py-1.5 rounded-full transition-colors font-semibold border border-white/10 shadow-lg">
+                    + Balas Lagu
+                  </button>
+                </div>
+
+                <div class="flex flex-col gap-3 max-h-[200px] overflow-y-auto custom-scrollbar">
+                  <div
+                    v-if="!selectedNote?.replies || selectedNote.replies.length === 0"
+                    class="text-center py-4 text-white/20 text-xs italic rounded-lg">
+                    Belum ada yang membalas dengan lagu.
+                  </div>
+
+                  <div
+                    v-for="reply in selectedNote?.replies"
+                    :key="reply.id"
+                    class="group/reply flex items-center gap-3 bg-black/20 p-3 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
+                    <div class="relative w-10 h-10 shrink-0">
+                      <img
+                        :src="reply.music_album_image"
+                        class="w-full h-full rounded-md object-cover brightness-75 hover:brightness-100 transition-all" />
+                      <button
+                        @click="playAudio(reply)"
+                        class="absolute inset-0 flex items-center justify-center text-white opacity-0 group-hover/reply:opacity-100 transition-opacity">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="currentColor">
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                      </button>
+                    </div>
+
+                    <div class="flex-1 min-w-0">
+                      <div class="flex justify-between items-start">
+                        <p class="text-xs font-bold text-white truncate pr-2">{{ reply.music_track_name }}</p>
+                        <span class="text-[9px] text-white/30 whitespace-nowrap">
+                          {{ formatTime(reply.created_at, now) }}
+                        </span>
+                      </div>
+                      <p class="text-[10px] font-medium text-white/50 truncate">
+                        {{ reply.music_artist_name }}
+                      </p>
+                      <p v-if="reply.content" class="text-[10px] text-white/60 italic truncate mt-0.5">
+                        "{{ reply.content }}"
+                      </p>
+                      <p class="text-[9px] text-white/30 mt-1">Dari: {{ reply.author_name || "Anonim" }}</p>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div class="mt-6">

@@ -151,7 +151,7 @@ const loadMore = async () => {
 const playAudio = (item) => {
   let streamUrl = null;
   if (item.music_track_id) {
-    streamUrl = `${import.meta.env.VITE_APP_PATH || "http://localhost:8000/api"}/stream/${item.music_track_id}`;
+    streamUrl = `${import.meta.env.VITE_APP_PATH}/stream/${item.music_track_id}`;
   } else if (item.music_preview_url) {
     streamUrl = item.music_preview_url;
   }

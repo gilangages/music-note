@@ -62,7 +62,13 @@ class NoteController extends Controller
     public function globalIndex()
     {
         // Ambil 6 data secara acak (Random)
-        $notes = Note::with('user')
+        // UPDATE: Kita tambahkan 'replies' agar frontend bisa menampilkan list balasan
+        $notes = Note::with(['user', 'replies' => function ($query) {
+            $query->with('user') // Ambil data user si pengirim balasan
+                ->latest() // Urutkan dari yang terbaru
+                ->limit(5); // Cukup ambil 5 balasan buat "Teaser" di landing page
+        }])
+            ->whereNull('parent_id') // FILTER PENTING: Pastikan yang muncul cuma Note Utama (bukan note balasan orang)
             ->inRandomOrder()
             ->take(6)
             ->get();
