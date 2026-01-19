@@ -137,8 +137,37 @@ class UserController extends Controller
         }
 
         DB::transaction(function () use ($user) {
-            // OPTIONAL: Kalau mau lebih bersih lagi, hapus avatar Cloudinary di sini juga.
-            // Tapi sesuai requestmu untuk tidak mengubah logic destroy, ini dibiarkan aman.
+            // --- LOGIKA BEST PRACTICE: HAPUS FOTO CLOUDINARY ---
+            // Cek apakah user punya avatar DAN avatarnya dari Cloudinary
+            if ($user->avatar && str_contains($user->avatar, 'cloudinary')) {
+                try {
+                    // Kita perlu setup config Cloudinary manual lagi karena ini di dalam controller
+                    // Atau pastikan kamu sudah meload helper/config di tempat lain.
+                    // Agar aman, kita set seperti di method update:
+                    Configuration::instance([
+                        'cloud' => [
+                            'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+                            'api_key' => env('CLOUDINARY_API_KEY'),
+                            'api_secret' => env('CLOUDINARY_API_SECRET'),
+                        ],
+                        'url' => ['secure' => true],
+                    ]);
+
+                    // Ambil Public ID dari URL
+                    $path = parse_url($user->avatar, PHP_URL_PATH);
+                    $segments = explode('/', $path);
+                    $publicIdWithExtension = end($segments);
+                    $folder = prev($segments); // asumsi foldernya 'avatars'
+                    $publicId = $folder . '/' . pathinfo($publicIdWithExtension, PATHINFO_FILENAME);
+
+                    // Hapus file
+                    (new UploadApi())->destroy($publicId);
+                } catch (\Exception $e) {
+                    // Silent error: Jika gagal hapus gambar, biarkan saja.
+                    // Jangan sampai user gagal hapus akun cuma gara-gara Cloudinary error.
+                }
+            }
+            // ---------------------------------------------------
 
             $user->tokens()->delete();
             $user->delete();
