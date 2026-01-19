@@ -424,7 +424,7 @@ onMounted(async () => {
               </div>
 
               <div class="mb-6">
-                <p class="font-hand text-xl text-[#e5e5e5] leading-loose tracking-wide break-words">
+                <p class="font-hand text-xl text-[#e5e5e5] leading-loose tracking-wide whitespace-pre-wrap break-words">
                   "{{ selectedNote?.content }}"
                 </p>
               </div>
