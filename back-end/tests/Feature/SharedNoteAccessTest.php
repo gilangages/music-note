@@ -21,15 +21,16 @@ class SharedNoteAccessTest extends TestCase
         $note = Note::factory()->create([
             'user_id' => $user->id,
             'content' => 'Halo dunia',
+            // Factory otomatis pakai music_track_name
             'music_track_name' => 'Lagu Keren',
         ]);
 
-        // Akses endpoint public
         $response = $this->getJson("/api/notes/{$note->id}");
 
         $response->assertStatus(200)
             ->assertJsonPath('data.id', $note->id)
             ->assertJsonPath('data.content', 'Halo dunia')
+        // GANTI assertion dari spotify_track_name ke music_track_name
             ->assertJsonPath('data.music_track_name', 'Lagu Keren');
     }
 
