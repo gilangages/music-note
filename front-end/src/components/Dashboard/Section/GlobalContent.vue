@@ -733,8 +733,9 @@ onMounted(async () => {
                 </div>
 
                 <div class="border-t border-white/10 pt-6 exclude-from-capture">
-                  <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-[#e5e5e5] text-sm font-bold uppercase tracking-widest flex items-center gap-2">
+                  <div class="flex items-center justify-between mb-4 gap-2">
+                    <h3
+                      class="text-[#e5e5e5] text-xs sm:text-sm font-bold uppercase tracking-wide sm:tracking-widest flex items-center gap-1.5 sm:gap-2 shrink-0">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="16"
@@ -745,12 +746,13 @@ onMounted(async () => {
                         stroke-width="2">
                         <path d="M9 18l6-6-6-6" />
                       </svg>
-                      Resonansi Balasan ({{ selectedNote?.replies?.length || 0 }})
+                      <span class="truncate">Resonansi Balasan ({{ selectedNote?.replies?.length || 0 }})</span>
                     </h3>
+
                     <button
                       v-if="!isReplying"
                       @click="isReplying = true"
-                      class="text-xs bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-full transition-colors font-semibold">
+                      class="text-[10px] sm:text-xs bg-white/10 hover:bg-white/20 text-white px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-full transition-colors font-semibold whitespace-nowrap shrink-0">
                       + Balas Lagu
                     </button>
                   </div>
