@@ -521,16 +521,31 @@ onMounted(async () => {
                   <div
                     v-for="reply in selectedNote?.replies"
                     :key="reply.id"
-                    class="flex items-center gap-3 bg-black/20 p-3 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
-                    <div class="relative w-10 h-10 shrink-0 cursor-pointer" @click="playAudio(reply)">
+                    class="group/reply flex items-center gap-3 bg-black/20 p-3 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
+                    <div class="relative w-10 h-10 shrink-0">
                       <img
                         :src="reply.music_album_image"
                         class="w-full h-full rounded-md object-cover brightness-75 hover:brightness-100 transition-all" />
+                      <button
+                        @click="playAudio(reply)"
+                        class="absolute inset-0 flex items-center justify-center text-white opacity-0 group-hover/reply:opacity-100 transition-opacity">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="currentColor">
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                      </button>
                     </div>
 
                     <div class="flex-1 min-w-0">
                       <div class="flex justify-between items-start">
                         <p class="text-xs font-bold text-white truncate pr-2">{{ reply.music_track_name }}</p>
+                        <span class="text-[9px] text-white/30 whitespace-nowrap">
+                          {{ formatTime(reply.created_at, now) }}
+                        </span>
                       </div>
                       <p class="text-[10px] font-medium text-white/50 truncate">
                         {{ reply.music_artist_name }}
