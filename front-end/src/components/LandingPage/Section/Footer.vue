@@ -14,13 +14,13 @@
         href="https://www.deezer.com"
         target="_blank"
         rel="noopener noreferrer"
-        class="flex items-center gap-2 opacity-50 hover:opacity-100 transition-opacity duration-300 select-none cursor-pointer"
+        class="flex items-center gap-2 lg:opacity-50 hover:opacity-100 transition-opacity duration-300 select-none cursor-pointer group"
         title="Visit Deezer.com">
         <span class="text-[9px] uppercase tracking-widest text-[#e5e5e5]/60">Music by</span>
         <img
           src="https://cdn.brandfetch.io/idEUKgCNtu/theme/light/logo.svg?c=1dxbfHSJFAPEGdCLU4o5B"
           alt="Deezer"
-          class="h-3 w-auto grayscale hover:grayscale-0 transition-all" />
+          class="h-3 w-auto filter brightness-0 invert transition-all group-hover:brightness-100 group-hover:invert-0" />
       </a>
 
       <router-link
