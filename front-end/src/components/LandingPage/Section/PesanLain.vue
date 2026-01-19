@@ -464,7 +464,7 @@ onMounted(async () => {
               </div>
 
               <div
-                class="flex items-center gap-2 text-[11px] text-white/60 font-mono bg-black/20 p-3 rounded-lg border"
+                class="flex items-center gap-2 text-[11px] text-white/60 font-mono bg-black/20 p-3 rounded-lg border mb-6"
                 :class="selectedTheme.border">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -557,6 +557,13 @@ onMounted(async () => {
                       <p class="text-[9px] text-white/30 mt-1">Dari: {{ reply.author_name || "Anonim" }}</p>
                     </div>
                   </div>
+
+                  <div v-if="selectedNote?.replies?.length >= 5" class="text-center py-4">
+                    <p class="text-[10px] text-white/30 italic">
+                      Menampilkan 5 balasan teratas.
+                      <span class="block">Pesan ini sangat populer! 🔥</span>
+                    </p>
+                  </div>
                 </div>
               </div>
 
@@ -564,9 +571,9 @@ onMounted(async () => {
                 <button
                   @click="closeModalDetail"
                   :class="[
-                    selectedTheme.btn_hover, // 1. Saat hover, background berubah jadi warna tema
-                    'border-white/10 text-white/50', // 2. State normal (Netral/Abu-abu)
-                    'hover:text-white hover:border-transparent', // 3. Saat hover, text jadi putih & border hilang
+                    selectedTheme.btn_hover,
+                    'border-white/10 text-white/50',
+                    'hover:text-white hover:border-transparent',
                   ]"
                   class="w-full py-3 rounded-[12px] border font-bold text-xs uppercase tracking-widest transition-all cursor-pointer">
                   Tutup Pesan

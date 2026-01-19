@@ -59,6 +59,9 @@ const replyNote = reactive({ content: "", initial_name: "" });
 let replyDebounceTimer = null;
 const currentUser = ref(null);
 
+// --- UPDATE: State Loading untuk Detail Modal ---
+const isLoadingDetail = ref(false);
+
 // Fetch User Profile
 const fetchCurrentUser = async () => {
   if (!token.value) return;
@@ -185,6 +188,9 @@ const openModalDetail = async (note) => {
   replySearchResults.value = [];
   replyQuery.value = "";
 
+  // --- UPDATE: Set Loading True ---
+  isLoadingDetail.value = true;
+
   playAudio(note);
 
   try {
@@ -195,6 +201,9 @@ const openModalDetail = async (note) => {
     }
   } catch (e) {
     console.error("Gagal refresh detail note", e);
+  } finally {
+    // --- UPDATE: Set Loading False (selalu dijalankan) ---
+    isLoadingDetail.value = false;
   }
 
   nextTick(() => {
@@ -865,77 +874,85 @@ onMounted(async () => {
 
                   <div class="flex flex-col gap-3">
                     <div
-                      v-if="!selectedNote?.replies || selectedNote.replies.length === 0"
-                      class="text-center py-4 text-white/20 text-xs italic">
-                      Belum ada yang membalas dengan lagu.
+                      v-if="isLoadingDetail"
+                      class="text-center py-6 text-white/30 text-xs italic animate-pulse border border-dashed border-white/10 rounded-xl">
+                      Memuat balasan terbaru...
                     </div>
 
-                    <div
-                      v-for="reply in selectedNote.replies"
-                      :key="reply.id"
-                      class="flex items-center gap-3 bg-black/20 p-3 rounded-xl border hover:border-white/10 transition-colors group/reply"
-                      :class="selectedTheme.border">
-                      <div class="relative w-10 h-10 shrink-0">
-                        <img
-                          :src="reply.music_album_image"
-                          class="w-full h-full rounded-md object-cover brightness-75 group-hover/reply:brightness-100 transition-all" />
+                    <template v-else>
+                      <div
+                        v-if="!selectedNote?.replies || selectedNote.replies.length === 0"
+                        class="text-center py-4 text-white/20 text-xs italic">
+                        Belum ada yang membalas dengan lagu.
+                      </div>
+
+                      <div
+                        v-for="reply in selectedNote.replies"
+                        :key="reply.id"
+                        class="flex items-center gap-3 bg-black/20 p-3 rounded-xl border hover:border-white/10 transition-colors group/reply"
+                        :class="selectedTheme.border">
+                        <div class="relative w-10 h-10 shrink-0">
+                          <img
+                            :src="reply.music_album_image"
+                            class="w-full h-full rounded-md object-cover brightness-75 group-hover/reply:brightness-100 transition-all" />
+                          <button
+                            @click="playAudio(reply)"
+                            class="absolute inset-0 flex items-center justify-center text-white opacity-0 group-hover/reply:opacity-100 transition-opacity">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="20"
+                              height="20"
+                              viewBox="0 0 24 24"
+                              fill="currentColor">
+                              <path d="M8 5v14l11-7z" />
+                            </svg>
+                          </button>
+                        </div>
+
+                        <div class="flex-1 min-w-0">
+                          <div class="flex justify-between items-start">
+                            <p class="text-xs font-bold text-white truncate pr-2">{{ reply.music_track_name }}</p>
+                            <span class="text-[9px] text-white/30 whitespace-nowrap">
+                              {{ formatTime(reply.created_at, now) }}
+                            </span>
+                          </div>
+                          <p class="text-[10px] font-medium truncate" :class="selectedTheme.text">
+                            {{ reply.music_artist_name }}
+                          </p>
+                          <p v-if="reply.content" class="text-[10px] text-white/60 italic truncate mt-0.5">
+                            "{{ reply.content }}"
+                          </p>
+                          <p class="text-[9px] text-white/30 mt-1">Dari: {{ reply.author_name || "Anonim" }}</p>
+                        </div>
+
                         <button
-                          @click="playAudio(reply)"
-                          class="absolute inset-0 flex items-center justify-center text-white opacity-0 group-hover/reply:opacity-100 transition-opacity">
+                          v-if="currentUser && (reply.user_id === currentUser.id || currentUser.role === 'admin')"
+                          @click.stop="deleteReply(reply.id)"
+                          class="text-white/20 hover:text-red-500 transition-colors p-1"
+                          title="Hapus Balasan">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="20"
-                            height="20"
+                            width="14"
+                            height="14"
                             viewBox="0 0 24 24"
-                            fill="currentColor">
-                            <path d="M8 5v14l11-7z" />
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path
+                              d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                           </svg>
                         </button>
                       </div>
-
-                      <div class="flex-1 min-w-0">
-                        <div class="flex justify-between items-start">
-                          <p class="text-xs font-bold text-white truncate pr-2">{{ reply.music_track_name }}</p>
-                          <span class="text-[9px] text-white/30 whitespace-nowrap">
-                            {{ formatTime(reply.created_at, now) }}
-                          </span>
-                        </div>
-                        <p class="text-[10px] font-medium truncate" :class="selectedTheme.text">
-                          {{ reply.music_artist_name }}
+                      <div v-if="selectedNote?.replies?.length >= 10" class="text-center py-4">
+                        <p class="text-[10px] text-white/30 italic">
+                          Menampilkan 25 balasan terbaru.
+                          <span class="block">Pesan ini sangat populer! 🔥</span>
                         </p>
-                        <p v-if="reply.content" class="text-[10px] text-white/60 italic truncate mt-0.5">
-                          "{{ reply.content }}"
-                        </p>
-                        <p class="text-[9px] text-white/30 mt-1">Dari: {{ reply.author_name || "Anonim" }}</p>
                       </div>
-
-                      <button
-                        v-if="currentUser && (reply.user_id === currentUser.id || currentUser.role === 'admin')"
-                        @click.stop="deleteReply(reply.id)"
-                        class="text-white/20 hover:text-red-500 transition-colors p-1"
-                        title="Hapus Balasan">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round">
-                          <polyline points="3 6 5 6 21 6"></polyline>
-                          <path
-                            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                        </svg>
-                      </button>
-                    </div>
-                    <div v-if="selectedNote?.replies?.length >= 10" class="text-center py-4">
-                      <p class="text-[10px] text-white/30 italic">
-                        Menampilkan 25 balasan terbaru.
-                        <span class="block">Pesan ini sangat populer! 🔥</span>
-                      </p>
-                    </div>
+                    </template>
                   </div>
                 </div>
 
