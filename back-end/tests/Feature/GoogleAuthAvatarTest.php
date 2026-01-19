@@ -119,33 +119,26 @@ class GoogleAuthAvatarTest extends TestCase
      * Skenario 2 (YANG DIMINTA): User sudah upload foto sendiri (Lokal).
      * Saat login Google, avatar TIDAK BOLEH berubah.
      */
-    public function test_user_avatar_is_NOT_updated_if_current_avatar_is_local_file()
+    public function test_user_avatar_is_NOT_updated_if_current_avatar_is_cloud_file()
     {
-        // Setup user dengan avatar path lokal (hasil upload)
-        // Biasanya path lokal tidak punya http:// dan ada di folder avatars/
-        $localPath = 'avatars/my-custom-photo.jpg';
+        // Gunakan URL dummy yang mengandung kata 'cloudinary' sesuai logika controller
+        $cloudinaryPath = 'https://res.cloudinary.com/demo/image/upload/v12345/my-custom-photo.jpg';
 
         $user = User::factory()->create([
             'email' => 'custom@example.com',
             'google_id' => '67890',
-            'avatar' => $localPath, // BUKAN URL
+            'avatar' => $cloudinaryPath,
         ]);
 
-        // Google mencoba menawarkan avatar baru
+        // Google menawarkan avatar baru
         $this->mockSocialite('custom@example.com', '67890', 'https://google.com/new-photo.jpg');
 
         $this->get('/api/auth/google/callback');
 
-        // Cek Database: Avatar HARUS TETAP file lokal
+        // Cek Database: Avatar HARUS TETAP link cloudinary
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
-            'avatar' => $localPath,
-        ]);
-
-        // Pastikan avatar Google TIDAK masuk
-        $this->assertDatabaseMissing('users', [
-            'id' => $user->id,
-            'avatar' => 'https://google.com/new-photo.jpg',
+            'avatar' => $cloudinaryPath,
         ]);
     }
 
