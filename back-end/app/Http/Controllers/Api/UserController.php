@@ -5,14 +5,12 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
-use Cloudinary\Api\Upload\UploadApi;
+use Cloudinary\Api\Upload\UploadApi; // Untuk Upload
 use Cloudinary\Configuration\Configuration;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-
-// use Illuminate\Support\Facades\Storage; // Tidak dipakai lagi untuk avatar
 
 class UserController extends Controller
 {
@@ -50,8 +48,7 @@ class UserController extends Controller
         // 4. LOGIKA BARU: Update Avatar ke Cloudinary ☁️
         if ($request->hasFile('avatar')) {
             try {
-                // 1. Konfigurasi Manual (BYPASS FILE CONFIG)
-                // Kita ambil langsung dari env, jadi tidak peduli config cache error/nggak.
+                // Konfigurasi Manual (Sesuai kode aslimu)
                 Configuration::instance([
                     'cloud' => [
                         'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
@@ -63,11 +60,40 @@ class UserController extends Controller
                     ],
                 ]);
 
-                // 2. Upload Pakai SDK Asli
+                // --- TAMBAHAN: Hapus Foto Lama (Hemat Storage) ---
+                $oldAvatarUrl = $user->avatar;
+
+                // Cek: Hapus cuma kalau ada foto lama DAN fotonya dari Cloudinary
+                // (Jangan hapus kalau fotonya dari Google/URL eksternal lain)
+                if ($oldAvatarUrl && str_contains($oldAvatarUrl, 'cloudinary')) {
+                    try {
+                        // Extract Public ID dari URL
+                        // Contoh URL: https://.../upload/v1234/avatars/foto.jpg
+                        // Kita butuh: avatars/foto (tanpa ekstensi)
+                        $path = parse_url($oldAvatarUrl, PHP_URL_PATH);
+                        // Ambil bagian setelah 'upload/' dan versioning 'v...'
+                        // Cara simpel: ambil nama folder + nama file tanpa ekstensi
+                        $segments = explode('/', $path);
+                        $publicIdWithExtension = end($segments); // foto.jpg
+                        $folder = prev($segments); // avatars
+
+                        // Gabungkan folder dan nama file
+                        $publicId = $folder . '/' . pathinfo($publicIdWithExtension, PATHINFO_FILENAME);
+
+                        // Panggil API Destroy
+                        (new UploadApi())->destroy($publicId);
+                    } catch (\Exception $e) {
+                        // Jika gagal hapus foto lama, biarkan saja (jangan error)
+                        // Lanjut upload foto baru.
+                    }
+                }
+                // ----------------------------------------------------
+
+                // 2. Upload Pakai SDK Asli (Kode aslimu)
                 $file = $request->file('avatar')->getRealPath();
                 $upload = (new UploadApi())->upload($file, [
-                    'folder' => 'avatars', // Nama folder di cloudinary
-                    'transformation' => [ // Opsional: Langsung crop jadi kotak
+                    'folder' => 'avatars',
+                    'transformation' => [
                         'width' => 400,
                         'height' => 400,
                         'crop' => 'fill',
@@ -81,7 +107,6 @@ class UserController extends Controller
                 $user->avatar = $secureUrl;
 
             } catch (\Exception $e) {
-                // Tampilkan error asli jika masih gagal
                 return response()->json([
                     'message' => 'Upload failed via Native SDK',
                     'debug_error' => $e->getMessage(),
@@ -105,7 +130,6 @@ class UserController extends Controller
     {
         $user = $request->user();
 
-        // 🛡️ PROTEKSI: Admin tidak boleh hapus diri sendiri
         if ($user->role === 'admin') {
             return response()->json([
                 'message' => 'Admin account cannot be deleted for safety reasons.',
@@ -113,14 +137,10 @@ class UserController extends Controller
         }
 
         DB::transaction(function () use ($user) {
-            // Note: Kita tidak menghapus gambar di Cloudinary saat akun dihapus
-            // untuk menjaga performa delete agar cepat.
-            // Gambar di Cloudinary akan tetap ada (bisa dibersihkan manual nanti).
+            // OPTIONAL: Kalau mau lebih bersih lagi, hapus avatar Cloudinary di sini juga.
+            // Tapi sesuai requestmu untuk tidak mengubah logic destroy, ini dibiarkan aman.
 
-            // 1. Hapus Semua Token (Force Logout)
             $user->tokens()->delete();
-
-            // 2. Hapus User
             $user->delete();
         });
 
