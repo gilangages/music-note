@@ -22,16 +22,26 @@ import About from "./components/LandingPage/Section/About.vue";
 
 const router = createRouter({
   history: createWebHistory(),
-  // --- TAMBAHAN DI SINI ---
-  // Menambahkan scrollBehavior untuk menangani posisi scroll saat pindah halaman
+
+  // --- PERBAIKAN DI SINI ---
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
-      // Jika user menekan tombol Back/Forward browser, kembali ke posisi sebelumnya
+      // Jika user tekan Back/Forward browser
       return savedPosition;
-    } else {
-      // Jika navigasi biasa (seperti klik link di footer), scroll ke paling atas dengan animasi
-      return { top: 0, behavior: "smooth" };
     }
+
+    // Jika user navigasi ke anchor/hash (misal: /#fitur), gunakan smooth scroll
+    if (to.hash) {
+      return {
+        el: to.hash,
+        behavior: "smooth",
+      };
+    }
+
+    // Jika navigasi ganti halaman biasa (misal: ke /login),
+    // LANGSUNG ke atas (tanpa 'smooth') untuk menghindari bug "nyangkut"
+    // karena perbedaan tinggi halaman yang drastis.
+    return { top: 0 };
   },
   // ------------------------
   routes: [
