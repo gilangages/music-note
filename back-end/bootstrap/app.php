@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\CheckBanned;
 use App\Http\Middleware\IsAdmin;
+use App\Http\Middleware\SetLocale;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -26,6 +27,12 @@ return Application::configure(basePath: dirname(__DIR__))
             'check.banned' => CheckBanned::class,
         ]);
         $middleware->statefulApi();
+    })
+    ->withMiddleware(function (Middleware $middleware) {
+        // Tambahkan di sini
+        $middleware->api(prepend: [
+            SetLocale::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (AuthenticationException $e, Request $request) {

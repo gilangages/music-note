@@ -10,6 +10,7 @@ const i18n = createI18n({
   locale: savedLocale,
   fallbackLocale: "id",
   globalInjection: true, // Agar $t bisa dipakai langsung di template
+  warnHtmlInMessage: "off",
   messages: {
     id,
     en,
