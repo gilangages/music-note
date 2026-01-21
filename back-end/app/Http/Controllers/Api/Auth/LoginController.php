@@ -15,35 +15,31 @@ class LoginController extends Controller
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
-        ], [
-            'email.required' => 'Email wajib diisi.',
-            'email.email' => 'Format email tidak valid.',
-            'password.required' => 'Password wajib diisi.',
         ]);
 
         $user = User::where('email', $request->email)->first();
 
         // 1. Jika user tidak ditemukan sama sekali
         if (!$user) {
-            return response()->json(['message' => 'Email tidak terdaftar.'], 401);
+            return response()->json(['message' => __('messages.email_not_found')], 401);
         }
 
         // 2. Jika user ditemukan, tapi password di database NULL (User Google belum buat password)
         if (is_null($user->password) && $user->google_id) {
             return response()->json([
-                'message' => 'Akun ini terdaftar melalui Google. Silakan login menggunakan tombol Google atau gunakan fitur Lupa Password untuk membuat password manual.',
+                'message' => __('messages.account_google'),
             ], 422);
         }
 
         // 3. Jika user ada, tapi password salah
         if (!Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Password salah.'], 401);
+            return response()->json(['message' => __('messages.password_wrong')], 401);
         }
 
         // 4. CEK STATUS BANNED (Implementation Baru)
         if ($user->is_banned) {
             return response()->json([
-                'message' => 'AKUN_DIBEKUKAN', // Kode khusus untuk frontend
+                'message' => __('messages.account_banned'), // Kode khusus untuk frontend
                 'status' => 'banned',
 
                 'reason' => $user->ban_reason ?? 'Pelanggaran Aturan.',
@@ -55,7 +51,7 @@ class LoginController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'message' => 'Login berhasil',
+            'message' => __('messages.login_success'),
             'token' => $token,
             'token_type' => 'Bearer',
             'user' => new UserResource($user), // <--- Lebih simpel, photo_url otomatis masuk

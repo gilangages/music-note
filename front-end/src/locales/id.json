@@ -164,7 +164,7 @@
     "label_confirm_password": "Konfirmasi Kata Sandi",
     "placeholder_name": "Masukkan namamu",
     "placeholder_email": "{'contoh@gmail.com'}",
-    "placeholder_password": "Masukkan kata sandi",
+    "placeholder_password": "Minimal 8 karakter",
     "placeholder_confirm_password": "Ulangi kata sandi",
     "btn_login": "Masuk",
     "btn_register": "Daftar",
@@ -209,6 +209,12 @@
       "reset_success": "Password berhasil direset. Silakan login.",
       "reset_failed": "Gagal mereset password."
     }
+  },
+  "auth_callback": {
+    "processing": "Menyiapkan profil Anda...",
+    "error_data": "Data user korup/tidak valid.",
+    "error_login_prefix": "Gagal login: {message}",
+    "error_general_prefix": "Login Gagal: {error}"
   },
   "user_profile": {
     "title": "Edit Profil",

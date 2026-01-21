@@ -164,7 +164,7 @@
     "label_confirm_password": "Confirm Password",
     "placeholder_name": "Enter your name",
     "placeholder_email": "{'example@gmail.com'}",
-    "placeholder_password": "Enter password",
+    "placeholder_password": "Minimal 8 characters",
     "placeholder_confirm_password": "Repeat password",
     "btn_login": "Login",
     "btn_register": "Register",
@@ -209,6 +209,12 @@
       "reset_success": "Password successfully reset. Please login.",
       "reset_failed": "Failed to reset password."
     }
+  },
+  "auth_callback": {
+    "processing": "Setting up your profile...",
+    "error_data": "User data corrupt/invalid.",
+    "error_login_prefix": "Login failed: {message}",
+    "error_general_prefix": "Login Failed: {error}"
   },
   "user_profile": {
     "title": "Edit Profile",
