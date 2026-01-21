@@ -28,7 +28,7 @@ const previewImageUrl = ref("");
 
 const now = useNow({ interval: 60000 });
 const router = useRouter();
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 // Helper computed untuk theme modal
 const selectedTheme = computed(() => {
@@ -181,7 +181,14 @@ const formatDateDetail = (dateString) => {
   const optionsDate = { weekday: "long", day: "numeric", month: "short", year: "numeric" };
   const hours = String(date.getHours()).padStart(2, "0");
   const minutes = String(date.getMinutes()).padStart(2, "0");
-  return `${date.toLocaleDateString("id-ID", optionsDate)} • ${hours}:${minutes} WIB`;
+
+  // --- PERBAIKAN DI SINI ---
+  // Cek locale yang sedang aktif dari i18n
+  // Jika 'en' gunakan 'en-US', jika 'id' gunakan 'id-ID'
+  const currentLang = locale.value === "en" ? "en-US" : "id-ID";
+
+  // Gunakan variable currentLang, JANGAN "id-ID" langsung
+  return `${date.toLocaleDateString(currentLang, optionsDate)} • ${hours}:${minutes} WIB`;
 };
 
 const formatTimeMusic = (time) => {
@@ -230,7 +237,7 @@ onMounted(async () => {
         class="flex gap-[1.5em] overflow-x-auto pb-8 pt-4 snap-x snap-mandatory scrollbar-hide px-2">
         <div
           v-for="(note, index) in notes"
-          :key="note.id || index"
+          :key="`${note.id || index}-${locale}`"
           @click="openModalDetail(note)"
           class="min-w-[85vw] sm:min-w-[450px] snap-center group/card cursor-pointer flex flex-col h-full">
           <div

@@ -2,7 +2,7 @@
 <template>
   <!-- AJAKAN -->
   <div class="flex flex-col items-center justify-center p-[2em] mt-[2em] text-[#e5e5e5]">
-    <h1 class="text-[26px] m-0 font-bold">{{ $t("cta_section.title") }}</h1>
+    <h1 class="text-[26px] m-0 text-center font-bold">{{ $t("cta_section.title") }}</h1>
     <p class="text-[#8c8a8a] text-[16px] text-center m-0">
       {{ $t("cta_section.subtitle") }}
     </p>

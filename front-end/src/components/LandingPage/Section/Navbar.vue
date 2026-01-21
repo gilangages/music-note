@@ -35,8 +35,13 @@ const scrollToSection = async (sectionId) => {
     const checkExist = setInterval(() => {
       const element = document.getElementById(sectionId);
       if (element) {
-        handleScroll(sectionId);
         clearInterval(checkExist);
+
+        handleScroll(sectionId);
+
+        setTimeout(() => {
+          handleScroll(sectionId);
+        }, 1200);
       }
       attempts++;
       if (attempts >= 20) {
