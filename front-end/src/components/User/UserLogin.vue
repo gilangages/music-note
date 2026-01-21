@@ -7,9 +7,13 @@ import { useLocalStorage } from "@vueuse/core";
 import Swal from "sweetalert2";
 import { useCardTheme } from "../../lib/useCardTheme";
 import { store } from "../../lib/store";
+import { useI18n } from "vue-i18n"; // <--- 1. TAMBAHKAN IMPORT INI
+
+const { t } = useI18n(); // <--- 2. INISIALISASI i18n
 
 const route = useRoute();
 const router = useRouter();
+const isLoading = ref(false);
 const token = useLocalStorage("token", "");
 const user = reactive({
   email: "",
@@ -20,66 +24,55 @@ const showPassword = ref(false);
 const { initTheme } = useCardTheme();
 
 // --- 1. FUNGSI REUSABLE UNTUK MENANGANI USER BANNED ---
-// Fungsi ini akan dipanggil oleh Login Biasa & Login Google
 async function handleBannedUser(emailTarget, message) {
+  // Ganti teks manual dengan t(...)
   const { isConfirmed, value: reason } = await Swal.fire({
     icon: "error",
-    title: "Akun Dinonaktifkan",
-    text: message || "Akun Anda telah dibekukan.",
-    footer: '<span class="text-sm">Tulis minimal 10 karakter.</span>',
+    title: t("auth.alert.banned_title"), // "Akun Dinonaktifkan"
+    text: message || t("auth.alert.banned_text"), // "Akun Anda telah dibekukan."
+    footer: `<span class="text-sm">${t("auth.alert.banned_footer")}</span>`, // "Tulis minimal 10 karakter."
     input: "textarea",
-    inputLabel: "Alasan Banding",
-    inputPlaceholder: "Jelaskan mengapa akun Anda harus dipulihkan...",
+    inputLabel: t("auth.alert.appeal_label"), // "Alasan Banding"
+    inputPlaceholder: t("auth.alert.appeal_placeholder"), // "Jelaskan mengapa akun Anda harus dipulihkan..."
     inputAttributes: {
       "aria-label": "Tulis pesan banding disini",
     },
     showCancelButton: true,
-    confirmButtonText: "Kirim Banding",
-    cancelButtonText: "Tutup",
+    confirmButtonText: t("auth.alert.btn_appeal"), // "Kirim Banding"
+    cancelButtonText: t("auth.alert.btn_close"), // "Tutup"
     confirmButtonColor: "#9a203e",
   });
 
-  // Jika user mengirim banding
   if (isConfirmed && reason) {
     try {
-      // Gunakan emailTarget yang dipassing ke fungsi (bisa dari form atau url google)
       const resAppeal = await sendAppeal(emailTarget, reason);
       const jsonAppeal = await resAppeal.json();
 
       if (resAppeal.ok) {
-        await alertSuccess("Permintaan banding terkirim ke Admin.");
+        await alertSuccess(t("auth.alert.appeal_success")); // "Permintaan banding terkirim ke Admin."
       } else {
-        await alertError(jsonAppeal.message || "Gagal mengirim banding.");
+        await alertError(jsonAppeal.message || t("auth.alert.appeal_failed")); // "Gagal mengirim banding."
       }
     } catch (err) {
       console.error(err);
-      await alertError("Gagal terhubung ke server untuk banding.");
+      await alertError(t("auth.alert.network_error")); // "Gagal terhubung ke server untuk banding."
     }
   }
 }
 
 async function handleSubmit() {
+  isLoading.value = true; // Tambahkan loading state
   try {
     const response = await userLogin(user);
     const responseBody = await response.json();
 
     if (response.ok) {
-      // --- LOGIN SUKSES ---
       token.value = responseBody.token;
       sessionStorage.removeItem("last_anim_name");
       store.setUser(responseBody.user);
 
-      // --- DEBUGGING EKSTRIM ---
+      // Logic Redirect
       const serverRole = responseBody.user?.role;
-      console.log("=== DEBUG LOGIN ROLE ===");
-      console.log("Raw Role from Server:", serverRole);
-      console.log("Type of Role:", typeof serverRole);
-      console.log("Role Length:", serverRole ? serverRole.length : "N/A");
-      console.log("Is Admin Match?:", serverRole === "admin");
-      console.log("Is Admin Match (Trimmed)?:", String(serverRole).trim() === "admin");
-      console.log("========================");
-
-      // Logic Redirect dengan pembersihan string
       const finalRole = String(serverRole || "").trim();
 
       if (finalRole === "admin") {
@@ -88,7 +81,6 @@ async function handleSubmit() {
         await router.push("/dashboard/global");
       }
     } else {
-      // --- LOGIN GAGAL ---
       if (response.status === 403 && responseBody.status === "banned") {
         await handleBannedUser(user.email, responseBody.message);
       } else {
@@ -98,7 +90,9 @@ async function handleSubmit() {
     }
   } catch (error) {
     console.error("Login Error:", error);
-    await alertError("Terjadi kesalahan jaringan atau server.");
+    await alertError(t("auth.alert.server_error")); // "Terjadi kesalahan jaringan atau server."
+  } finally {
+    isLoading.value = false;
   }
 }
 
@@ -106,21 +100,13 @@ const loginWithGoogle = () => {
   window.location.href = `${import.meta.env.VITE_APP_PATH}/auth/google/redirect`;
 };
 
-// --- 3. MODIFIKASI ONMOUNTED ---
 onMounted(async () => {
-  // Ambil query params
   const { error, status, email, message } = route.query;
 
-  // Skenario 1: Balik dari Google tapi BANNED
   if (status === "banned" && email) {
-    // Bersihkan URL supaya bersih
     router.replace({ query: {} });
-
-    // Panggil Popup Banding
     handleBannedUser(email, message);
-  }
-  // Skenario 2: Error biasa (misal gagal connect google)
-  else if (error) {
+  } else if (error) {
     await alertError(error);
     router.replace({ query: {} });
   }
@@ -133,28 +119,32 @@ onMounted(async () => {
     <div
       class="bg-[#1c1516] text-[#e5e5e5] text-[14px] rounded-[30px] w-full max-w-[560px] px-4 py-8 shadow-2xl border border-[#2c2021]">
       <div class="flex flex-col items-center text-[#9a203e] mb-6">
-        <h1 class="text-[28px] font-bold leading-tight">Masuk</h1>
-        <p class="mt-1 text-[13px] text-[#8c8a8a]">Lanjutkan ke akunmu</p>
+        <h1 class="text-[28px] font-bold leading-tight">{{ $t("auth.login_title") }}</h1>
+        <p class="mt-1 text-[13px] text-[#8c8a8a]">{{ $t("auth.login_subtitle") }}</p>
       </div>
 
       <form v-on:submit.prevent="handleSubmit" class="space-y-5">
         <div>
-          <label class="block text-xs font-bold text-[#8c8a8a] uppercase tracking-wider mb-1">Email</label>
+          <label class="block text-xs font-bold text-[#8c8a8a] uppercase tracking-wider mb-1">
+            {{ $t("auth.label_email") }}
+          </label>
           <input
             v-model="user.email"
             type="email"
             required
-            placeholder="nama@email.com"
+            :placeholder="$t('auth.placeholder_email')"
             class="w-full px-4 py-3 bg-[#2b2122] text-[#e5e5e5] rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#9a203e] placeholder-[#555] transition-all" />
         </div>
 
         <div>
           <div class="flex justify-between items-center mb-1">
-            <label class="block text-xs font-bold text-[#8c8a8a] uppercase tracking-wider">Password</label>
+            <label class="block text-xs font-bold text-[#8c8a8a] uppercase tracking-wider">
+              {{ $t("auth.label_password") }}
+            </label>
             <RouterLink
               to="/forgot-password"
               class="text-[11px] font-bold text-[#9a203e] hover:text-[#b82b4d] transition-colors">
-              Lupa Password?
+              {{ $t("auth.forgot_password") }}
             </RouterLink>
           </div>
           <div class="relative">
@@ -162,7 +152,7 @@ onMounted(async () => {
               v-model="user.password"
               :type="showPassword ? 'text' : 'password'"
               required
-              placeholder="Masukkan password"
+              :placeholder="$t('auth.placeholder_password')"
               class="w-full px-4 py-3 bg-[#2b2122] text-[#e5e5e5] rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#9a203e] placeholder-[#555] pr-10 transition-all" />
 
             <button
@@ -206,13 +196,16 @@ onMounted(async () => {
         <div class="pt-2 flex flex-col gap-4">
           <button
             type="submit"
-            class="w-full bg-[#9a203e] hover:bg-[#821c35] text-white font-bold py-3.5 rounded-[12px] transition-transform active:scale-95 shadow-lg shadow-[#9a203e]/20 cursor-pointer">
-            Masuk
+            :disabled="isLoading"
+            class="w-full bg-[#9a203e] hover:bg-[#821c35] text-white font-bold py-3.5 rounded-[12px] transition-transform active:scale-95 shadow-lg shadow-[#9a203e]/20 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed">
+            {{ isLoading ? $t("auth.btn_loading") : $t("auth.btn_login") }}
           </button>
 
           <div class="relative flex items-center">
             <div class="flex-grow border-t border-[#2c2021]"></div>
-            <span class="flex-shrink mx-4 text-[#666] text-[10px] uppercase font-bold tracking-widest">Atau</span>
+            <span class="flex-shrink mx-4 text-[#666] text-[10px] uppercase font-bold tracking-widest">
+              {{ $t("auth.or") }}
+            </span>
             <div class="flex-grow border-t border-[#2c2021]"></div>
           </div>
 
@@ -234,18 +227,18 @@ onMounted(async () => {
                 fill="#EA4335"
                 d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
             </svg>
-            Masuk dengan Google
+            {{ $t("auth.btn_google_login") }}
           </button>
         </div>
       </form>
 
       <div class="text-center mt-6 pt-4 border-t border-[#2c2021]">
         <p class="text-[#8c8a8a] text-xs">
-          Belum punya akun?
+          {{ $t("auth.no_account") }}
           <RouterLink
             to="/register"
             class="text-[#9a203e] font-bold hover:text-[#b82b4d] transition-colors ml-1 cursor-pointer">
-            Daftar sekarang
+            {{ $t("auth.link_register") }}
           </RouterLink>
         </p>
       </div>

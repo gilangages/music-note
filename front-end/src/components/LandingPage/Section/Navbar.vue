@@ -1,8 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
-// Import komponen ganti bahasa (pastikan file ini sudah dibuat di folder components)
-import LanguageSwitcher from "../../LanguageSwitcher.vue";
+import LanguageSwitcher from "../../LanguageSwitcher.vue"; // Pastikan path import benar
 
 const router = useRouter();
 const route = useRoute();
@@ -31,26 +30,20 @@ const scrollToSection = async (sectionId) => {
   isMobileMenuOpen.value = false;
 
   if (route.path !== "/") {
-    // 1. Pindah ke Home
     await router.push("/");
-
-    // 2. Polling cek elemen
     let attempts = 0;
     const checkExist = setInterval(() => {
       const element = document.getElementById(sectionId);
-
       if (element) {
         handleScroll(sectionId);
         clearInterval(checkExist);
       }
-
       attempts++;
       if (attempts >= 20) {
         clearInterval(checkExist);
       }
     }, 100);
   } else {
-    // Jika sudah di Home
     handleScroll(sectionId);
   }
 };
@@ -58,8 +51,8 @@ const scrollToSection = async (sectionId) => {
 
 <template>
   <div class="font-poppins bg-[#180808] sticky top-0 z-50 w-full">
-    <div class="flex items-center justify-between p-[12px] bg-[#180808] relative z-50">
-      <div class="flex items-center gap-4">
+    <div class="flex items-center justify-between p-[12px] bg-[#180808] relative z-50 h-[63px]">
+      <div class="flex items-center gap-4 z-20 relative">
         <button
           @click="toggleMobileMenu"
           class="md:hidden text-[#e5e5e5] hover:text-[#9a203e] transition-transform active:scale-90 focus:outline-none">
@@ -91,7 +84,8 @@ const scrollToSection = async (sectionId) => {
         </div>
       </div>
 
-      <div class="hidden md:flex items-center gap-8 text-[14px] font-medium text-gray-400">
+      <div
+        class="hidden md:flex items-center gap-8 text-[14px] font-medium text-gray-400 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
         <button @click="scrollToSection('fitur')" class="hover:text-white transition-colors hover:scale-105 transform">
           {{ $t("nav.features") }}
         </button>
@@ -107,7 +101,7 @@ const scrollToSection = async (sectionId) => {
         </button>
       </div>
 
-      <div class="flex items-center gap-[10px]">
+      <div class="flex items-center gap-[10px] z-20 relative">
         <LanguageSwitcher class="hidden sm:flex mr-2" />
 
         <RouterLink
@@ -138,25 +132,21 @@ const scrollToSection = async (sectionId) => {
             <span>Bahasa / Language</span>
             <LanguageSwitcher />
           </div>
-
           <button
             @click="scrollToSection('fitur')"
             class="text-left hover:text-[#9a203e] py-2 border-b border-white/5 transition-colors">
             {{ $t("nav.features") }}
           </button>
-
           <button
             @click="scrollToSection('pesan-lain')"
             class="text-left hover:text-[#9a203e] py-2 border-b border-white/5 transition-colors">
             {{ $t("nav.explore") }}
           </button>
-
           <button
             @click="scrollToSection('faq')"
             class="text-left hover:text-[#9a203e] py-2 border-b border-white/5 transition-colors">
             {{ $t("nav.faq") }}
           </button>
-
           <div class="pt-2">
             <RouterLink
               to="/register"
