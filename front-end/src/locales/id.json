@@ -509,5 +509,17 @@
       "error_generic": "Terjadi kesalahan",
       "error_server": "Gagal menghubungi server"
     }
+  },
+  "free_tier": {
+    "title": "Info Server",
+    "text_prefix": "Halo! Website ini sedang di-hosting menggunakan layanan",
+    "highlight": "Gratis (Free Tier).",
+    "text_suffix": "Mohon dimaklumi jika akses terasa agak lambat atau web sempat \"tertidur\" dan butuh waktu untuk bangun kembali.",
+    "btn_ok": "Oke, Mengerti"
+  },
+  "not_found": {
+    "title": "Halaman Tidak Ditemukan",
+    "desc": "Oops! Sepertinya nada yang kamu cari fals atau halaman ini sudah menghilang dari peredaran.",
+    "btn_home": "Kembali ke Beranda"
   }
 }

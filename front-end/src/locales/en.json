@@ -509,5 +509,17 @@
       "error_generic": "An error occurred",
       "error_server": "Failed to contact server"
     }
+  },
+  "free_tier": {
+    "title": "Server Info",
+    "text_prefix": "Hello! This website is currently hosted using a",
+    "highlight": "Free Tier Service.",
+    "text_suffix": "Please understand if access feels a bit slow or the web falls \"asleep\" and needs time to wake up again.",
+    "btn_ok": "Okay, Understood"
+  },
+  "not_found": {
+    "title": "Page Not Found",
+    "desc": "Oops! It seems the tone you are looking for is false or this page has vanished from circulation.",
+    "btn_home": "Back to Home"
   }
 }

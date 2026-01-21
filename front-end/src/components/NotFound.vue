@@ -41,15 +41,16 @@ function goBack() {
       </div>
     </div>
 
-    <h2 class="text-2xl md:text-3xl font-bold mb-3">Halaman Tidak Ditemukan</h2>
+    <h2 class="text-2xl md:text-3xl font-bold mb-3">{{ $t("not_found.title") }}</h2>
+
     <p class="text-[#8c8a8a] max-w-md mb-8">
-      Oops! Sepertinya nada yang kamu cari fals atau halaman ini sudah menghilang dari peredaran.
+      {{ $t("not_found.desc") }}
     </p>
 
     <button
       v-on:click="goBack"
       class="cursor-pointer bg-[#9a203e] text-[#e5e5e5] px-8 py-3 rounded-[12px] font-semibold tracking-wide transition-all duration-300 hover:bg-[#b92b4f] hover:scale-105 shadow-[0_0_20px_rgba(154,32,62,0.4)]">
-      Kembali ke Beranda
+      {{ $t("not_found.btn_home") }}
     </button>
   </div>
 </template>
