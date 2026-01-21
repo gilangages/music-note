@@ -7,6 +7,8 @@ import { getUnreadCount } from "../../../lib/api/NotificationApi"; // Import API
 import NotificationDropdown from "./NotificationDropdown.vue"; // Import Komponen Dropdown
 import { useLocalStorage } from "@vueuse/core";
 import { alertError } from "../../../lib/alert";
+// --- TAMBAHAN BARU: Import Komponen Ganti Bahasa ---
+import LanguageSwitcher from "../../LanguageSwitcher.vue";
 
 const route = useRoute();
 const token = useLocalStorage("token", "");
@@ -103,21 +105,23 @@ onUnmounted(() => {
       class="hidden md:flex absolute left-1/2 transform -translate-x-1/2 gap-1 bg-[#0f0505]/80 backdrop-blur-sm p-1.5 rounded-xl border border-[#2c2021]">
       <RouterLink
         to="/dashboard/global"
-        data-title="Jelajahi"
+        :data-title="$t('nav.dashboard_explore')"
         active-class="bg-[#9a203e] text-white shadow-md"
         class="tooltip-container-mid px-5 py-2 text-[14px] font-medium text-[#cdcccc] rounded-lg hover:text-white hover:bg-[#2c2021] transition-all duration-300">
-        Jelajahi
+        {{ $t("nav.dashboard_explore") }}
       </RouterLink>
       <RouterLink
         to="/dashboard"
         exact-active-class="bg-[#9a203e] text-white shadow-md"
-        data-title="Pesan saya"
+        :data-title="$t('nav.my_messages')"
         class="tooltip-container-mid px-5 py-2 text-[14px] font-medium text-[#cdcccc] rounded-lg hover:text-white hover:bg-[#2c2021] transition-all duration-300">
-        Pesan Saya
+        {{ $t("nav.my_messages") }}
       </RouterLink>
     </div>
 
     <div class="flex items-center gap-3 sm:gap-4">
+      <LanguageSwitcher class="hidden md:flex" />
+
       <div class="relative">
         <button
           @click="toggleNotif"
@@ -173,12 +177,16 @@ onUnmounted(() => {
           <div
             v-if="showDropdown"
             class="absolute right-0 mt-3 w-[200px] rounded-xl bg-[#1e1e1e] p-1.5 z-50 shadow-2xl border border-[#4b1a1a] ring-1 ring-white/5 origin-top-right">
+            <div class="md:hidden px-3 py-2 border-b border-[#4b1a1a] mb-1 flex justify-center">
+              <LanguageSwitcher />
+            </div>
+
             <RouterLink
               to="/dashboard/users/profile"
               class="flex items-center gap-3 px-3 py-2.5 text-sm text-[#e5e5e5] font-medium rounded-lg hover:bg-[#2c2021] hover:text-white transition-colors"
               @click="closeDropdown">
               <span>👤</span>
-              Edit Profil
+              {{ $t("nav.profile") }}
             </RouterLink>
 
             <div v-if="userState.role === 'admin'">
@@ -188,7 +196,7 @@ onUnmounted(() => {
                 class="flex items-center gap-3 px-3 py-2.5 text-sm text-red-400 font-bold rounded-lg hover:bg-[#2c0f0f] hover:text-red-300 transition-colors"
                 @click="closeDropdown">
                 <span>⚡</span>
-                Admin Panel
+                {{ $t("nav.admin") }}
               </RouterLink>
             </div>
 
@@ -199,7 +207,7 @@ onUnmounted(() => {
               class="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-400 font-medium rounded-lg hover:bg-[#2c2021] hover:text-red-400 transition-colors"
               @click="closeDropdown">
               <span>🚪</span>
-              Log out
+              {{ $t("nav.logout") }}
             </RouterLink>
           </div>
         </Transition>
@@ -215,14 +223,14 @@ onUnmounted(() => {
         to="/dashboard/global"
         active-class="bg-[#9a203e] text-white shadow-lg"
         class="flex items-center justify-center px-4 py-3 text-[13px] font-medium text-[#cdcccc] rounded-full hover:text-white transition-all duration-300 whitespace-nowrap">
-        Jelajahi
+        {{ $t("nav.dashboard_explore") }}
       </RouterLink>
 
       <RouterLink
         to="/dashboard"
         exact-active-class="bg-[#9a203e] text-white shadow-lg"
         class="flex items-center justify-center px-4 py-3 text-[13px] font-medium text-[#cdcccc] rounded-full hover:text-white transition-all duration-300 whitespace-nowrap">
-        Pesan Saya
+        {{ $t("nav.my_messages") }}
       </RouterLink>
     </div>
   </div>

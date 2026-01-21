@@ -1,6 +1,8 @@
 <script setup>
-import { ref } from "vue";
+import { computed } from "vue";
+import { useI18n } from "vue-i18n"; // Import hook i18n
 
+const { t } = useI18n(); // Inisialisasi fungsi translate
 // --- ICON ASSETS (SVG Strings) ---
 
 // --- NEW ICONS ---
@@ -29,58 +31,58 @@ const googleIconSvg = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/200
 const shieldIconSvg = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>`;
 
 // --- DATA FEATURES (Total 9 Item) ---
-const features = ref([
+const features = computed(() => [
   {
-    title: "Mode Anonim",
-    desc: "Ingin menyampaikan perasaan kepada seseorang tapi tak ingin identitasmu diketahui? Gunakan mode anonim (inisial) agar kamu bisa bebas bercerita tanpa rasa khawatir.",
-    img: anonimIconSvg, // MENGGUNAKAN ICON BARU
+    title: t("features.anonim_title"), // Panggil translate disini
+    desc: t("features.anonim_desc"),
+    img: anonimIconSvg,
     isGeneric: true,
   },
   {
-    title: "Pustaka Deezer",
-    desc: "Temukan jutaan lagu dari Deezer. Sematkan lagu yang pas dan biarkan orang lain mendengarkan cuplikannya.",
+    title: t("features.deezer_title"),
+    desc: t("features.deezer_desc"),
     img: deezerIconSvg,
     isGeneric: false,
   },
   {
-    title: "Respon dengan Lagu",
-    desc: "Kata-kata saja tidak cukup? Balas curhatan orang lain dengan lagu yang paling mewakili perasaanmu.",
+    title: t("features.reply_title"),
+    desc: t("features.reply_desc"),
     img: replyIconSvg,
     isGeneric: true,
   },
   {
-    title: "Ruang Personal",
-    desc: "Kontrol penuh di tanganmu. Edit kesalahan ketik atau hapus pesan kapan saja kamu mau.",
-    img: personalSpaceIconSvg, // MENGGUNAKAN ICON BARU
+    title: t("features.personal_title"),
+    desc: t("features.personal_desc"),
+    img: personalSpaceIconSvg,
     isGeneric: false,
   },
   {
-    title: "Share ke Story",
-    desc: "Ingin membagikan pesanmu? Unduh pesan sebagai gambar yang estetik hanya dengan satu klik.",
+    title: t("features.share_title"),
+    desc: t("features.share_desc"),
     img: shareIconSvg,
     isGeneric: true,
   },
   {
-    title: "Tema & Kustomisasi",
-    desc: "Ekspresikan mood kamu. Ganti tema warna kartu pesan sesuka hati agar tampilannya tidak membosankan.",
+    title: t("features.theme_title"),
+    desc: t("features.theme_desc"),
     img: themeIconSvg,
     isGeneric: true,
   },
   {
-    title: "Moderasi Objektif",
-    desc: "Sistem moderasi kami bekerja secara adil. Peninjauan konten dilakukan tanpa melihat identitas pengirim, sehingga privasimu tetap terjaga 100%.",
+    title: t("features.mod_title"),
+    desc: t("features.mod_desc"),
     img: blindIconSvg,
     isGeneric: true,
   },
   {
-    title: "Pusat Bantuan",
-    desc: "Terjadi kesalahan pemblokiran? Jangan khawatir, kamu bisa mengajukan banding dengan mudah melalui formulir yang tersedia otomatis.",
+    title: t("features.help_title"),
+    desc: t("features.help_desc"),
     img: shieldIconSvg,
     isGeneric: true,
   },
   {
-    title: "Akses Kilat",
-    desc: "Masuk dengan akun Google dalam hitungan detik. Tanpa ribet isi formulir, langsung tulis dan jelajahi pesan.",
+    title: t("features.access_title"),
+    desc: t("features.access_desc"),
     img: googleIconSvg,
     isGeneric: true,
   },
@@ -89,7 +91,7 @@ const features = ref([
 
 <template>
   <div class="p-[2em]">
-    <h2 class="text-[#e5e5e5] text-[20px] font-semibold sm:text-left mb-8">Fitur Unggulan</h2>
+    <h2 class="text-[#e5e5e5] text-[20px] font-semibold sm:text-left mb-8">{{ $t("features.header") }}</h2>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
       <div

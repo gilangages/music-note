@@ -26,7 +26,7 @@
       <router-link
         to="/about"
         class="text-[#e5e5e5]/40 hover:text-[#9a203e] text-[12px] font-medium transition-colors duration-300 py-2">
-        About
+        {{ $t("footer.about") }}
       </router-link>
     </div>
   </div>

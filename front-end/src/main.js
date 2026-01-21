@@ -19,6 +19,7 @@ import AdminDashboard from "./components/Admin/AdminDashboard.vue";
 import { alertError } from "./lib/alert";
 import AllNotifications from "./components/Dashboard/AllNotifications.vue";
 import About from "./components/LandingPage/Section/About.vue";
+import i18n from "./lib/i18n";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -147,4 +148,4 @@ router.beforeEach((to, from, next) => {
   }
 });
 
-createApp(App).use(router).mount("#app");
+createApp(App).use(router).use(i18n).mount("#app");

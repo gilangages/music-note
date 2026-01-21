@@ -1,0 +1,156 @@
+{
+  "nav": {
+    "language": "Language",
+    "features": "Features",
+    "explore": "Explore",
+    "faq": "FAQ",
+    "register": "Register ",
+    "login": "Login",
+    "dashboard_explore": "Discover",
+    "my_messages": "My Messages",
+    "profile": "Edit Profile",
+    "admin": "Admin Panel",
+    "logout": "Log out"
+  },
+  "hero": {
+    "highlight": "Express Your Feelings Through Melody!",
+    "title": "Write your message, pin the perfect song, and let the world listen.",
+    "cta": "Start Writing"
+  },
+  "features": {
+    "header": "Key Features",
+    "anonim_title": "Anonymous Mode",
+    "anonim_desc": "Want to convey feelings to someone but don't want your identity known? Use anonymous mode (initials) so you can share freely without worry.",
+    "deezer_title": "Deezer Library",
+    "deezer_desc": "Discover millions of songs from Deezer. Pin the perfect song and let others hear the snippet.",
+    "reply_title": "Reply with Song",
+    "reply_desc": "Words aren't enough? Reply to others' vents with the song that best represents your feelings.",
+    "personal_title": "Personal Space",
+    "personal_desc": "Full control in your hands. Edit typos or delete messages whenever you want.",
+    "share_title": "Share to Story",
+    "share_desc": "Want to share your message? Download the message as an aesthetic image with just one click.",
+    "theme_title": "Themes & Customization",
+    "theme_desc": "Express your mood. Change the message card color theme as you like so it never looks boring.",
+    "mod_title": "Objective Moderation",
+    "mod_desc": "Our moderation system works fairly. Content review is done without seeing the sender's identity, so your privacy is 100% protected.",
+    "help_title": "Help Center",
+    "help_desc": "Blocked by mistake? Don't worry, you can easily file an appeal through the automatically available form.",
+    "access_title": "Lightning Access",
+    "access_desc": "Login with Google account in seconds. No hassle filling out forms, write and explore messages immediately."
+  },
+  "pesan_lain": {
+    "header_title": "Listen to Others' Messages",
+    "view_all": "View all messages",
+    "card": {
+      "to": "TO",
+      "from": "From",
+      "admin": "Admin",
+      "edited": "(edited)"
+    },
+    "modal": {
+      "anonymous": "Anonymous",
+      "alert_title": "Want to reply to this message?",
+      "alert_text": "You need to login or register first to send a song reply! 🎵",
+      "alert_confirm": "Let's Login!",
+      "alert_cancel": "Not now",
+      "preview": "Preview",
+      "play_full": "Play Full Song",
+      "from_label": "FROM",
+      "to_label": "TO",
+      "sent_at": "Sent:",
+      "replies_title": "Reply Resonance",
+      "reply_btn": "+ Reply with Song",
+      "no_replies": "No one has replied with a song yet.",
+      "replies_limit_1": "Showing top 5 replies.",
+      "replies_limit_2": "This message is on fire! 🔥",
+      "close": "Close Message"
+    },
+    "preview": {
+      "profile_photo": "Profile Photo"
+    }
+  },
+  "faq": {
+    "header_title": "Frequently Asked Questions",
+    "header_subtitle": "Still confused? Find the answers here.",
+    "q1": "Do I have to use my real name?",
+    "a1": "Not necessarily, whatever you are comfortable with. You can use your real name if you want your friends to know it's you, or use initials/pseudonym if you want to be more private and mysterious.",
+    "q2": "How do I reply to a message I like?",
+    "a2": "Here music is the main language. You can respond to messages by sending a <strong>Song Reply</strong> via Deezer that represents your feelings, optionally with a short text message.",
+    "q3": "Can Admin see who sent the message?",
+    "a3": "<strong>No.</strong> We implement a <em>Blind Moderation</em> system. When reviewing messages, the sender's identity is hidden from moderators. We only judge the content, not the person.",
+    "q4": "What if I find inappropriate messages?",
+    "a4": "We implement an <strong>Automatic Word Filter</strong> when creating messages. However, if negative content still slips through, you can report it via the form in the <strong>About</strong> menu (Footer). Select the <strong>'Report Content'</strong> category and our team will follow up immediately.",
+    "q5": "Why did my message suddenly disappear?",
+    "a5": "For mutual comfort, Admin actively moderates content. If your message is gone, please check the <strong>Notifications</strong> menu. Our system will surely send info on the reason for the message deletion.",
+    "q6": "Why can't I reply to other people's 'replies'?",
+    "a6": "We apply the <strong>'One-Way Tribute'</strong> concept. The goal is to keep interactions simple, focus on song appreciation, and avoid unnecessary long debates.",
+    "q7": "Do I need a Premium account to play songs?",
+    "a7": "No need! Thanks to Deezer integration, anyone can listen to a 30-second song snippet (preview) for free without needing to login or subscribe to any music app.",
+    "q8": "Why does the song only play for 30 seconds?",
+    "a8": "This is the international standard for <strong>Audio Preview</strong> allowed by music labels for free. Since Resonate is not a paid streaming app (like Spotify/Deezer Premium), we are only allowed to play 30-second snippets to respect musician copyrights.",
+    "q9": "Why can't I find the song I'm looking for?",
+    "a9": "The song collection on Resonate is connected directly in <em>real-time</em> with the <strong>Deezer</strong> database. If your favorite song doesn't appear, it's likely not available in their catalog yet. This is beyond our control, thank you for understanding!",
+    "q10": "Why use Deezer, not Spotify?",
+    "a10": "We understand that Spotify is many people's favorite platform. However, currently, new integration access is <strong>temporarily suspended</strong> by Spotify for system maintenance. <br><br>To keep the song preview feature running smoothly, we are currently using Deezer. Don't worry! If Spotify access is reopened, we plan to <strong>support both platforms simultaneously</strong> so your music search is maximized and limitless.",
+    "q11": "My account is restricted/banned, what's the solution?",
+    "a11": "We take strict action against community violations. However, if you feel this sanction is a mistake, you can file an <strong>Appeal</strong> directly through the app. Our team will review your account status.",
+    "q12": "Can I change my appearance or delete my account?",
+    "a12": "Of course. You can change the card theme and profile photo (avatar) as you like. If you want to quit, there is also an option to permanently delete your account in the profile settings."
+  },
+  "cta_section": {
+    "title": "Start Writing Your Message",
+    "subtitle": "Record every feeling and precious moment combined with music.",
+    "button": "Create Account"
+  },
+  "footer": {
+    "about": "About"
+  },
+  "about": {
+    "title": "About Resonate",
+    "desc_1": "Resonate was born from a simple realization: sometimes, words alone are not enough to represent what we feel.",
+    "desc_2": "We believe that every feeling deserves to be heard. Whether it's an unsent love letter, a heavy heart, or just a joke to entertain yourself. However, text often feels flat. That's why here, words are combined with music.",
+    "features": {
+      "amplify_title": "Amplify Feelings",
+      "amplify_desc": "Music is a universal language. By embedding songs from Deezer, your message is not only read, but also \"felt\".",
+      "judgment_title": "No Judgment",
+      "judgment_desc": "Through the Anonymous feature, we create a safe space. You are free to be yourself without worrying about identity.",
+      "trace_title": "Digital Footprint",
+      "trace_desc": "Think of this as your emotional journal. A place where visual and audio memories are stored neatly for the future."
+    },
+    "form": {
+      "title": "Send Reports & Feedback",
+      "subtitle": "Found an error, inappropriate content, or have a feature idea? Send a message below.",
+      "note": "*Message sent directly to the developer's personal email.",
+      "name_label": "Name",
+      "name_placeholder": "Your Name",
+      "email_label": "Email",
+      "email_placeholder": "youremail@gmail.com",
+      "category_label": "Category",
+      "message_label": "Message",
+      "message_placeholder": "Write your detailed message here...",
+      "submit_btn": "Send Message",
+      "sending": "Sending...",
+      "options": {
+        "bug": "🐛 Report Bug / Error",
+        "feature": "💡 New Feature Suggestion",
+        "content": "🚨 Report Inappropriate Content",
+        "question": "👋 General Question",
+        "other": "Other"
+      },
+      "alert": {
+        "incomplete_title": "Incomplete Data",
+        "incomplete_text": "Please fill in your name, email, and message.",
+        "success_title": "Sent!",
+        "success_text": "Your report has been sent to our email. Thank you!",
+        "error_title": "Failed",
+        "error_text": "An error occurred while sending the message. Please try again later."
+      }
+    },
+    "support": {
+      "title": "Support the Developer ☕",
+      "desc": "Resonate is developed and managed by a single person (Solo Dev) with independent resources. If this place means something to you, your support will fuel the developer's spirit to continue maintaining, improving, and keeping Resonate alive.",
+      "btn": "Buy me a Coffee / Support",
+      "credit": "Developed Solo By"
+    }
+  }
+}
