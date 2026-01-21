@@ -7,6 +7,9 @@ import { alertError } from "../../lib/alert";
 // 1. Import 'store' untuk mengosongkan data user
 import { store, resetUserState } from "../../lib/store";
 import { useCardTheme } from "../../lib/useCardTheme";
+import { useI18n } from "vue-i18n"; // Import i18n
+
+const { t } = useI18n(); // Inisialisasi
 
 const token = useLocalStorage("token", "");
 const router = useRouter();
@@ -49,6 +52,6 @@ onBeforeMount(async () => {
 <template>
   <div class="flex flex-col items-center justify-center min-h-[60vh] text-white">
     <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#9a203e] mb-4"></div>
-    <p class="text-lg font-medium italic">Sedang mengeluarkan akun...</p>
+    <p class="text-lg font-medium italic">{{ t("user_logout.processing") }}</p>
   </div>
 </template>

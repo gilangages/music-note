@@ -50,19 +50,17 @@ onMounted(() => {
                   d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-white font-jakarta">Info Server</h3>
+            <h3 class="text-xl font-bold text-white font-jakarta">{{ $t("free_tier.title") }}</h3>
           </div>
         </div>
 
         <div class="px-6 py-2">
           <p class="text-gray-300 text-sm leading-relaxed font-poppins">
-            Halo! Website ini sedang di-hosting menggunakan layanan
-            <span class="text-yellow-500 font-semibold">Gratis (Free Tier)</span>
-            .
+            {{ $t("free_tier.text_prefix") }}
+            <span class="text-yellow-500 font-semibold">{{ $t("free_tier.highlight") }}</span>
             <br />
             <br />
-            Mohon dimaklumi jika akses terasa agak lambat atau web sempat "tertidur" dan butuh waktu untuk bangun
-            kembali.
+            {{ $t("free_tier.text_suffix") }}
           </p>
         </div>
 
@@ -70,7 +68,7 @@ onMounted(() => {
           <button
             @click="closeNotice"
             class="bg-[#9a203e] hover:bg-[#b92b4a] text-white px-6 py-2 rounded-lg text-sm font-semibold transition-all duration-300 font-jakarta shadow-lg hover:shadow-red-900/20 active:scale-95">
-            Oke, Mengerti
+            {{ $t("free_tier.btn_ok") }}
           </button>
         </div>
       </div>

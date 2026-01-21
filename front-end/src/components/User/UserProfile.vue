@@ -11,6 +11,9 @@ import {
 import { alertConfirm, alertError, alertSuccess } from "../../lib/alert";
 import { getAvatarUrl, userState } from "../../lib/store";
 import { store } from "../../lib/store";
+import { useI18n } from "vue-i18n"; // 1. Import i18n
+
+const { t } = useI18n(); // 2. Inisialisasi
 
 const token = useLocalStorage("token", "");
 const name = ref("");
@@ -49,7 +52,7 @@ async function fetchUser() {
     }
   } catch (error) {
     console.error(error);
-    await alertError("Gagal memuat data user.");
+    await alertError(t("user_profile.alert.load_error")); // Translate
   } finally {
     isLoading.value = false;
   }
@@ -68,12 +71,12 @@ async function handleFileChange(event) {
     console.log(responseBody);
     if (response.ok) {
       userState.value = responseBody.data;
-      await alertSuccess("Foto profil berhasil diperbarui!");
+      await alertSuccess(t("user_profile.alert.photo_success")); // Translate
     } else {
       throw new Error(responseBody.message);
     }
   } catch (error) {
-    await alertError(error.message || "Gagal upload foto");
+    await alertError(error.message || t("user_profile.alert.photo_error")); // Translate
   } finally {
     event.target.value = null;
     if (fileInput.value) fileInput.value.value = null;
@@ -85,7 +88,7 @@ async function handleChangeName() {
   const responseBody = await response.json();
   console.log(responseBody);
   if (response.ok) {
-    await alertSuccess("Nama berhasil diubah.");
+    await alertSuccess(t("user_profile.alert.name_success")); // Translate
     userState.value.name = name.value;
   } else {
     const pesanError = responseBody.errors ? Object.values(responseBody.errors)[0][0] : responseBody.message;
@@ -95,7 +98,7 @@ async function handleChangeName() {
 
 async function handleChangePassword() {
   if (password.value !== password_confirmation.value) {
-    await alertError("Password tidak sama!");
+    await alertError(t("user_profile.alert.password_mismatch")); // Translate
     return;
   }
 
@@ -118,20 +121,20 @@ async function handleChangePassword() {
         store.setUser(updatedUser);
       }
 
-      await alertSuccess("Password berhasil diperbarui!");
+      await alertSuccess(t("user_profile.alert.password_success")); // Translate
     } else {
       const pesanError = responseBody.errors ? Object.values(responseBody.errors)[0][0] : responseBody.message;
       await alertError(pesanError);
     }
   } catch (error) {
-    await alertError("Terjadi kesalahan sistem.");
+    await alertError(t("user_profile.alert.system_error")); // Translate
   }
 }
 
 async function handleDeleteAccount() {
   const confirmed = await alertConfirm(
-    "Yakin hapus akun?",
-    "Tindakan ini permanen! Semua notes dan data kamu akan hilang selamanya."
+    t("user_profile.alert.delete_confirm_title"), // Translate
+    t("user_profile.alert.delete_confirm_text"), // Translate
   );
 
   if (!confirmed) return;
@@ -141,7 +144,7 @@ async function handleDeleteAccount() {
     const response = await userDeleteAccount(token.value);
 
     if (response.ok) {
-      await alertSuccess("Akun berhasil dihapus. Sampai jumpa!");
+      await alertSuccess(t("user_profile.alert.delete_success")); // Translate
 
       // Bersihkan state & redirect
       token.value = null;
@@ -151,11 +154,11 @@ async function handleDeleteAccount() {
       window.location.href = "/";
     } else {
       const responseBody = await response.json();
-      await alertError(responseBody.message || "Gagal menghapus akun.");
+      await alertError(responseBody.message || t("user_profile.alert.delete_error")); // Translate
     }
   } catch (error) {
     console.error(error);
-    await alertError("Terjadi kesalahan sistem.");
+    await alertError(t("user_profile.alert.system_error")); // Translate
   } finally {
     isLoading.value = false;
   }
@@ -182,7 +185,7 @@ onMounted(() => {
         class="absolute top-4 md:top-8 left-6 p-2 rounded-full text-[#8c8a8a] hover:text-[#9a203e] hover:bg-[#2b2122] transition-all duration-300 group z-20">
         <div
           class="tooltip-container-top group-hover:-translate-x-1 transition-transform"
-          data-title="Kembali ke Dashboard">
+          :data-title="$t('user_profile.back_dashboard')">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -198,7 +201,7 @@ onMounted(() => {
           </svg>
         </div>
       </RouterLink>
-      <h1 class="text-center mt-[4px] text-[#9a203e] font-bold text-3xl">Edit Profil</h1>
+      <h1 class="text-center mt-[4px] text-[#9a203e] font-bold text-3xl">{{ $t("user_profile.title") }}</h1>
 
       <Transition name="fade" mode="out-in">
         <div v-if="isLoading" key="skeleton" class="animate-pulse w-full">
@@ -253,16 +256,16 @@ onMounted(() => {
             <p
               class="py-2 cursor-pointer text-[#9a203e] font-semibold hover:text-[#e5e5e5] transition-colors mt-2 text-sm uppercase tracking-wider"
               @click="triggerFileInput">
-              Ganti Foto
+              {{ $t("user_profile.change_photo") }}
             </p>
             <input type="file" ref="fileInput" class="hidden" accept="image/*" @change="handleFileChange" />
           </div>
 
           <form v-on:submit.prevent="handleChangeName" class="info-dasar">
-            <h2 class="mb-[8px] font-bold text-xl">Informasi Dasar</h2>
+            <h2 class="mb-[8px] font-bold text-xl">{{ $t("user_profile.basic_info") }}</h2>
 
             <div class="input">
-              <label for="nama">Nama</label>
+              <label for="nama">{{ $t("user_profile.label_name") }}</label>
               <br />
               <input
                 id="nama"
@@ -274,17 +277,17 @@ onMounted(() => {
             <button
               type="submit"
               class="bg-[#9a203e] text-[#e5e5e5] font-semibold rounded-[8px] p-[8px] hover:bg-[#7d1a33] cursor-pointer w-full sm:w-auto">
-              Simpan Profile
+              {{ $t("user_profile.btn_save_profile") }}
             </button>
           </form>
 
           <form v-on:submit.prevent="handleChangePassword" class="keamanan mt-[2em]">
-            <h2 class="mb-[8px] font-bold text-xl">Keamanan</h2>
+            <h2 class="mb-[8px] font-bold text-xl">{{ $t("user_profile.security") }}</h2>
 
             <div class="input">
               <label for="email">
-                Email
-                <span class="text-[12px] text-[#6b6b6b] ml-1">(Locked)</span>
+                {{ $t("user_profile.label_email") }}
+                <span class="text-[12px] text-[#6b6b6b] ml-1">{{ $t("user_profile.locked") }}</span>
               </label>
               <br />
               <input
@@ -297,11 +300,11 @@ onMounted(() => {
 
             <div class="input">
               <div class="form-grup">
-                <label for="password_baru">Password Baru</label>
+                <label for="password_baru">{{ $t("user_profile.label_new_password") }}</label>
 
                 <small v-if="!userHasPassword" class="text-[#9a203e] block mb-2 text-sm italic font-medium">
                   <i class="fas fa-info-circle mr-1"></i>
-                  Kamu mendaftar dengan Google. Isi password ini jika ingin bisa login secara manual nanti.
+                  {{ $t("user_profile.google_hint") }}
                 </small>
 
                 <div class="relative my-[8px] mb-[20px]">
@@ -309,14 +312,14 @@ onMounted(() => {
                     id="password_baru"
                     :type="showPassword ? 'text' : 'password'"
                     v-model="password"
-                    placeholder="Kosongkan jika tidak ingin mengganti"
+                    :placeholder="$t('user_profile.placeholder_password')"
                     class="w-full bg-[#2b2122] text-[#e5e5e5] caret-[#e5e5e5] rounded-[15px] p-[1em] border-none focus:outline-[2px] focus:outline-[#9a203e] pr-[3.5em]" />
 
                   <button
                     type="button"
                     @click="showPassword = !showPassword"
                     class="absolute inset-y-0 right-0 px-4 flex items-center text-[#8c8a8a] hover:text-[#9a203e] transition-colors cursor-pointer"
-                    title="Lihat Password">
+                    :title="$t('user_profile.view_password')">
                     <svg
                       v-if="showPassword"
                       xmlns="http://www.w3.org/2000/svg"
@@ -352,20 +355,20 @@ onMounted(() => {
             </div>
 
             <div class="input">
-              <label>Konfirmasi Password</label>
+              <label>{{ $t("user_profile.label_confirm_password") }}</label>
               <div class="relative my-[8px] mb-[20px]">
                 <input
                   :type="showConfirmPassword ? 'text' : 'password'"
                   required
                   v-model="password_confirmation"
-                  placeholder="Masukkan ulang kata sandi"
+                  :placeholder="$t('user_profile.placeholder_confirm_password')"
                   class="w-full bg-[#2b2122] text-[#e5e5e5] caret-[#e5e5e5] rounded-[15px] p-[1em] border-none focus:outline-[2px] focus:outline-[#9a203e] pr-[3.5em]" />
 
                 <button
                   type="button"
                   @click="showConfirmPassword = !showConfirmPassword"
                   class="absolute inset-y-0 right-0 px-4 flex items-center text-[#8c8a8a] hover:text-[#9a203e] transition-colors cursor-pointer"
-                  title="Lihat Password">
+                  :title="$t('user_profile.view_password')">
                   <svg
                     v-if="showConfirmPassword"
                     xmlns="http://www.w3.org/2000/svg"
@@ -402,14 +405,14 @@ onMounted(() => {
             <button
               type="submit"
               class="font-semibold bg-[#9a203e] text-[#e5e5e5] font-bold rounded-[8px] p-[8px] hover:bg-[#7d1a33] cursor-pointer w-full sm:w-auto">
-              Ganti Password
+              {{ $t("user_profile.btn_change_password") }}
             </button>
           </form>
 
           <div v-if="store.user?.role !== 'admin'" class="zona-bahaya mt-[3em] pt-[2em] border-t border-[#2b2122]">
-            <h2 class="mb-[8px] font-bold text-xl text-red-500">Zona Bahaya</h2>
+            <h2 class="mb-[8px] font-bold text-xl text-red-500">{{ $t("user_profile.danger_zone") }}</h2>
             <p class="text-sm text-[#8c8a8a] mb-4">
-              Menghapus akun akan menghilangkan semua data secara permanen. Tindakan ini tidak dapat dibatalkan.
+              {{ $t("user_profile.danger_text") }}
             </p>
 
             <button
@@ -431,7 +434,7 @@ onMounted(() => {
                 <line x1="10" y1="11" x2="10" y2="17"></line>
                 <line x1="14" y1="11" x2="14" y2="17"></line>
               </svg>
-              Hapus Akun Saya
+              {{ $t("user_profile.btn_delete_account") }}
             </button>
           </div>
         </div>
@@ -449,7 +452,9 @@ onMounted(() => {
             referrerpolicy="no-referrer"
             class="w-auto h-auto max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
             @click.stop />
-          <p class="text-white/50 text-sm tracking-widest uppercase font-bold mt-4" @click.stop>Foto Profil</p>
+          <p class="text-white/50 text-sm tracking-widest uppercase font-bold mt-4" @click.stop>
+            {{ $t("user_profile.modal_photo") }}
+          </p>
         </div>
       </div>
     </Transition>

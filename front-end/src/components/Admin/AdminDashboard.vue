@@ -6,6 +6,9 @@ import { getAdminNotes, deleteNoteByAdmin } from "../../lib/api/NoteApi";
 import { alertConfirm, alertSuccess } from "../../lib/alert";
 import { getAvatarUrl } from "../../lib/store";
 import Swal from "sweetalert2";
+import { useI18n } from "vue-i18n"; // 1. Import i18n
+
+const { t, locale } = useI18n(); // 2. Inisialisasi
 
 const token = useLocalStorage("token", "");
 const activeTab = ref("users"); // 'users' atau 'notes'
@@ -72,13 +75,14 @@ const switchTab = (tab) => {
 // --- ACTION HANDLERS ---
 
 const restoreUser = async (id) => {
-  if (!(await alertConfirm("Pulihkan akses akun user ini?"))) return;
+  // Translate alert message
+  if (!(await alertConfirm(t("admin_dashboard.alert.restore_confirm")))) return;
   try {
     const res = await restoreUserByAdmin(token.value, id);
     if (res.ok) {
       const user = items.value.find((u) => u.id === id);
       if (user) user.is_banned = 0;
-      alertSuccess("Akun dipulihkan.");
+      alertSuccess(t("admin_dashboard.alert.restore_success"));
     }
   } catch (err) {
     console.error(err);
@@ -88,15 +92,15 @@ const restoreUser = async (id) => {
 const banUserFromNote = async (noteId) => {
   // ... (bagian Swal konfirmasi tetap sama) ...
   const { value: reason, isConfirmed } = await Swal.fire({
-    // ... konfig swal ...
-    title: "Blokir Penulis Ini?",
-    text: "Sistem akan melacak dan memblokir penulis pesan ini. Identitas penulis tetap disembunyikan dari Anda.",
+    // ... konfig swal dengan translate ...
+    title: t("admin_dashboard.alert.ban_sender_title"),
+    text: t("admin_dashboard.alert.ban_sender_text"),
     icon: "warning",
     input: "text",
-    inputPlaceholder: "Alasan pemblokiran (Opsional)",
+    inputPlaceholder: t("admin_dashboard.alert.ban_sender_placeholder"),
     showCancelButton: true,
     confirmButtonColor: "#d33",
-    confirmButtonText: "Ya, Hukum User",
+    confirmButtonText: t("admin_dashboard.alert.ban_sender_confirm_btn"),
   });
 
   if (!isConfirmed) return;
@@ -106,27 +110,28 @@ const banUserFromNote = async (noteId) => {
     const json = await res.json();
 
     if (res.ok) {
-      alertSuccess(json.message || "User berhasil diblokir.");
+      alertSuccess(json.message || t("admin_dashboard.alert.ban_sender_success"));
 
       // --- TAMBAHKAN BARIS INI ---
       // Menghapus note dari tampilan tabel secara langsung (Client-side update)
       items.value = items.value.filter((n) => n.id !== noteId);
     } else {
-      Swal.fire("Gagal", json.message || "Terjadi kesalahan", "error");
+      Swal.fire("Gagal", json.message || t("admin_dashboard.alert.error_generic"), "error");
     }
   } catch (err) {
     console.error(err);
-    Swal.fire("Error", "Gagal menghubungi server", "error");
+    Swal.fire("Error", t("admin_dashboard.alert.error_server"), "error");
   }
 };
 
 const deleteUser = async (id) => {
-  if (!(await alertConfirm("Yakin ingin memblokir user ini?"))) return;
+  // Translate alert message
+  if (!(await alertConfirm(t("admin_dashboard.alert.ban_user_confirm")))) return;
   try {
     await deleteUserByAdmin(token.value, id);
     const user = items.value.find((u) => u.id === id);
     if (user) user.is_banned = 1;
-    alertSuccess("User diblokir.");
+    alertSuccess(t("admin_dashboard.alert.ban_user_success"));
   } catch (err) {
     console.error(err);
   }
@@ -134,13 +139,13 @@ const deleteUser = async (id) => {
 
 const deleteNote = async (id) => {
   const { value: reason, isConfirmed } = await Swal.fire({
-    title: "Hapus Note?",
-    text: "Masukkan alasan (wajib):",
+    title: t("admin_dashboard.alert.delete_note_title"),
+    text: t("admin_dashboard.alert.delete_note_text"),
     input: "text",
-    inputPlaceholder: "Contoh: Spam / Kata kasar",
+    inputPlaceholder: t("admin_dashboard.alert.delete_note_placeholder"),
     showCancelButton: true,
     confirmButtonColor: "#d33",
-    confirmButtonText: "Hapus",
+    confirmButtonText: t("admin_dashboard.alert.delete_note_confirm_btn"),
   });
 
   if (!isConfirmed) return;
@@ -148,7 +153,7 @@ const deleteNote = async (id) => {
   try {
     await deleteNoteByAdmin(token.value, id, reason || "Konten tidak pantas");
     items.value = items.value.filter((n) => n.id !== id);
-    alertSuccess("Note dihapus.");
+    alertSuccess(t("admin_dashboard.alert.delete_note_success"));
   } catch (err) {
     console.error(err);
   }
@@ -161,11 +166,22 @@ const copyUserId = (id) => {
     toast: true,
     position: "top-end",
     icon: "success",
-    title: "ID User disalin",
+    title: t("admin_dashboard.alert.copy_id_success"),
     showConfirmButton: false,
     timer: 1500,
     background: "#1c1516",
     color: "#fff",
+  });
+};
+
+// Format Date Helper with locale support
+const formatDate = (dateString) => {
+  const currentLocale = locale.value === "id" ? "id-ID" : "en-US";
+  return new Date(dateString).toLocaleDateString(currentLocale, {
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 };
 
@@ -183,11 +199,11 @@ onMounted(fetchData);
         <div>
           <h1
             class="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-gray-500 tracking-tight">
-            Admin Dashboard
+            {{ $t("admin_dashboard.title") }}
           </h1>
           <p class="text-gray-400 text-sm mt-2 flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-red-500 inline-block animate-pulse"></span>
-            Community Safety & Content Moderation
+            {{ $t("admin_dashboard.subtitle") }}
           </p>
         </div>
 
@@ -195,7 +211,9 @@ onMounted(fetchData);
           <input
             v-model="searchQuery"
             type="text"
-            :placeholder="activeTab === 'users' ? 'Cari nama/email...' : 'Cari isi konten...'"
+            :placeholder="
+              activeTab === 'users' ? $t('admin_dashboard.search_users') : $t('admin_dashboard.search_notes')
+            "
             class="w-full bg-[#1c1516]/80 backdrop-blur-sm border border-[#2c2021] rounded-xl py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/50 transition-all text-white placeholder-gray-600 shadow-lg group-hover:border-white/10" />
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -221,7 +239,7 @@ onMounted(fetchData);
               : 'text-gray-500 hover:text-gray-200 hover:bg-white/5'
           "
           class="pb-3 px-4 font-medium transition-all rounded-t-lg text-sm tracking-wide whitespace-nowrap">
-          Users Management
+          {{ $t("admin_dashboard.tabs.users") }}
         </button>
         <button
           @click="switchTab('notes')"
@@ -231,14 +249,14 @@ onMounted(fetchData);
               : 'text-gray-500 hover:text-gray-200 hover:bg-white/5'
           "
           class="pb-3 px-4 font-medium transition-all rounded-t-lg text-sm tracking-wide whitespace-nowrap">
-          Content Moderation
+          {{ $t("admin_dashboard.tabs.notes") }}
         </button>
       </div>
 
       <div v-if="loading" class="py-20 text-center">
         <div
           class="animate-spin w-10 h-10 border-2 border-red-500 border-t-transparent rounded-full mx-auto mb-4 shadow-[0_0_15px_rgba(239,68,68,0.5)]"></div>
-        <p class="text-gray-500 text-sm animate-pulse">Sinkronisasi data...</p>
+        <p class="text-gray-500 text-sm animate-pulse">{{ $t("admin_dashboard.loading") }}</p>
       </div>
 
       <div
@@ -258,7 +276,7 @@ onMounted(fetchData);
               d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
-        <p class="text-gray-400 font-medium">Tidak ada data ditemukan.</p>
+        <p class="text-gray-400 font-medium">{{ $t("admin_dashboard.empty_state") }}</p>
       </div>
 
       <div
@@ -269,16 +287,22 @@ onMounted(fetchData);
             <thead class="bg-[#1c1516] text-gray-400 text-xs uppercase tracking-wider sticky top-0 z-20 shadow-sm">
               <tr>
                 <th v-if="activeTab === 'users'" class="p-4 md:p-5 font-semibold text-gray-300 min-w-[200px]">
-                  User Profile
+                  {{ $t("admin_dashboard.table_headers.user_profile") }}
                 </th>
-                <th v-if="activeTab === 'users'" class="p-4 md:p-5 font-semibold text-gray-300">Status</th>
+                <th v-if="activeTab === 'users'" class="p-4 md:p-5 font-semibold text-gray-300">
+                  {{ $t("admin_dashboard.table_headers.status") }}
+                </th>
 
-                <th v-if="activeTab === 'notes'" class="p-4 md:p-5 font-semibold text-gray-300 w-32">Date</th>
+                <th v-if="activeTab === 'notes'" class="p-4 md:p-5 font-semibold text-gray-300 w-32">
+                  {{ $t("admin_dashboard.table_headers.date") }}
+                </th>
                 <th v-if="activeTab === 'notes'" class="p-4 md:p-5 font-semibold text-gray-300 min-w-[300px]">
-                  Message Content (Anonymous)
+                  {{ $t("admin_dashboard.table_headers.content") }}
                 </th>
 
-                <th class="p-4 md:p-5 text-center font-semibold text-gray-300 w-48">Actions</th>
+                <th class="p-4 md:p-5 text-center font-semibold text-gray-300 w-48">
+                  {{ $t("admin_dashboard.table_headers.actions") }}
+                </th>
               </tr>
             </thead>
 
@@ -311,17 +335,17 @@ onMounted(fetchData);
                     <span
                       v-if="item.role === 'admin'"
                       class="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-500/10 text-blue-400 text-xs font-medium border border-blue-500/20">
-                      Admin
+                      {{ $t("admin_dashboard.status.admin") }}
                     </span>
                     <span
                       v-else-if="item.is_banned"
                       class="inline-flex items-center px-2.5 py-1 rounded-md bg-red-500/10 text-red-400 text-xs font-medium border border-red-500/20">
-                      Banned
+                      {{ $t("admin_dashboard.status.banned") }}
                     </span>
                     <span
                       v-else
                       class="inline-flex items-center px-2.5 py-1 rounded-md bg-green-500/10 text-green-400 text-xs font-medium border border-green-500/20">
-                      Active
+                      {{ $t("admin_dashboard.status.active") }}
                     </span>
                   </td>
 
@@ -331,13 +355,13 @@ onMounted(fetchData);
                         v-if="item.role !== 'admin' && !item.is_banned"
                         @click="deleteUser(item.id)"
                         class="text-gray-400 hover:text-red-400 px-3 py-1.5 text-xs border border-gray-700 rounded-lg hover:border-red-500/50 whitespace-nowrap transition-colors">
-                        Ban User
+                        {{ $t("admin_dashboard.buttons.ban_user") }}
                       </button>
                       <button
                         v-if="item.is_banned"
                         @click="restoreUser(item.id)"
                         class="text-green-400 bg-green-500/10 px-3 py-1.5 text-xs border border-green-500/30 rounded-lg whitespace-nowrap hover:bg-green-500/20 transition-colors">
-                        Restore
+                        {{ $t("admin_dashboard.buttons.restore") }}
                       </button>
                     </div>
                   </td>
@@ -346,14 +370,7 @@ onMounted(fetchData);
                 <template v-if="activeTab === 'notes'">
                   <td class="p-4 md:p-5 align-top">
                     <div class="text-xs text-gray-500 font-mono whitespace-nowrap">
-                      {{
-                        new Date(item.created_at).toLocaleDateString("id-ID", {
-                          day: "numeric",
-                          month: "short",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })
-                      }}
+                      {{ formatDate(item.created_at) }}
                     </div>
                   </td>
 
@@ -381,7 +398,7 @@ onMounted(fetchData);
                             stroke-width="2"
                             d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                         </svg>
-                        Hapus Pesan
+                        {{ $t("admin_dashboard.buttons.delete_note") }}
                       </button>
 
                       <button
@@ -400,7 +417,7 @@ onMounted(fetchData);
                             stroke-width="2"
                             d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
                         </svg>
-                        Ban Sender
+                        {{ $t("admin_dashboard.buttons.ban_sender") }}
                       </button>
                     </div>
                   </td>
@@ -413,15 +430,14 @@ onMounted(fetchData);
         <div
           class="p-4 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between bg-[#130b0c] gap-4">
           <div class="text-xs text-gray-500">
-            Total Data:
-            <span class="text-white font-bold ml-1">{{ totalData }}</span>
+            {{ $t("admin_dashboard.pagination", { total: totalData }) }}
           </div>
           <div class="flex items-center gap-3">
             <button
               @click="changePage(currentPage - 1)"
               :disabled="currentPage === 1"
               class="px-4 py-1.5 text-xs rounded-lg border border-gray-700 text-gray-400 hover:bg-white/5 disabled:opacity-30">
-              Previous
+              {{ $t("admin_dashboard.buttons.prev") }}
             </button>
             <span class="text-xs font-mono text-gray-400 bg-black/30 px-3 py-1 rounded border border-white/5">
               {{ currentPage }} / {{ lastPage }}
@@ -430,7 +446,7 @@ onMounted(fetchData);
               @click="changePage(currentPage + 1)"
               :disabled="currentPage === lastPage"
               class="px-4 py-1.5 text-xs rounded-lg border border-gray-700 text-gray-400 hover:bg-white/5 disabled:opacity-30">
-              Next
+              {{ $t("admin_dashboard.buttons.next") }}
             </button>
           </div>
         </div>

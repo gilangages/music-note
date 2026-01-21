@@ -3,7 +3,9 @@ import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { resetPassword } from "../../lib/api/UserApi";
 import { alertError, alertSuccess } from "../../lib/alert";
+import { useI18n } from "vue-i18n"; // <--- 1. Import i18n
 
+const { t } = useI18n(); // <--- 2. Inisialisasi
 const route = useRoute();
 const router = useRouter();
 const showPassword = ref(false);
@@ -27,13 +29,13 @@ async function handleReset() {
     const result = await response.json();
 
     if (response.ok) {
-      await alertSuccess("Password berhasil direset. Silakan login.");
+      await alertSuccess(t("auth.alert.reset_success")); // Gunakan t()
       router.push("/login");
     } else {
-      await alertError(result.message || "Gagal mereset password.");
+      await alertError(result.message || t("auth.alert.reset_failed")); // Gunakan t()
     }
   } catch (error) {
-    await alertError("Terjadi kesalahan sistem.");
+    await alertError(t("auth.alert.system_error")); // Gunakan key system_error yang sudah ada
   }
 }
 </script>
@@ -41,22 +43,26 @@ async function handleReset() {
 <template>
   <div class="flex justify-center items-center min-h-screen text-[#e5e5e5] font-jakarta -mt-16 md:-mt-16">
     <div class="bg-[#1c1516] rounded-[20px] w-full max-w-[560px] mx-[24px] p-[2em] border border-[#2b2122] shadow-2xl">
-      <h1 class="text-center text-[#9a203e] font-bold text-3xl mb-8">Atur Ulang Password</h1>
+      <h1 class="text-center text-[#9a203e] font-bold text-3xl mb-8">
+        {{ $t("auth.reset_header_title") }}
+      </h1>
 
       <form @submit.prevent="handleReset" class="space-y-5">
         <div class="px-4 py-3 text-sm text-[#8c8a8a] bg-[#2b2122] rounded-xl border border-[#9a203e]/30">
-          Reset password untuk:
+          {{ $t("auth.reset_intro") }}
           <strong class="text-[#e5e5e5] block mt-1">{{ form.email }}</strong>
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-[#8c8a8a] uppercase tracking-wider mb-2">Password Baru</label>
+          <label class="block text-xs font-bold text-[#8c8a8a] uppercase tracking-wider mb-2">
+            {{ $t("auth.label_new_password") }}
+          </label>
           <div class="relative">
             <input
               v-model="form.password"
               :type="showPassword ? 'text' : 'password'"
               required
-              placeholder="Masukkan password baru"
+              :placeholder="$t('auth.placeholder_new_password')"
               class="w-full px-4 py-3 bg-[#2b2122] text-[#e5e5e5] rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#9a203e] placeholder-[#555] pr-10 transition-all" />
 
             <button
@@ -99,14 +105,14 @@ async function handleReset() {
 
         <div>
           <label class="block text-xs font-bold text-[#8c8a8a] uppercase tracking-wider mb-2">
-            Konfirmasi Password Baru
+            {{ $t("auth.label_confirm_new_password") }}
           </label>
           <div class="relative">
             <input
               v-model="form.password_confirmation"
               :type="showConfirmPassword ? 'text' : 'password'"
               required
-              placeholder="Ulangi password baru"
+              :placeholder="$t('auth.placeholder_confirm_new_password')"
               class="w-full px-4 py-3 bg-[#2b2122] text-[#e5e5e5] rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#9a203e] placeholder-[#555] pr-10 transition-all" />
 
             <button
@@ -151,7 +157,7 @@ async function handleReset() {
           <button
             type="submit"
             class="w-full bg-[#9a203e] hover:bg-[#821c35] text-white font-bold py-3.5 rounded-[12px] transition-transform active:scale-95 shadow-lg shadow-[#9a203e]/20 cursor-pointer">
-            Perbarui Password
+            {{ $t("auth.btn_update_password") }}
           </button>
         </div>
       </form>

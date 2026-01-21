@@ -3,8 +3,12 @@ import { reactive, ref } from "vue";
 import { userRegister } from "../../lib/api/UserApi";
 import { alertError, alertSuccess } from "../../lib/alert";
 import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n"; // Import i18n
 
+const { t } = useI18n(); // Inisialisasi
 const router = useRouter();
+const isLoading = ref(false); // Tambah loading state
+
 const user = reactive({
   name: "",
   email: "",
@@ -17,23 +21,33 @@ const showPassword = ref(false);
 const showConfirmPassword = ref(false);
 
 async function handleSubmit() {
+  // Validasi Password
   if (user.password !== user.password_confirmation) {
-    await alertError("Password harus sama!");
+    await alertError(t("auth.alert.password_mismatch")); // <--- Mengambil dari JSON alert baru
     return;
   }
 
-  const response = await userRegister(user);
-  const responseBody = await response.json();
-  console.log(responseBody);
+  isLoading.value = true;
 
-  if (response.ok) {
-    await alertSuccess("Akun berhasil dibuat! Silakan masuk.");
-    await router.push({
-      path: "/login",
-    });
-  } else {
-    const pesanError = responseBody.errors ? Object.values(responseBody.errors)[0][0] : responseBody.message;
-    await alertError(pesanError);
+  try {
+    const response = await userRegister(user);
+    const responseBody = await response.json();
+    console.log(responseBody);
+
+    if (response.ok) {
+      await alertSuccess(t("auth.alert.register_success")); // <--- Mengambil dari JSON alert baru
+      await router.push({
+        path: "/login",
+      });
+    } else {
+      const pesanError = responseBody.errors ? Object.values(responseBody.errors)[0][0] : responseBody.message;
+      await alertError(pesanError);
+    }
+  } catch (e) {
+    console.error(e);
+    await alertError(t("auth.alert.server_error")); // Pakai error umum yang sudah ada
+  } finally {
+    isLoading.value = false;
   }
 }
 
@@ -48,38 +62,44 @@ const registerWithGoogle = () => {
     <div
       class="bg-[#1c1516] text-[#e5e5e5] text-[14px] rounded-[30px] w-full max-w-[560px] px-4 py-8 shadow-2xl border border-[#2c2021]">
       <div class="flex flex-col items-center text-[#9a203e] mb-6">
-        <h1 class="text-[28px] font-bold leading-tight">Daftar</h1>
-        <p class="mt-1 text-[13px] text-[#8c8a8a]">Buat akun Resonate baru</p>
+        <h1 class="text-[28px] font-bold leading-tight">{{ $t("auth.register_title") }}</h1>
+        <p class="mt-1 text-[13px] text-center text-[#8c8a8a]">{{ $t("auth.register_subtitle") }}</p>
       </div>
 
       <form v-on:submit.prevent="handleSubmit" class="space-y-5">
         <div>
-          <label class="block text-xs font-bold text-[#8c8a8a] uppercase tracking-wider mb-1">Nama</label>
+          <label class="block text-xs font-bold text-[#8c8a8a] uppercase tracking-wider mb-1">
+            {{ $t("auth.label_name") }}
+          </label>
           <input
             type="text"
             v-model="user.name"
-            placeholder="Nama Lengkap"
+            :placeholder="$t('auth.placeholder_name')"
             class="w-full px-4 py-3 bg-[#2b2122] text-[#e5e5e5] rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#9a203e] placeholder-[#555] transition-all" />
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-[#8c8a8a] uppercase tracking-wider mb-1">Email</label>
+          <label class="block text-xs font-bold text-[#8c8a8a] uppercase tracking-wider mb-1">
+            {{ $t("auth.label_email") }}
+          </label>
           <input
             v-model="user.email"
             type="email"
             required
-            placeholder="nama@email.com"
+            :placeholder="$t('auth.placeholder_email')"
             class="w-full px-4 py-3 bg-[#2b2122] text-[#e5e5e5] rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#9a203e] placeholder-[#555] transition-all" />
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-[#8c8a8a] uppercase tracking-wider mb-1">Password</label>
+          <label class="block text-xs font-bold text-[#8c8a8a] uppercase tracking-wider mb-1">
+            {{ $t("auth.label_password") }}
+          </label>
           <div class="relative">
             <input
               v-model="user.password"
               :type="showPassword ? 'text' : 'password'"
               required
-              placeholder="Minimal 8 karakter"
+              :placeholder="$t('auth.placeholder_password_register')"
               class="w-full px-4 py-3 bg-[#2b2122] text-[#e5e5e5] rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#9a203e] placeholder-[#555] pr-10 transition-all" />
 
             <button
@@ -121,14 +141,14 @@ const registerWithGoogle = () => {
 
         <div>
           <label class="block text-xs font-bold text-[#8c8a8a] uppercase tracking-wider mb-1">
-            Konfirmasi Password
+            {{ $t("auth.label_confirm_password") }}
           </label>
           <div class="relative">
             <input
               v-model="user.password_confirmation"
               :type="showConfirmPassword ? 'text' : 'password'"
               required
-              placeholder="Ketik ulang password"
+              :placeholder="$t('auth.placeholder_confirm_password')"
               class="w-full px-4 py-3 bg-[#2b2122] text-[#e5e5e5] rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#9a203e] placeholder-[#555] pr-10 transition-all" />
 
             <button
@@ -171,13 +191,16 @@ const registerWithGoogle = () => {
         <div class="pt-2 flex flex-col gap-4">
           <button
             type="submit"
-            class="cursor-pointer w-full bg-[#9a203e] hover:bg-[#821c35] text-white font-bold py-3.5 rounded-[12px] transition-transform active:scale-95 shadow-lg shadow-[#9a203e]/20">
-            Daftar Sekarang
+            :disabled="isLoading"
+            class="cursor-pointer w-full bg-[#9a203e] hover:bg-[#821c35] text-white font-bold py-3.5 rounded-[12px] transition-transform active:scale-95 shadow-lg shadow-[#9a203e]/20 disabled:opacity-70 disabled:cursor-not-allowed">
+            {{ isLoading ? $t("auth.btn_loading") : $t("auth.btn_register") }}
           </button>
 
           <div class="relative flex items-center">
             <div class="flex-grow border-t border-[#2c2021]"></div>
-            <span class="flex-shrink mx-4 text-[#666] text-[10px] uppercase font-bold tracking-widest">Atau</span>
+            <span class="flex-shrink mx-4 text-[#666] text-[10px] uppercase font-bold tracking-widest">
+              {{ $t("auth.or") }}
+            </span>
             <div class="flex-grow border-t border-[#2c2021]"></div>
           </div>
 
@@ -199,16 +222,16 @@ const registerWithGoogle = () => {
                 fill="#EA4335"
                 d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
             </svg>
-            Daftar dengan Google
+            {{ $t("auth.btn_google_register") }}
           </button>
         </div>
       </form>
 
       <div class="text-center mt-6 pt-4 border-t border-[#2c2021]">
         <p class="text-[#8c8a8a] text-xs">
-          Sudah punya akun?
+          {{ $t("auth.have_account") }}
           <RouterLink to="/login" class="text-[#9a203e] font-bold hover:text-[#b82b4d] transition-colors ml-1">
-            Masuk disini
+            {{ $t("auth.link_login") }}
           </RouterLink>
         </p>
       </div>

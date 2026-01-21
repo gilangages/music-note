@@ -19,6 +19,9 @@ import { useShareImage } from "../../../lib/useShareImage";
 import { useNow } from "@vueuse/core";
 import { alertSuccess, alertError, alertConfirm } from "../../../lib/alert";
 import { userDetail } from "../../../lib/api/UserApi";
+import { useI18n } from "vue-i18n"; // 1. Import i18n
+
+const { t, locale } = useI18n(); // 2. Inisialisasi
 
 // --- DECLARATIONS LAMA (TIDAK DIUBAH) ---
 const showShareOptions = ref(false);
@@ -76,14 +79,14 @@ const fetchCurrentUser = async () => {
 
 // Fungsi Delete Reply (Pastikan noteDelete sudah diimport di atas)
 const deleteReply = async (replyId) => {
-  if (!(await alertConfirm("Hapus balasan lagu ini?"))) return;
+  if (!(await alertConfirm(t("global_content.alert.confirm_delete_reply")))) return;
 
   try {
     // Gunakan API deleteReplyApi yang baru
     const response = await deleteReplyApi(token.value, replyId);
 
     if (response.ok) {
-      alertSuccess("Balasan dihapus.");
+      alertSuccess(t("global_content.alert.delete_success"));
       // Refresh data
       const res = await noteDetail(token.value, selectedNote.value.id);
       if (res.ok) {
@@ -91,7 +94,7 @@ const deleteReply = async (replyId) => {
         selectedNote.value = resData.data;
       }
     } else {
-      await alertError("Gagal menghapus.");
+      await alertError(t("global_content.alert.delete_error"));
     }
   } catch (error) {
     console.error(error);
@@ -109,7 +112,10 @@ const formatDateDetail = (dateString) => {
   const optionsDate = { weekday: "long", day: "numeric", month: "short", year: "numeric" };
   const hours = String(date.getHours()).padStart(2, "0");
   const minutes = String(date.getMinutes()).padStart(2, "0");
-  return `${date.toLocaleDateString("id-ID", optionsDate)} • ${hours}:${minutes} WIB`;
+
+  // Gunakan locale dari i18n
+  const currentLocale = locale.value === "id" ? "id-ID" : "en-US";
+  return `${date.toLocaleDateString(currentLocale, optionsDate)} • ${hours}:${minutes} WIB`;
 };
 
 const formatTimeMusic = (time) => {
@@ -264,14 +270,14 @@ const cancelReply = () => {
 
 const submitReply = async () => {
   if (!selectedReplySong.value) {
-    await alertError("Pilih lagu dulu dong!");
+    await alertError(t("global_content.alert.select_song_error"));
     return;
   }
-  const senderName = replyNote.initial_name.trim() || "Teman Rahasia";
+  const senderName = replyNote.initial_name.trim() || t("global_content.defaults.secret_friend");
 
   // Payload disesuaikan dengan Controller baru
   const payload = {
-    content: replyNote.content || "Membalas dengan lagu...",
+    content: replyNote.content || t("global_content.defaults.reply_content"),
     initial_name: senderName,
     music_track_id: selectedReplySong.value.id,
     music_track_name: selectedReplySong.value.name,
@@ -288,7 +294,7 @@ const submitReply = async () => {
 
     if (response.ok) {
       replyNote.initial_name = "";
-      alertSuccess("Balasan terkirim!");
+      alertSuccess(t("global_content.alert.reply_sent"));
       cancelReply();
 
       // Refresh detail note untuk melihat reply baru
@@ -303,7 +309,7 @@ const submitReply = async () => {
     }
   } catch (error) {
     console.error(error);
-    await alertError("Terjadi kesalahan koneksi.");
+    await alertError(t("global_content.alert.connection_error"));
   }
 };
 
@@ -320,9 +326,13 @@ const handleSearch = useDebounceFn(() => fetchNoteList(true), 500);
 
 const handleShare = async () => {
   if (!selectedNote.value) return;
-  const fileName = `pesan-dari-${selectedNote.value.author_name || "user"}`;
-  const title = "Music Note Card";
-  const text = `Dengerin pesan lagu dari ${selectedNote.value.author_name} buat ${selectedNote.recipient} 七`;
+  const fileName = `${t("global_content.share_text.filename_prefix")}${selectedNote.value.author_name || "user"}`;
+  const title = t("global_content.share_text.title");
+  // Menggunakan interpolasi i18n
+  const text = t("global_content.share_text.body", {
+    author: selectedNote.value.author_name,
+    recipient: selectedNote.value.recipient,
+  });
 
   try {
     const file = await generateImageFile(fileName);
@@ -347,7 +357,7 @@ const downloadManual = () => {
   link.click();
   showShareOptions.value = false;
   setTimeout(() => {
-    alertSuccess("Gambar berhasil disimpan ke galeri!");
+    alertSuccess(t("global_content.alert.image_saved"));
   }, 300);
 };
 
@@ -358,7 +368,7 @@ const onCopyLink = async () => {
     await navigator.clipboard.writeText(shareUrl);
     showShareOptions.value = false;
     setTimeout(() => {
-      alertSuccess("Link berhasil disalin!");
+      alertSuccess(t("global_content.alert.link_copied"));
     }, 300);
   } catch (err) {
     console.error("Gagal menyalin link:", err);
@@ -427,7 +437,7 @@ onMounted(async () => {
         v-model:searchQuery="searchQuery"
         v-model:sortBy="sortBy"
         @search="handleSearch"
-        placeholder="Jelajahi pesan dunia..." />
+        :placeholder="$t('global_content.search_placeholder')" />
 
       <div v-if="isLoading" class="relative z-0 columns-1 md:columns-2 lg:columns-3 gap-6 mb-10 space-y-6">
         <div v-for="i in 6" :key="i" class="break-inside-avoid relative">
@@ -449,7 +459,7 @@ onMounted(async () => {
       </div>
 
       <div v-else-if="notes.length === 0" class="w-full text-center text-[#8c8a8a] py-20 text-lg">
-        Belum ada pesan yang dibuat.
+        {{ $t("global_content.empty_state") }}
       </div>
 
       <div v-else class="flex flex-col md:flex-row gap-6 mb-10 items-start w-full">
@@ -486,7 +496,9 @@ onMounted(async () => {
                 :class="`bg-gradient-to-b ${getTheme(note.id).gradient} to-transparent`"
                 class="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"></div>
               <div class="mb-5 relative z-10">
-                <p class="text-[11px] text-[#666] font-bold uppercase tracking-wider mb-1">UNTUK</p>
+                <p class="text-[11px] text-[#666] font-bold uppercase tracking-wider mb-1">
+                  {{ $t("global_content.card.to") }}
+                </p>
                 <h2
                   :class="getTheme(note.id).text_hover"
                   class="text-2xl font-bold text-white transition-colors break-words leading-tight">
@@ -520,13 +532,15 @@ onMounted(async () => {
                     :crossorigin="(note.author_avatar || note.author_photo_url)?.includes('http') ? 'anonymous' : null"
                     class="w-6 h-6 rounded-full border border-[#333] object-cover" />
                   <div class="flex flex-col">
-                    <span class="text-[10px] text-[#666] uppercase font-bold">Dari</span>
+                    <span class="text-[10px] text-[#666] uppercase font-bold">
+                      {{ $t("global_content.card.from") }}
+                    </span>
                     <div class="flex items-center gap-1.5">
                       <span class="text-xs text-[#999] font-medium leading-none">{{ note.author_name }}</span>
                       <span
                         v-if="note.is_admin"
                         class="bg-[#9a203e] text-white text-[9px] px-1.5 py-0.5 rounded-[4px] font-bold uppercase tracking-wider border border-white/10 shadow-[0_0_10px_rgba(154,32,62,0.6)]">
-                        Admin
+                        {{ $t("global_content.card.admin") }}
                       </span>
                     </div>
                   </div>
@@ -536,7 +550,7 @@ onMounted(async () => {
                       v-if="isEdited(note.created_at, note.updated_at)"
                       :class="getTheme(note.id).text"
                       class="italic ml-1 block sm:inline">
-                      (diedit)
+                      {{ $t("global_content.card.edited") }}
                     </span>
                   </span>
                 </div>
@@ -550,7 +564,7 @@ onMounted(async () => {
                       getTheme(note.id).btn_hover,
                     ]"
                     class="w-full py-2 rounded-lg border text-xs font-bold uppercase tracking-widest hover:text-white transition-all flex items-center justify-center gap-2">
-                    BUKA
+                    {{ $t("global_content.card.btn_open") }}
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="14"
@@ -578,7 +592,7 @@ onMounted(async () => {
           @click="loadMore"
           :disabled="isLoadingMore"
           class="bg-transparent font-semibold uppercase hover:underline cursor-pointer disabled:opacity-50 tracking-widest text-sm">
-          {{ isLoadingMore ? "Memuat..." : "Lihat Lebih Banyak" }}
+          {{ isLoadingMore ? $t("global_content.load_more.loading") : $t("global_content.load_more.load") }}
         </button>
       </div>
 
@@ -656,7 +670,7 @@ onMounted(async () => {
                       src="https://cdn.brandfetch.io/idEUKgCNtu/theme/dark/symbol.svg?c=1dxbfHSJFAPEGdCLU4o5B"
                       alt="Deezer"
                       class="w-4 h-4 object-contain filter brightness-0 invert" />
-                    <span>Putar Lagu Penuh</span>
+                    <span>{{ $t("global_content.modal.play_full") }}</span>
                   </a>
                 </div>
               </div>
@@ -679,13 +693,15 @@ onMounted(async () => {
                         class="w-10 h-10 rounded-full border border-white/10 object-cover" />
                     </div>
                     <div>
-                      <p class="text-[10px] text-white/50 uppercase tracking-wide">DARI</p>
+                      <p class="text-[10px] text-white/50 uppercase tracking-wide">
+                        {{ $t("global_content.modal.from") }}
+                      </p>
                       <div class="flex items-center gap-2">
                         <p class="text-sm font-bold text-white">{{ selectedNote?.author_name }}</p>
                         <span
                           v-if="selectedNote?.is_admin"
                           class="bg-[#9a203e] text-white text-[9px] px-1.5 py-0.5 rounded-[4px] font-bold uppercase tracking-wider border border-white/10">
-                          Admin
+                          {{ $t("global_content.card.admin") }}
                         </span>
                       </div>
                     </div>
@@ -704,7 +720,7 @@ onMounted(async () => {
                     <path d="M5 12h14M12 5l7 7-7 7" />
                   </svg>
                   <div class="text-right">
-                    <p class="text-[10px] text-white/50 uppercase tracking-wide">UNTUK</p>
+                    <p class="text-[10px] text-white/50 uppercase tracking-wide">{{ $t("global_content.modal.to") }}</p>
                     <p :class="selectedTheme.text" class="text-sm font-bold">{{ selectedNote?.recipient }}</p>
                   </div>
                 </div>
@@ -731,12 +747,12 @@ onMounted(async () => {
                     <polyline points="12 6 12 12 16 14"></polyline>
                   </svg>
                   <span>
-                    Dikirim: {{ formatDateDetail(selectedNote?.created_at) }}
+                    {{ $t("global_content.modal.sent_at") }} {{ formatDateDetail(selectedNote?.created_at) }}
                     <span
                       v-if="isEdited(selectedNote?.created_at, selectedNote?.updated_at)"
                       :class="selectedTheme.text"
                       class="italic ml-1 font-bold">
-                      (diedit)
+                      {{ $t("global_content.card.edited") }}
                     </span>
                   </span>
                 </div>
@@ -755,14 +771,16 @@ onMounted(async () => {
                         stroke-width="2">
                         <path d="M9 18l6-6-6-6" />
                       </svg>
-                      <span class="truncate">Resonansi Balasan ({{ selectedNote?.replies?.length || 0 }})</span>
+                      <span class="truncate">
+                        {{ $t("global_content.modal.reply_header") }} ({{ selectedNote?.replies?.length || 0 }})
+                      </span>
                     </h3>
 
                     <button
                       v-if="!isReplying"
                       @click="isReplying = true"
                       class="text-[10px] sm:text-xs bg-white/10 hover:bg-white/20 text-white px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-full transition-colors font-semibold whitespace-nowrap shrink-0">
-                      + Balas Lagu
+                      {{ $t("global_content.modal.btn_reply_add") }}
                     </button>
                   </div>
 
@@ -770,7 +788,9 @@ onMounted(async () => {
                     v-if="isReplying"
                     class="bg-black/30 p-4 rounded-xl border border-white/10 mb-6 animate-slide-up">
                     <div class="mb-4 relative">
-                      <label class="text-[10px] text-white/50 font-bold uppercase mb-1 block">Pilih Lagu Balasan</label>
+                      <label class="text-[10px] text-white/50 font-bold uppercase mb-1 block">
+                        {{ $t("global_content.modal.form.label_song") }}
+                      </label>
                       <div
                         v-if="selectedReplySong"
                         class="flex items-center gap-3 bg-white/5 p-2 rounded-lg border border-white/10">
@@ -799,7 +819,7 @@ onMounted(async () => {
                         v-model="replyQuery"
                         @input="handleReplySearchInput"
                         type="text"
-                        placeholder="Ketik judul lagu..."
+                        :placeholder="$t('global_content.modal.form.placeholder_search')"
                         class="w-full bg-black/40 border rounded-lg px-3 py-2 text-xs text-white focus:outline-none transition-colors"
                         :class="selectedTheme.border" />
 
@@ -825,7 +845,9 @@ onMounted(async () => {
                             rel="noopener noreferrer"
                             class="flex items-center gap-1 opacity-50 hover:opacity-100 transition-opacity cursor-pointer group"
                             title="Search powered by Deezer">
-                            <span class="text-[8px] text-white/40 group-hover:text-white/60">Search results by</span>
+                            <span class="text-[8px] text-white/40 group-hover:text-white/60">
+                              {{ $t("global_content.modal.form.search_by") }}
+                            </span>
                             <img
                               src="https://cdn.brandfetch.io/idEUKgCNtu/theme/light/logo.svg?c=1dxbfHSJFAPEGdCLU4o5B"
                               class="h-2.5 w-auto grayscale group-hover:grayscale-0 transition-all"
@@ -836,22 +858,26 @@ onMounted(async () => {
                     </div>
 
                     <div class="mb-2">
-                      <label class="text-[10px] text-white/50 font-bold uppercase mb-1 block">Pesan (Opsional)</label>
+                      <label class="text-[10px] text-white/50 font-bold uppercase mb-1 block">
+                        {{ $t("global_content.modal.form.label_message") }}
+                      </label>
                       <textarea
                         v-model="replyNote.content"
                         rows="2"
-                        placeholder="Tulis pesan singkat..."
+                        :placeholder="$t('global_content.modal.form.placeholder_message')"
                         class="w-full bg-black/40 border rounded-lg px-3 py-2 text-xs text-white focus:outline-none transition-colors resize-none"
                         :class="selectedTheme.border"></textarea>
                     </div>
 
                     <div class="mb-4">
-                      <label class="text-[10px] text-white/50 font-bold uppercase mb-1 block">Dari Siapa?</label>
+                      <label class="text-[10px] text-white/50 font-bold uppercase mb-1 block">
+                        {{ $t("global_content.modal.form.label_sender") }}
+                      </label>
                       <div class="flex gap-2">
                         <input
                           v-model="replyNote.initial_name"
                           type="text"
-                          placeholder="Ketik nama (atau kosongkan utk Anonim)"
+                          :placeholder="$t('global_content.modal.form.placeholder_sender')"
                           class="flex-1 bg-black/40 border rounded-lg px-3 py-2 text-xs text-white focus:outline-none transition-colors"
                           :class="selectedTheme.border" />
                       </div>
@@ -861,13 +887,13 @@ onMounted(async () => {
                       <button
                         @click="cancelReply"
                         class="flex-1 py-2 text-[10px] uppercase font-bold text-white/40 hover:text-white border border-white/5 rounded-lg">
-                        Batal
+                        {{ $t("global_content.modal.form.btn_cancel") }}
                       </button>
                       <button
                         @click="submitReply"
                         class="flex-1 py-2 text-[10px] uppercase font-bold text-white rounded-lg shadow-lg"
                         :class="selectedTheme.modal_btn">
-                        Kirim Balasan
+                        {{ $t("global_content.modal.form.btn_submit") }}
                       </button>
                     </div>
                   </div>
@@ -876,14 +902,14 @@ onMounted(async () => {
                     <div
                       v-if="isLoadingDetail"
                       class="text-center py-6 text-white/30 text-xs italic animate-pulse border border-dashed border-white/10 rounded-xl">
-                      Memuat balasan terbaru...
+                      {{ $t("global_content.modal.loading_replies") }}
                     </div>
 
                     <template v-else>
                       <div
                         v-if="!selectedNote?.replies || selectedNote.replies.length === 0"
                         class="text-center py-4 text-white/20 text-xs italic">
-                        Belum ada yang membalas dengan lagu.
+                        {{ $t("global_content.modal.empty_replies") }}
                       </div>
 
                       <div
@@ -922,7 +948,10 @@ onMounted(async () => {
                           <p v-if="reply.content" class="text-[10px] text-white/60 italic truncate mt-0.5">
                             "{{ reply.content }}"
                           </p>
-                          <p class="text-[9px] text-white/30 mt-1">Dari: {{ reply.author_name || "Anonim" }}</p>
+                          <p class="text-[9px] text-white/30 mt-1">
+                            {{ $t("global_content.modal.reply_from") }}
+                            {{ reply.author_name || $t("global_content.defaults.anonymous") }}
+                          </p>
                         </div>
 
                         <button
@@ -948,8 +977,8 @@ onMounted(async () => {
                       </div>
                       <div v-if="selectedNote?.replies?.length >= 10" class="text-center py-4">
                         <p class="text-[10px] text-white/30 italic">
-                          Menampilkan 25 balasan terbaru.
-                          <span class="block">Pesan ini sangat populer! 🔥</span>
+                          {{ $t("global_content.modal.limit_info") }}
+                          <span class="block">{{ $t("global_content.modal.limit_sub") }}</span>
                         </p>
                       </div>
                     </template>
@@ -965,7 +994,7 @@ onMounted(async () => {
                       'hover:text-white hover:border-transparent',
                     ]"
                     class="flex-1 py-3 rounded-[12px] border font-bold text-xs uppercase tracking-widest transition-all cursor-pointer">
-                    Tutup
+                    {{ $t("global_content.modal.btn_close") }}
                   </button>
                   <button
                     @click="handleShare"
@@ -975,7 +1004,7 @@ onMounted(async () => {
                       isDownloading ? 'opacity-70 cursor-wait' : 'hover:brightness-110 cursor-pointer',
                     ]"
                     class="flex-1 py-3 rounded-[12px] text-white font-bold text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2 shadow-lg">
-                    <span v-if="isDownloading">Memproses...</span>
+                    <span v-if="isDownloading">{{ $t("global_content.modal.processing") }}</span>
                     <span v-else class="flex items-center gap-2">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -993,7 +1022,7 @@ onMounted(async () => {
                         <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
                         <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
                       </svg>
-                      Bagikan
+                      {{ $t("global_content.modal.btn_share") }}
                     </span>
                   </button>
                 </div>
@@ -1041,32 +1070,40 @@ onMounted(async () => {
             @click.self="closeShareOptions">
             <div
               class="bg-[#1c1516] border border-[#333] rounded-t-[32px] sm:rounded-3xl p-6 w-full max-w-sm shadow-2xl relative animate-slide-up">
-              <h3 class="text-white text-lg font-bold mb-2 text-center">Bagikan Pesan</h3>
+              <h3 class="text-white text-lg font-bold mb-2 text-center">
+                {{ $t("global_content.share_modal.title") }}
+              </h3>
               <div class="grid grid-cols-1 gap-3 mt-6">
                 <button
                   v-if="canNativeShare"
                   @click="onNativeShare"
                   class="flex items-center gap-4 p-4 rounded-2xl bg-[#9a203e]/10 border border-[#9a203e]/20 hover:bg-[#9a203e]/20 transition-all text-left">
                   <span class="text-2xl">📱</span>
-                  <div><p class="text-sm font-bold text-[#f87171]">Bagikan ke Aplikasi</p></div>
+                  <div>
+                    <p class="text-sm font-bold text-[#f87171]">{{ $t("global_content.share_modal.app") }}</p>
+                  </div>
                 </button>
                 <button
                   @click="downloadManual"
                   class="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-left">
                   <span class="text-2xl">💾</span>
-                  <div><p class="text-sm font-bold text-white">Simpan ke Galeri</p></div>
+                  <div>
+                    <p class="text-sm font-bold text-white">{{ $t("global_content.share_modal.gallery") }}</p>
+                  </div>
                 </button>
                 <button
                   @click="onCopyLink"
                   class="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-left">
                   <span class="text-2xl">🔗</span>
-                  <div><p class="text-sm font-bold text-white">Salin Link Pesan</p></div>
+                  <div>
+                    <p class="text-sm font-bold text-white">{{ $t("global_content.share_modal.link") }}</p>
+                  </div>
                 </button>
               </div>
               <button
                 @click="closeShareOptions"
                 class="w-full mt-6 py-3 text-xs font-bold text-white/30 hover:text-white transition-colors uppercase tracking-widest">
-                Batal
+                {{ $t("global_content.share_modal.cancel") }}
               </button>
             </div>
           </div>

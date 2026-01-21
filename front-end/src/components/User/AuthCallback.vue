@@ -8,7 +8,9 @@ import { userDetail } from "../../lib/api/UserApi";
 // 👇 1. IMPORT 'store' (yang reactive), BUKAN 'userState'
 import { store } from "../../lib/store";
 import { alertError } from "../../lib/alert";
+import { useI18n } from "vue-i18n"; // Import i18n
 
+const { t } = useI18n(); // Inisialisasi
 const router = useRouter();
 const route = useRoute();
 const tokenStorage = useLocalStorage("token", "");
@@ -49,7 +51,8 @@ onMounted(async () => {
 
       // Validasi Data
       if (!userData || !userData.id) {
-        throw new Error("Data user korup/tidak valid.");
+        // Menggunakan t() untuk error message
+        throw new Error(t("auth_callback.error_data"));
       }
 
       // 👇 2. GUNAKAN 'setUser' DARI STORE.JS
@@ -66,11 +69,13 @@ onMounted(async () => {
       window.location.href = "/dashboard/global";
     } catch (err) {
       console.error("Callback Error:", err);
-      await alertError("Gagal login: " + err.message);
+      // Menggunakan t() dengan parameter message
+      await alertError(t("auth_callback.error_login_prefix", { message: err.message }));
       router.push("/login");
     }
   } else if (error) {
-    await alertError("Login Gagal: " + error);
+    // Menggunakan t() dengan parameter error
+    await alertError(t("auth_callback.error_general_prefix", { error: error }));
     router.push("/login");
   } else {
     router.push("/login");
@@ -82,7 +87,7 @@ onMounted(async () => {
   <div class="min-h-screen flex items-center justify-center bg-[#1c1516] text-white">
     <div class="flex flex-col items-center gap-4">
       <div class="w-10 h-10 border-4 border-[#9a203e] border-t-transparent rounded-full animate-spin"></div>
-      <p class="text-[#e5e5e5] text-sm animate-pulse">Menyiapkan profil Anda...</p>
+      <p class="text-[#e5e5e5] text-sm animate-pulse">{{ $t("auth_callback.processing") }}</p>
     </div>
   </div>
 </template>

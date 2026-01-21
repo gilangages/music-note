@@ -4,6 +4,9 @@ import { getAllNotifications, markNotificationsRead, markAllNotificationsRead } 
 import { useLocalStorage } from "@vueuse/core";
 import { formatTime } from "../../lib/dateFormatter";
 import { alertConfirm } from "../../lib/alert";
+import { useI18n } from "vue-i18n"; // 1. Import i18n
+
+const { t } = useI18n(); // 2. Inisialisasi
 
 const token = useLocalStorage("token", "");
 const notifications = ref([]);
@@ -51,7 +54,8 @@ const handleMarkRead = async (notifId) => {
 };
 
 const handleMarkAllRead = async () => {
-  const confirmed = await alertConfirm("Tandai semua notifikasi (termasuk di halaman lain) sebagai sudah dibaca?");
+  // Gunakan i18n untuk konfirmasi alert
+  const confirmed = await alertConfirm(t("notifications_page.alert.confirm_mark_all"));
 
   if (!confirmed) return;
 
@@ -82,24 +86,24 @@ onMounted(() => {
   <div class="max-w-4xl mx-auto p-6 min-h-screen text-[#e5e5e5]">
     <div class="flex justify-between items-center mb-8 pb-4 border-b border-[#4b1a1a]">
       <div>
-        <h1 class="text-2xl font-bold">Semua Notifikasi</h1>
-        <p class="text-sm text-gray-400 mt-1">Riwayat aktivitas dan pemberitahuan Anda.</p>
+        <h1 class="text-2xl font-bold">{{ $t("notifications_page.title") }}</h1>
+        <p class="text-sm text-gray-400 mt-1">{{ $t("notifications_page.subtitle") }}</p>
       </div>
       <button
         @click="handleMarkAllRead"
         class="px-4 py-2 text-xs font-medium bg-[#2c0f0f] border border-[#4b1a1a] rounded-lg hover:bg-[#4b1a1a] hover:text-white transition text-red-400">
-        ✓ Tandai Semua Dibaca
+        {{ $t("notifications_page.mark_all_read") }}
       </button>
     </div>
 
     <div v-if="loading" class="py-20 text-center">
       <div class="animate-spin w-8 h-8 border-2 border-red-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-      <p class="text-gray-500 text-sm">Memuat notifikasi...</p>
+      <p class="text-gray-500 text-sm">{{ $t("notifications_page.loading") }}</p>
     </div>
 
     <div v-else-if="notifications.length === 0" class="py-20 text-center bg-[#1e1e1e] rounded-xl border border-[#333]">
       <span class="text-4xl block mb-2">📭</span>
-      <p class="text-gray-400">Tidak ada notifikasi untuk ditampilkan.</p>
+      <p class="text-gray-400">{{ $t("notifications_page.empty_state") }}</p>
     </div>
 
     <div v-else class="space-y-3">
@@ -139,7 +143,7 @@ onMounted(() => {
           <div class="flex-1">
             <div class="flex justify-between items-start">
               <h3 :class="!notif.read_at ? 'text-white font-bold' : 'text-gray-400 font-medium'" class="text-base">
-                {{ notif.data.title || "Info Baru" }}
+                {{ notif.data.title || $t("notifications_page.new_info_default") }}
               </h3>
               <span class="text-xs text-gray-500 whitespace-nowrap ml-2">
                 {{ formatTime(notif.created_at) }}
@@ -153,7 +157,7 @@ onMounted(() => {
             <div
               v-if="notif.data.reason"
               class="mt-3 text-xs text-red-300 bg-red-900/20 border border-red-500/20 p-2 rounded-md inline-block">
-              <span class="font-bold mr-1">⚠️ Alasan Admin:</span>
+              <span class="font-bold mr-1">{{ $t("notifications_page.admin_reason") }}</span>
               {{ notif.data.reason }}
             </div>
 
@@ -161,7 +165,9 @@ onMounted(() => {
               v-if="notif.data.appeal_message"
               class="mt-3 p-3 rounded bg-[#2c1a1a] border border-[#4b1a1a] relative w-full sm:w-auto inline-block">
               <p class="text-xs text-gray-300 italic">
-                <span class="font-bold text-[#9a203e] not-italic">Pesan User:</span>
+                <span class="font-bold text-[#9a203e] not-italic">
+                  {{ $t("notifications_page.user_message_label") }}
+                </span>
                 "{{ notif.data.appeal_message }}"
               </p>
             </div>
@@ -178,18 +184,18 @@ onMounted(() => {
         @click="fetchNotifs(pagination.current_page - 1)"
         class="flex items-center justify-center gap-2 px-3 py-2 bg-[#2c0f0f] border border-[#4b1a1a] rounded text-sm text-gray-300 hover:bg-[#4b1a1a] disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap transition-colors">
         <span>&larr;</span>
-        <span>Sebelumnya</span>
+        <span>{{ $t("notifications_page.btn_prev") }}</span>
       </button>
 
       <span class="text-xs text-gray-500 mx-2 text-center">
-        Hal {{ pagination.current_page }} / {{ pagination.last_page }}
+        {{ $t("notifications_page.pagination_info", { current: pagination.current_page, last: pagination.last_page }) }}
       </span>
 
       <button
         :disabled="!pagination.next_page_url"
         @click="fetchNotifs(pagination.current_page + 1)"
         class="flex items-center justify-center gap-2 px-3 py-2 bg-[#2c0f0f] border border-[#4b1a1a] rounded text-sm text-gray-300 hover:bg-[#4b1a1a] disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap transition-colors">
-        <span>Berikutnya</span>
+        <span>{{ $t("notifications_page.btn_next") }}</span>
         <span>&rarr;</span>
       </button>
     </div>

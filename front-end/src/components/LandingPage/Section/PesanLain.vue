@@ -8,6 +8,7 @@ import { useNow } from "@vueuse/core";
 import Swal from "sweetalert2";
 import { computed } from "vue";
 import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n"; // <--- 1. Import ini
 
 //useTheme
 const { getTheme, getSelectedTheme } = useCardTheme();
@@ -27,6 +28,7 @@ const previewImageUrl = ref("");
 
 const now = useNow({ interval: 60000 });
 const router = useRouter();
+const { t } = useI18n();
 
 // Helper computed untuk theme modal
 const selectedTheme = computed(() => {
@@ -87,14 +89,14 @@ const handleReplyClick = () => {
   // Biarkan modal tetap terbuka di background SweetAlert.
 
   Swal.fire({
-    title: "Ingin membalas pesan ini?",
-    text: "Kamu perlu login atau daftar dulu untuk mengirim lagu balasan! 🎵",
+    title: t("pesan_lain.modal.alert_title"), // <--- Ganti string manual
+    text: t("pesan_lain.modal.alert_text"), // <--- Ganti string manual
     icon: "info",
     showCancelButton: true,
     confirmButtonColor: "#9a203e",
     cancelButtonColor: "#333",
-    confirmButtonText: "Gas, Login!",
-    cancelButtonText: "Nanti dulu",
+    confirmButtonText: t("pesan_lain.modal.alert_confirm"),
+    cancelButtonText: t("pesan_lain.modal.alert_cancel"),
     // --- TAMBAHAN PENTING: Fix Z-Index ---
     didOpen: () => {
       const container = Swal.getContainer();
@@ -197,11 +199,13 @@ onMounted(async () => {
 <template>
   <div class="mt-[4em] relative font-jakarta">
     <div class="flex justify-between items-center text-[#e5e5e5] mx-[2em] mb-[1em]">
-      <h2 class="text-[18px] sm:text-[20px] font-semibold">Dengarkan Pesan Pengguna Lain</h2>
+      <h2 class="text-[18px] sm:text-[20px] font-semibold">{{ $t("pesan_lain.header_title") }}</h2>
       <RouterLink
         to="/login"
         class="hidden sm:flex gap-1 items-center cursor-pointer hover:opacity-80 decoration-0 no-underline">
-        <span class="uppercase text-[12px] font-semibold text-[#e5e5e5] hover:underline">Lihat semua pesan</span>
+        <span class="uppercase text-[12px] font-semibold text-[#e5e5e5] hover:underline">
+          {{ $t("pesan_lain.view_all") }}
+        </span>
         <img src="../../../assets/img/arrow-right.svg" class="w-[14px]" />
       </RouterLink>
     </div>
@@ -237,7 +241,9 @@ onMounted(async () => {
               class="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"></div>
 
             <div class="mb-5 relative z-10">
-              <p class="text-[11px] text-[#666] font-bold uppercase tracking-wider mb-1">KEPADA</p>
+              <p class="text-[11px] text-[#666] font-bold uppercase tracking-wider mb-1">
+                {{ $t("pesan_lain.card.to") }}
+              </p>
               <h2
                 :class="getTheme(note.id).text_hover"
                 class="text-2xl font-bold text-white transition-colors truncate">
@@ -270,13 +276,13 @@ onMounted(async () => {
                   :src="note.author_avatar || note.author_photo_url"
                   class="w-6 h-6 rounded-full border border-[#333] object-cover" />
                 <div class="flex flex-col">
-                  <span class="text-[10px] text-[#666] uppercase font-bold">Dari</span>
+                  <span class="text-[10px] text-[#666] uppercase font-bold">{{ $t("pesan_lain.card.from") }}</span>
                   <div class="flex items-center gap-1.5">
                     <span class="text-xs text-[#999] font-medium leading-none">{{ note.author_name }}</span>
                     <span
                       v-if="note.is_admin"
                       class="bg-[#9a203e] text-white text-[9px] px-1.5 py-0.5 rounded-[4px] font-bold uppercase tracking-wider border border-white/10 shadow-[0_0_10px_rgba(154,32,62,0.6)]">
-                      Admin
+                      {{ $t("pesan_lain.card.admin") }}
                     </span>
                   </div>
                 </div>
@@ -288,7 +294,7 @@ onMounted(async () => {
                       v-if="isEdited(note.created_at, note.updated_at)"
                       :class="getTheme(note.id).text"
                       class="italic ml-1 block sm:inline">
-                      (diedit)
+                      {{ $t("pesan_lain.card.edited") }}
                     </span>
                   </span>
 
@@ -332,7 +338,9 @@ onMounted(async () => {
 
     <div class="flex justify-end mr-[2em] sm:hidden mt-2 mb-10">
       <RouterLink to="/login" class="flex gap-1 items-center cursor-pointer hover:opacity-80 decoration-0 no-underline">
-        <span class="uppercase text-[10px] font-semibold text-[#e5e5e5] hover:underline">Lihat semua pesan</span>
+        <span class="uppercase text-[10px] font-semibold text-[#e5e5e5] hover:underline">
+          {{ $t("pesan_lain.view_all") }}
+        </span>
         <img src="../../../assets/img/arrow-right.svg" class="w-[12px]" />
       </RouterLink>
     </div>
@@ -396,7 +404,7 @@ onMounted(async () => {
                       :style="{ width: `${(currentTime / 30) * 100}%` }"></div>
                   </div>
                   <div class="flex justify-between text-[10px] text-white/50 mt-1 font-mono">
-                    <span>Preview: {{ formatTimeMusic(currentTime) }}</span>
+                    <span>{{ $t("pesan_lain.modal.preview") }}: {{ formatTimeMusic(currentTime) }}</span>
                     <span>0:30</span>
                   </div>
                 </div>
@@ -411,7 +419,7 @@ onMounted(async () => {
                     src="https://cdn.brandfetch.io/idEUKgCNtu/theme/dark/symbol.svg?c=1dxbfHSJFAPEGdCLU4o5B"
                     alt="Deezer"
                     class="w-4 h-4 object-contain filter brightness-0 invert" />
-                  <span>Putar Lagu Penuh</span>
+                  <span>{{ $t("pesan_lain.modal.play_full") }}</span>
                 </a>
               </div>
             </div>
@@ -427,7 +435,9 @@ onMounted(async () => {
                       class="w-10 h-10 rounded-full border border-white/10 object-cover transition-transform group-hover/avatar:scale-110" />
                   </div>
                   <div>
-                    <p class="text-[10px] text-white/50 uppercase tracking-wide">DARI</p>
+                    <p class="text-[10px] text-white/50 uppercase tracking-wide">
+                      {{ $t("pesan_lain.modal.from_label") }}
+                    </p>
                     <div class="flex items-center gap-2">
                       <p class="text-sm font-bold text-white">{{ selectedNote?.author_name }}</p>
                       <span
@@ -452,7 +462,7 @@ onMounted(async () => {
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
                 <div class="text-right">
-                  <p class="text-[10px] text-white/50 uppercase tracking-wide">UNTUK</p>
+                  <p class="text-[10px] text-white/50 uppercase tracking-wide">{{ $t("pesan_lain.modal.to_label") }}</p>
                   <p :class="selectedTheme.text" class="text-sm font-bold">{{ selectedNote?.recipient }}</p>
                 </div>
               </div>
@@ -478,12 +488,12 @@ onMounted(async () => {
                   <polyline points="12 6 12 12 16 14"></polyline>
                 </svg>
                 <span>
-                  Dikirim: {{ formatDateDetail(selectedNote?.created_at) }}
+                  {{ $t("pesan_lain.modal.sent_at") }} {{ formatDateDetail(selectedNote?.created_at) }}
                   <span
                     v-if="isEdited(selectedNote?.created_at, selectedNote?.updated_at)"
                     :class="selectedTheme.text"
                     class="italic ml-1 font-bold">
-                    (diedit)
+                    {{ $t("pesan_lain.card.edited") }}
                   </span>
                 </span>
               </div>
@@ -502,13 +512,15 @@ onMounted(async () => {
                       stroke-width="2">
                       <path d="M9 18l6-6-6-6" />
                     </svg>
-                    <span class="truncate">Resonansi Balasan ({{ selectedNote?.replies?.length || 0 }})</span>
+                    <span class="truncate">
+                      {{ $t("pesan_lain.modal.replies_title") }} ({{ selectedNote?.replies?.length || 0 }})
+                    </span>
                   </h3>
 
                   <button
                     @click="handleReplyClick"
                     class="text-[10px] sm:text-xs bg-white/10 hover:bg-white/20 text-white px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-full transition-colors font-semibold whitespace-nowrap shrink-0">
-                    + Balas Lagu
+                    {{ $t("pesan_lain.modal.reply_btn") }}
                   </button>
                 </div>
 
@@ -516,7 +528,7 @@ onMounted(async () => {
                   <div
                     v-if="!selectedNote?.replies || selectedNote.replies.length === 0"
                     class="text-center py-4 text-white/20 text-xs italic rounded-lg">
-                    Belum ada yang membalas dengan lagu.
+                    {{ $t("pesan_lain.modal.no_replies") }}
                   </div>
 
                   <div
@@ -554,14 +566,17 @@ onMounted(async () => {
                       <p v-if="reply.content" class="text-[10px] text-white/60 italic truncate mt-0.5">
                         "{{ reply.content }}"
                       </p>
-                      <p class="text-[9px] text-white/30 mt-1">Dari: {{ reply.author_name || "Anonim" }}</p>
+                      <p class="text-[9px] text-white/30 mt-1">
+                        {{ $t("pesan_lain.modal.from_label") }}:
+                        {{ reply.author_name || $t("pesan_lain.modal.anonymous") }}
+                      </p>
                     </div>
                   </div>
 
                   <div v-if="selectedNote?.replies?.length >= 5" class="text-center py-4">
                     <p class="text-[10px] text-white/30 italic">
-                      Menampilkan 5 balasan teratas.
-                      <span class="block">Pesan ini sangat populer! 🔥</span>
+                      {{ $t("pesan_lain.modal.replies_limit_1") }}
+                      <span class="block">{{ $t("pesan_lain.modal.replies_limit_2") }}</span>
                     </p>
                   </div>
                 </div>
@@ -576,7 +591,7 @@ onMounted(async () => {
                     'hover:text-white hover:border-transparent',
                   ]"
                   class="w-full py-3 rounded-[12px] border font-bold text-xs uppercase tracking-widest transition-all cursor-pointer">
-                  Tutup Pesan
+                  {{ $t("pesan_lain.modal.close") }}
                 </button>
               </div>
             </div>
@@ -611,7 +626,9 @@ onMounted(async () => {
               :src="previewImageUrl"
               class="w-auto h-auto max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
               @click.stop />
-            <p class="text-white/50 text-sm tracking-widest uppercase font-bold mt-4" @click.stop>Foto Profil</p>
+            <p class="text-white/50 text-sm tracking-widest uppercase font-bold mt-4" @click.stop>
+              {{ $t("pesan_lain.preview.profile_photo") }}
+            </p>
           </div>
         </div>
       </Transition>

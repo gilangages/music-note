@@ -1,100 +1,100 @@
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue"; // Import computed
+import { useI18n } from "vue-i18n"; // Import useI18n
 
-const faqs = ref([
+const { t } = useI18n(); // Inisialisasi
+
+// --- UBAH DARI REF BIASA KE COMPUTED ---
+// Kita bungkus array di dalam computed agar saat bahasa berubah, array ini dibuat ulang
+const faqsData = computed(() => [
   {
-    question: "Apakah saya harus menggunakan nama asli?",
-    answer:
-      "Tidak harus, senyamannya kamu saja. Kamu boleh pakai nama asli jika ingin temanmu tahu itu kamu, atau gunakan inisial/nama samaran jika ingin lebih privat dan misterius.",
+    question: t("faq.q1"),
+    answer: t("faq.a1"),
     open: false,
   },
   {
-    question: "Bagaimana cara membalas pesan yang saya suka?",
-    answer:
-      "Di sini musik adalah bahasa utamanya. Kamu bisa merespon pesan dengan mengirimkan <strong>Lagu Balasan</strong> via Deezer yang mewakili perasaanmu, opsional dengan pesan teks singkat.",
+    question: t("faq.q2"),
+    answer: t("faq.a2"),
     open: false,
   },
   {
-    question: "Apakah Admin bisa melihat siapa pengirim pesan?",
-    answer:
-      "<strong>Tidak.</strong> Kami menerapkan sistem <em>Blind Moderation</em>. Saat meninjau pesan, identitas pengirim disembunyikan dari moderator. Kami hanya menilai isi konten, bukan orangnya.",
+    question: t("faq.q3"),
+    answer: t("faq.a3"),
     open: false,
   },
   {
-    question: "Bagaimana jika saya menemukan pesan tidak pantas?",
-    answer:
-      "Kami menerapkan <strong>Filter Kata Otomatis</strong> saat pembuatan pesan. Namun jika masih ada konten negatif yang lolos, kamu bisa melaporkannya lewat formulir di menu <strong>About</strong> (Footer). Pilih kategori <strong>'Lapor Konten'</strong> dan tim kami akan segera menindaklanjutinya.",
+    question: t("faq.q4"),
+    answer: t("faq.a4"),
     open: false,
   },
   {
-    question: "Kenapa pesan saya tiba-tiba hilang?", // FAQ PENTING (Transparansi Admin)
-    answer:
-      "Demi kenyamanan bersama, Admin memoderasi konten secara aktif. Jika pesanmu hilang, silakan cek menu <strong>Notifikasi</strong>. Sistem kami pasti mengirimkan info alasan penghapusan pesan tersebut.",
+    question: t("faq.q5"),
+    answer: t("faq.a5"),
     open: false,
   },
   {
-    question: "Kenapa saya tidak bisa membalas 'reply' orang lain?",
-    answer:
-      "Kami menerapkan konsep <strong>'One-Way Tribute'</strong>. Tujuannya agar interaksi tetap sederhana, fokus pada apresiasi lagu, dan menghindari debat panjang yang tidak perlu.",
+    question: t("faq.q6"),
+    answer: t("faq.a6"),
     open: false,
   },
   {
-    question: "Apakah saya perlu akun Premium untuk memutar lagu?",
-    answer:
-      "Tidak perlu! Berkat integrasi Deezer, siapa saja bisa mendengarkan cuplikan (preview) lagu selama 30 detik secara gratis tanpa perlu login atau berlangganan aplikasi musik apapun.",
+    question: t("faq.q7"),
+    answer: t("faq.a7"),
     open: false,
   },
   {
-    question: "Kenapa lagu hanya berputar selama 30 detik?",
-    answer:
-      "Ini adalah standar internasional untuk <strong>Audio Preview</strong> yang diizinkan oleh label musik secara gratis. Karena Resonate bukan aplikasi streaming berbayar (seperti Spotify/Deezer Premium), kami hanya diperbolehkan memutar cuplikan 30 detik agar tetap menghargai hak cipta musisi.",
+    question: t("faq.q8"),
+    answer: t("faq.a8"),
     open: false,
   },
   {
-    question: "Kenapa lagu yang saya cari tidak ditemukan?",
-    answer:
-      "Koleksi lagu di Resonate terhubung langsung secara <em>real-time</em> dengan database <strong>Deezer</strong>. Jika lagu favoritmu tidak muncul, kemungkinan besar lagu tersebut memang belum tersedia di katalog mereka. Hal ini di luar kendali kami, mohon pengertiannya ya!",
+    question: t("faq.q9"),
+    answer: t("faq.a9"),
     open: false,
   },
   {
-    question: "Kenapa menggunakan Deezer, bukan Spotify?",
-    answer:
-      "Kami mengerti bahwa Spotify adalah platform favorit banyak orang. Namun saat ini, akses integrasi baru sedang <strong>ditangguhkan sementara</strong> oleh pihak Spotify untuk pemeliharaan sistem. <br><br>Agar fitur preview lagu tetap berjalan lancar, saat ini kami menggunakan Deezer. Tenang saja! Jika akses Spotify sudah dibuka kembali, kami berencana untuk <strong>mendukung kedua platform sekaligus</strong> agar pencarian musikmu makin maksimal dan tanpa batas.",
+    question: t("faq.q10"),
+    answer: t("faq.a10"),
     open: false,
   },
   {
-    question: "Akun saya dibatasi/banned, apa solusinya?", // FAQ PENTING (Fitur Appeal)
-    answer:
-      "Kami menindak tegas pelanggaran komunitas. Namun jika kamu merasa sanksi ini keliru, kamu bisa mengajukan <strong>Banding (Appeal)</strong> langsung lewat aplikasi. Tim kami akan meninjau ulang status akunmu.",
+    question: t("faq.q11"),
+    answer: t("faq.a11"),
     open: false,
   },
   {
-    question: "Bisakah saya mengubah tampilan atau menghapus akun?",
-    answer:
-      "Tentu. Kamu bisa mengubah tema kartu dan foto profil (avatar) sesuka hati. Jika ingin berhenti, tersedia juga opsi untuk menghapus akun secara permanen di pengaturan profil.",
+    question: t("faq.q12"),
+    answer: t("faq.a12"),
     open: false,
   },
 ]);
 
+// --- TRIK PENTING UNTUK STATE 'OPEN' ---
+// Karena computed itu 'read-only' (tidak bisa diubah langsung nilai .open = true),
+// kita butuh state terpisah untuk menyimpan index mana yang sedang terbuka.
+const openIndex = ref(null); // Menyimpan index yang sedang dibuka (misal: 0, 1, atau null)
+
 const toggleFaq = (index) => {
-  faqs.value.forEach((item, i) => {
-    if (i === index) {
-      item.open = !item.open;
-    } else {
-      item.open = false;
-    }
-  });
+  if (openIndex.value === index) {
+    openIndex.value = null; // Tutup jika diklik lagi
+  } else {
+    openIndex.value = index; // Buka index baru
+  }
 };
 </script>
 
 <template>
   <div class="p-[2em] max-w-4xl mx-auto">
-    <h2 class="text-[#e5e5e5] text-[24px] font-semibold text-center mb-2">Pertanyaan Umum</h2>
-    <p class="text-[#8c8a8a] text-center mb-10 text-sm">Masih bingung? Cari tahu jawabannya di sini.</p>
+    <h2 class="text-[#e5e5e5] text-[24px] font-semibold text-center mb-2">
+      {{ $t("faq.header_title") }}
+    </h2>
+    <p class="text-[#8c8a8a] text-center mb-10 text-sm">
+      {{ $t("faq.header_subtitle") }}
+    </p>
 
     <div class="space-y-4">
       <div
-        v-for="(faq, index) in faqs"
+        v-for="(faq, index) in faqsData"
         :key="index"
         class="border border-white/10 rounded-xl overflow-hidden bg-white/[0.02] transition-colors duration-300 hover:border-white/20">
         <button
@@ -102,13 +102,13 @@ const toggleFaq = (index) => {
           class="w-full flex items-center justify-between p-5 text-left focus:outline-none group cursor-pointer">
           <span
             class="text-[#e5e5e5] font-medium transition-colors duration-300 group-hover:text-[#9a203e]"
-            :class="{ 'text-[#9a203e]': faq.open }">
+            :class="{ 'text-[#9a203e]': openIndex === index }">
             {{ faq.question }}
           </span>
 
           <span
             class="text-white/50 transition-transform duration-300 transform"
-            :class="{ 'rotate-180 text-[#9a203e]': faq.open }">
+            :class="{ 'rotate-180 text-[#9a203e]': openIndex === index }">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path
                 fill-rule="evenodd"
@@ -120,7 +120,7 @@ const toggleFaq = (index) => {
 
         <div
           class="grid transition-[grid-template-rows] duration-300 ease-out"
-          :class="faq.open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'">
+          :class="openIndex === index ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'">
           <div class="overflow-hidden">
             <div class="px-5 pb-5 text-[#8c8a8a] text-sm leading-relaxed">
               <span v-html="faq.answer"></span>

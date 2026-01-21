@@ -1,0 +1,525 @@
+{
+  "nav": {
+    "language": "Language",
+    "features": "Features",
+    "explore": "Explore",
+    "faq": "FAQ",
+    "register": "Register ",
+    "login": "Login",
+    "dashboard_explore": "Discover",
+    "my_messages": "My Messages",
+    "profile": "Edit Profile",
+    "admin": "Admin Panel",
+    "logout": "Log out"
+  },
+  "hero": {
+    "highlight": "Express Your Feelings Through Melody!",
+    "title": "Write your message, pin the perfect song, and let the world listen.",
+    "cta": "Start Writing"
+  },
+  "features": {
+    "header": "Key Features",
+    "anonim_title": "Anonymous Mode",
+    "anonim_desc": "Want to convey feelings to someone but don't want your identity known? Use anonymous mode (initials) so you can share freely without worry.",
+    "deezer_title": "Deezer Library",
+    "deezer_desc": "Discover millions of songs from Deezer. Pin the perfect song and let others hear the snippet.",
+    "reply_title": "Reply with Song",
+    "reply_desc": "Words aren't enough? Reply to others' vents with the song that best represents your feelings.",
+    "personal_title": "Personal Space",
+    "personal_desc": "Full control in your hands. Edit typos or delete messages whenever you want.",
+    "share_title": "Share to Story",
+    "share_desc": "Want to share your message? Download the message as an aesthetic image with just one click.",
+    "theme_title": "Themes & Customization",
+    "theme_desc": "Express your mood. Change the message card color theme as you like so it never looks boring.",
+    "mod_title": "Objective Moderation",
+    "mod_desc": "Our moderation system works fairly. Content review is done without seeing the sender's identity, so your privacy is 100% protected.",
+    "help_title": "Help Center",
+    "help_desc": "Blocked by mistake? Don't worry, you can easily file an appeal through the automatically available form.",
+    "access_title": "Lightning Access",
+    "access_desc": "Login with Google account in seconds. No hassle filling out forms, write and explore messages immediately."
+  },
+  "pesan_lain": {
+    "header_title": "Listen to Others' Messages",
+    "view_all": "View all messages",
+    "card": {
+      "to": "TO",
+      "from": "From",
+      "admin": "Admin",
+      "edited": "(edited)"
+    },
+    "modal": {
+      "anonymous": "Anonymous",
+      "alert_title": "Want to reply to this message?",
+      "alert_text": "You need to login or register first to send a song reply! 🎵",
+      "alert_confirm": "Let's Login!",
+      "alert_cancel": "Not now",
+      "preview": "Preview",
+      "play_full": "Play Full Song",
+      "from_label": "FROM",
+      "to_label": "TO",
+      "sent_at": "Sent:",
+      "replies_title": "Reply Resonance",
+      "reply_btn": "+ Reply with Song",
+      "no_replies": "No one has replied with a song yet.",
+      "replies_limit_1": "Showing top 5 replies.",
+      "replies_limit_2": "This message is on fire! 🔥",
+      "close": "Close Message"
+    },
+    "preview": {
+      "profile_photo": "Profile Photo"
+    }
+  },
+  "faq": {
+    "header_title": "Frequently Asked Questions",
+    "header_subtitle": "Still confused? Find the answers here.",
+    "q1": "Do I have to use my real name?",
+    "a1": "Not necessarily, whatever you are comfortable with. You can use your real name if you want your friends to know it's you, or use initials/pseudonym if you want to be more private and mysterious.",
+    "q2": "How do I reply to a message I like?",
+    "a2": "Here music is the main language. You can respond to messages by sending a <strong>Song Reply</strong> via Deezer that represents your feelings, optionally with a short text message.",
+    "q3": "Can Admin see who sent the message?",
+    "a3": "<strong>No.</strong> We implement a <em>Blind Moderation</em> system. When reviewing messages, the sender's identity is hidden from moderators. We only judge the content, not the person.",
+    "q4": "What if I find inappropriate messages?",
+    "a4": "We implement an <strong>Automatic Word Filter</strong> when creating messages. However, if negative content still slips through, you can report it via the form in the <strong>About</strong> menu (Footer). Select the <strong>'Report Content'</strong> category and our team will follow up immediately.",
+    "q5": "Why did my message suddenly disappear?",
+    "a5": "For mutual comfort, Admin actively moderates content. If your message is gone, please check the <strong>Notifications</strong> menu. Our system will surely send info on the reason for the message deletion.",
+    "q6": "Why can't I reply to other people's 'replies'?",
+    "a6": "We apply the <strong>'One-Way Tribute'</strong> concept. The goal is to keep interactions simple, focus on song appreciation, and avoid unnecessary long debates.",
+    "q7": "Do I need a Premium account to play songs?",
+    "a7": "No need! Thanks to Deezer integration, anyone can listen to a 30-second song snippet (preview) for free without needing to login or subscribe to any music app.",
+    "q8": "Why does the song only play for 30 seconds?",
+    "a8": "This is the international standard for <strong>Audio Preview</strong> allowed by music labels for free. Since Resonate is not a paid streaming app (like Spotify/Deezer Premium), we are only allowed to play 30-second snippets to respect musician copyrights.",
+    "q9": "Why can't I find the song I'm looking for?",
+    "a9": "The song collection on Resonate is connected directly in <em>real-time</em> with the <strong>Deezer</strong> database. If your favorite song doesn't appear, it's likely not available in their catalog yet. This is beyond our control, thank you for understanding!",
+    "q10": "Why use Deezer, not Spotify?",
+    "a10": "We understand that Spotify is many people's favorite platform. However, currently, new integration access is <strong>temporarily suspended</strong> by Spotify for system maintenance. <br><br>To keep the song preview feature running smoothly, we are currently using Deezer. Don't worry! If Spotify access is reopened, we plan to <strong>support both platforms simultaneously</strong> so your music search is maximized and limitless.",
+    "q11": "My account is restricted/banned, what's the solution?",
+    "a11": "We take strict action against community violations. However, if you feel this sanction is a mistake, you can file an <strong>Appeal</strong> directly through the app. Our team will review your account status.",
+    "q12": "Can I change my appearance or delete my account?",
+    "a12": "Of course. You can change the card theme and profile photo (avatar) as you like. If you want to quit, there is also an option to permanently delete your account in the profile settings."
+  },
+  "cta_section": {
+    "title": "Start Writing Your Message",
+    "subtitle": "Record every feeling and precious moment combined with music.",
+    "button": "Create Account"
+  },
+  "footer": {
+    "about": "About"
+  },
+  "about": {
+    "title": "About Resonate",
+    "desc_1": "Resonate was born from a simple realization: sometimes, words alone are not enough to represent what we feel.",
+    "desc_2": "We believe that every feeling deserves to be heard. Whether it's an unsent love letter, a heavy heart, or just a joke to entertain yourself. However, text often feels flat. That's why here, words are combined with music.",
+    "features": {
+      "amplify_title": "Amplify Feelings",
+      "amplify_desc": "Music is a universal language. By embedding songs from Deezer, your message is not only read, but also \"felt\".",
+      "judgment_title": "No Judgment",
+      "judgment_desc": "Through the Anonymous feature, we create a safe space. You are free to be yourself without worrying about identity.",
+      "trace_title": "Digital Footprint",
+      "trace_desc": "Think of this as your emotional journal. A place where visual and audio memories are stored neatly for the future."
+    },
+    "form": {
+      "title": "Send Reports & Feedback",
+      "subtitle": "Found an error, inappropriate content, or have a feature idea? Send a message below.",
+      "note": "*Message sent directly to the developer's personal email.",
+      "name_label": "Name",
+      "name_placeholder": "Your Name",
+      "email_label": "Email",
+      "email_placeholder": "{'youremail@gmail.com'}",
+      "category_label": "Category",
+      "message_label": "Message",
+      "message_placeholder": "Write your detailed message here...",
+      "submit_btn": "Send Message",
+      "sending": "Sending...",
+      "options": {
+        "bug": "🐛 Report Bug / Error",
+        "feature": "💡 New Feature Suggestion",
+        "content": "🚨 Report Inappropriate Content",
+        "question": "👋 General Question",
+        "other": "Other"
+      },
+      "alert": {
+        "incomplete_title": "Incomplete Data",
+        "incomplete_text": "Please fill in your name, email, and message.",
+        "success_title": "Sent!",
+        "success_text": "Your report has been sent to our email. Thank you!",
+        "error_title": "Failed",
+        "error_text": "An error occurred while sending the message. Please try again later."
+      }
+    },
+    "support": {
+      "title": "Support the Developer ☕",
+      "desc": "Resonate is developed and managed by a single person (Solo Dev) with independent resources. If this place means something to you, your support will fuel the developer's spirit to continue maintaining, improving, and keeping Resonate alive.",
+      "btn": "Buy me a Coffee / Support",
+      "credit": "Developed Solo By"
+    }
+  },
+  "auth": {
+    "login_title": "Login",
+    "login_subtitle": "Login to continue your musical journey.",
+    "register_title": "Create New Account",
+    "register_subtitle": "Join the Resonate community today.",
+    "label_name": "Name",
+    "label_email": "Email",
+    "label_password": "Password",
+    "label_confirm_password": "Confirm Password",
+    "placeholder_name": "Enter your name",
+    "placeholder_email": "{'example@gmail.com'}",
+    "placeholder_password_login": "Enter password",
+    "placeholder_password_register": "Minimum 8 characters",
+    "placeholder_confirm_password": "Repeat password",
+    "btn_login": "Login",
+    "btn_register": "Register",
+    "btn_google_login": "Login with Google",
+    "btn_google_register": "Register with Google",
+    "btn_loading": "Processing...",
+    "forgot_password": "Forgot Password?",
+    "no_account": "Don't have an account?",
+    "have_account": "Already have an account?",
+    "link_register": "Register",
+    "link_login": "Login",
+    "or": "OR",
+    "forgot_header_title": "Forgot Password",
+    "forgot_header_subtitle": "Enter your email to receive a password reset link.",
+    "btn_send_reset": "Send Reset Link",
+    "btn_sending": "Sending...",
+    "link_back_login": "Back to Login",
+    "reset_header_title": "Reset Password",
+    "reset_intro": "Reset password for:",
+    "label_new_password": "New Password",
+    "placeholder_new_password": "Enter new password",
+    "label_confirm_new_password": "Confirm New Password",
+    "placeholder_confirm_new_password": "Repeat new password",
+    "btn_update_password": "Update Password",
+    "alert": {
+      "banned_title": "Account Deactivated",
+      "banned_text": "Your account has been suspended.",
+      "banned_footer": "Write at least 10 characters.",
+      "appeal_label": "Appeal Reason",
+      "appeal_placeholder": "Explain why your account should be restored...",
+      "btn_appeal": "Submit Appeal",
+      "btn_close": "Close",
+      "appeal_success": "Appeal request sent to Admin.",
+      "appeal_failed": "Failed to submit appeal.",
+      "network_error": "Failed to connect to appeal server.",
+      "server_error": "Network or server error occurred.",
+      "password_mismatch": "Passwords must match!",
+      "register_success": "Account created successfully! Please login.",
+      "forgot_success": "Password reset link has been sent to your email.",
+      "forgot_failed": "Failed to send reset link.",
+      "system_error": "System error occurred.",
+      "reset_success": "Password successfully reset. Please login.",
+      "reset_failed": "Failed to reset password."
+    }
+  },
+  "auth_callback": {
+    "processing": "Setting up your profile...",
+    "error_data": "User data corrupt/invalid.",
+    "error_login_prefix": "Login failed: {message}",
+    "error_general_prefix": "Login Failed: {error}"
+  },
+  "user_profile": {
+    "title": "Edit Profile",
+    "back_dashboard": "Back to Dashboard",
+    "change_photo": "Change Photo",
+    "basic_info": "Basic Information",
+    "label_name": "Name",
+    "btn_save_profile": "Save Profile",
+    "security": "Security",
+    "label_email": "Email",
+    "locked": "(Locked)",
+    "label_new_password": "New Password",
+    "google_hint": "You signed up with Google. Fill this password if you want to login manually later.",
+    "placeholder_password": "Leave blank if you don't want to change",
+    "view_password": "View Password",
+    "label_confirm_password": "Confirm Password",
+    "placeholder_confirm_password": "Re-enter password",
+    "btn_change_password": "Change Password",
+    "danger_zone": "Danger Zone",
+    "danger_text": "Deleting account will remove all your data permanently. This action cannot be undone.",
+    "btn_delete_account": "Delete My Account",
+    "modal_photo": "Profile Photo",
+    "alert": {
+      "load_error": "Failed to load user data.",
+      "photo_success": "Profile photo updated successfully!",
+      "photo_error": "Failed to upload photo",
+      "name_success": "Name changed successfully.",
+      "password_mismatch": "Passwords do not match!",
+      "password_success": "Password updated successfully!",
+      "system_error": "System error occurred.",
+      "delete_confirm_title": "Are you sure you want to delete account?",
+      "delete_confirm_text": "This action is permanent! All your notes and data will be lost forever.",
+      "delete_success": "Account deleted successfully. Goodbye!",
+      "delete_error": "Failed to delete account."
+    }
+  },
+  "note": {
+    "edit": {
+      "title": "Edit Message",
+      "subtitle": "Edit your song and message.",
+      "label_pick_song": "Select Song",
+      "btn_change_song": "Change Song",
+      "placeholder_search_song": "Type song title...",
+      "searching": "Searching...",
+      "search_by": "Search results by",
+      "label_recipient": "To",
+      "placeholder_recipient": "Who is this for?",
+      "label_message": "Message",
+      "placeholder_message": "Write your message",
+      "label_sender": "Send As",
+      "sender_real": "(Real)",
+      "sender_anonymous": "Pseudonym",
+      "label_anonymous_name": "PSEUDONYM NAME",
+      "placeholder_anonymous_name": "Ex: Secret Admirer...",
+      "btn_back": "Back",
+      "btn_save": "Save Changes",
+      "alert": {
+        "no_song": "You haven't selected a song!",
+        "no_anonymous_name": "Pseudonym name is required!",
+        "success_update": "Message updated successfully."
+      }
+    },
+    "create": {
+      "title": "Create New Message",
+      "subtitle": "Pick a song and write a message for someone.",
+      "label_pick_song": "Select Song",
+      "btn_change_song": "Change Song",
+      "placeholder_search_song": "Search song title...",
+      "searching": "Searching...",
+      "search_by": "Search results by",
+      "label_recipient": "To",
+      "placeholder_recipient": "Who is this for?",
+      "label_message": "Message",
+      "placeholder_message": "Write your message",
+      "label_sender": "Send As",
+      "sender_real": "(Real)",
+      "sender_anonymous": "Pseudonym",
+      "label_anonymous_name": "PSEUDONYM NAME",
+      "placeholder_anonymous_name": "Ex: Secret Admirer...",
+      "btn_back": "Back",
+      "btn_create": "Create Message",
+      "alert": {
+        "no_song": "You haven't selected a song! Please search and click one.",
+        "no_anonymous_name": "Pseudonym name is required!",
+        "success_create": "Message created successfully."
+      }
+    }
+  },
+  "dashboard_user": {
+    "search_placeholder": "Search message, song, or artist...",
+    "btn_select": "Select",
+    "btn_cancel": "Cancel",
+    "empty_state": "No messages created yet.",
+    "btn_create": "Create New Message",
+    "card": {
+      "to": "TO",
+      "from": "From",
+      "admin": "Admin",
+      "edited": "(edited)",
+      "btn_edit": "Edit",
+      "btn_delete": "Delete"
+    },
+    "load_more": {
+      "loading": "Loading...",
+      "load": "Load More"
+    },
+    "fab_title": "Create New Story",
+    "selection_bar": {
+      "selected": "Selected",
+      "delete": "Delete",
+      "cancel": "Cancel"
+    },
+    "modal": {
+      "play_full": "Play Full Song",
+      "preview": "Profile Photo",
+      "from": "FROM",
+      "to": "TO",
+      "sent_at": "Sent:",
+      "btn_close": "Close",
+      "btn_edit": "Edit Message"
+    },
+    "alert": {
+      "confirm_bulk_delete": "Delete {count} selected messages?",
+      "success_bulk_delete": "Selected messages deleted successfully.",
+      "error_bulk_delete": "Failed to delete messages.",
+      "confirm_delete": "Are you sure you want to delete this message?",
+      "success_delete": "Message deleted successfully.",
+      "error_delete": "An error occurred while deleting the note."
+    }
+  },
+  "welcome_overlay": {
+    "greeting": "Welcome, <span style=\"color: #9a203e; font-weight: bold; font-style: normal;\">{name}</span>",
+    "question": "How are you today?",
+    "instruction": "Start writing a message and don't forget to attach a song ^_^"
+  },
+  "global_content": {
+    "search_placeholder": "Explore global messages...",
+    "empty_state": "No messages created yet.",
+    "card": {
+      "to": "TO",
+      "from": "From",
+      "admin": "Admin",
+      "edited": "(edited)",
+      "btn_open": "OPEN"
+    },
+    "load_more": {
+      "loading": "Loading...",
+      "load": "Load More"
+    },
+    "modal": {
+      "play_full": "Play Full Song",
+      "from": "FROM",
+      "to": "TO",
+      "sent_at": "Sent:",
+      "reply_header": "Resonance Replies",
+      "btn_reply_add": "+ Reply with Song",
+      "form": {
+        "label_song": "Select Reply Song",
+        "placeholder_search": "Type song title...",
+        "search_by": "Search results by",
+        "label_message": "Message (Optional)",
+        "placeholder_message": "Write a short message...",
+        "label_sender": "From Who?",
+        "placeholder_sender": "Type name (or leave blank for Anonymous)",
+        "btn_cancel": "Cancel",
+        "btn_submit": "Send Reply"
+      },
+      "loading_replies": "Loading latest replies...",
+      "empty_replies": "No one has replied with a song yet.",
+      "reply_from": "From:",
+      "limit_info": "Showing latest 25 replies.",
+      "limit_sub": "This message is very popular! 🔥",
+      "btn_close": "Close",
+      "btn_share": "Share",
+      "processing": "Processing..."
+    },
+    "share_modal": {
+      "title": "Share Message",
+      "app": "Share to Apps",
+      "gallery": "Save to Gallery",
+      "link": "Copy Message Link",
+      "cancel": "Cancel"
+    },
+    "alert": {
+      "confirm_delete_reply": "Delete this song reply?",
+      "delete_success": "Reply deleted.",
+      "delete_error": "Failed to delete.",
+      "select_song_error": "Please select a song first!",
+      "reply_sent": "Reply sent!",
+      "connection_error": "Connection error occurred.",
+      "image_saved": "Image saved to gallery!",
+      "link_copied": "Link copied successfully!"
+    },
+    "share_text": {
+      "title": "Music Note Card",
+      "body": "Listen to a song message from {author} for {recipient} 🎵",
+      "filename_prefix": "message-from-"
+    },
+    "defaults": {
+      "secret_friend": "Secret Friend",
+      "reply_content": "Replying with a song...",
+      "anonymous": "Anonymous"
+    }
+  },
+  "notifications_page": {
+    "title": "All Notifications",
+    "subtitle": "Your activity history and notifications.",
+    "mark_all_read": "✓ Mark All as Read",
+    "loading": "Loading notifications...",
+    "empty_state": "No notifications to display.",
+    "new_info_default": "New Info",
+    "admin_reason": "⚠️ Admin Reason:",
+    "user_message_label": "User Message:",
+    "btn_prev": "Previous",
+    "btn_next": "Next",
+    "pagination_info": "Page {current} / {last}",
+    "alert": {
+      "confirm_mark_all": "Mark all notifications (including on other pages) as read?"
+    }
+  },
+  "notification_dropdown": {
+    "title": "Notifications",
+    "mark_all_read": "Mark all as read",
+    "loading": "Loading...",
+    "empty_state": "No notifications yet.",
+    "new_notification_default": "New Notification",
+    "reason_label": "⚠️ Reason:",
+    "user_message_label": "User Message:",
+    "view_all": "View All Notifications"
+  },
+  "dashboard_toolbar": {
+    "search_placeholder": "Search messages...",
+    "tooltip_theme": "Change Card Theme",
+    "theme_header": "Select Vibe",
+    "theme_random": "Random (Colorful)",
+    "theme_red_default": "Red (Default)",
+    "sort_newest": "Newest",
+    "sort_oldest": "Oldest"
+  },
+  "user_logout": {
+    "processing": "Logging out..."
+  },
+  "admin_dashboard": {
+    "title": "Admin Dashboard",
+    "subtitle": "Community Safety & Content Moderation",
+    "search_users": "Search name/email...",
+    "search_notes": "Search content...",
+    "tabs": {
+      "users": "User Management",
+      "notes": "Content Moderation"
+    },
+    "loading": "Syncing data...",
+    "empty_state": "No data found.",
+    "table_headers": {
+      "user_profile": "User Profile",
+      "status": "Status",
+      "date": "Date",
+      "content": "Message Content (Anonymous)",
+      "actions": "Actions"
+    },
+    "status": {
+      "admin": "Admin",
+      "banned": "Banned",
+      "active": "Active"
+    },
+    "buttons": {
+      "ban_user": "Ban User",
+      "restore": "Restore",
+      "delete_note": "Delete Message",
+      "ban_sender": "Ban Sender",
+      "prev": "Previous",
+      "next": "Next"
+    },
+    "pagination": "Total Data: {total}",
+    "alert": {
+      "restore_confirm": "Restore access for this user?",
+      "restore_success": "Account restored.",
+      "ban_user_confirm": "Are you sure you want to ban this user?",
+      "ban_user_success": "User banned.",
+      "ban_sender_title": "Ban This Author?",
+      "ban_sender_text": "System will track and ban the author of this message. Author identity remains hidden from you.",
+      "ban_sender_placeholder": "Ban reason (Optional)",
+      "ban_sender_confirm_btn": "Yes, Ban User",
+      "ban_sender_success": "User banned successfully.",
+      "delete_note_title": "Delete Note?",
+      "delete_note_text": "Enter reason (required):",
+      "delete_note_placeholder": "Ex: Spam / Abusive language",
+      "delete_note_confirm_btn": "Delete",
+      "delete_note_success": "Note deleted.",
+      "copy_id_success": "User ID copied",
+      "error_generic": "An error occurred",
+      "error_server": "Failed to contact server"
+    }
+  },
+  "free_tier": {
+    "title": "Server Info",
+    "text_prefix": "Hello! This website is currently hosted using a",
+    "highlight": "Free Tier Service.",
+    "text_suffix": "Please understand if access feels a bit slow or the web falls \"asleep\" and needs time to wake up again.",
+    "btn_ok": "Okay, Understood"
+  },
+  "not_found": {
+    "title": "Page Not Found",
+    "desc": "Oops! It seems the tone you are looking for is false or this page has vanished from circulation.",
+    "btn_home": "Back to Home"
+  }
+}
