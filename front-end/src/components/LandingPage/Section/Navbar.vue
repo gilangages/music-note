@@ -126,7 +126,7 @@ const scrollToSection = async (sectionId) => {
       leave-to-class="transform -translate-y-5 opacity-0">
       <div
         v-if="isMobileMenuOpen"
-        class="md:hidden absolute top-full left-0 w-full bg-[#1c1516] border-b border-[#9a203e]/30 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.8)] z-40">
+        class="md:hidden absolute top-full left-0 w-full bg-[#1c1516] border-b border-[#9a203e]/30 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.8)] z-40 -mt-[1px]">
         <div class="flex flex-col p-6 gap-4 text-[#e5e5e5] text-[15px] font-medium">
           <div class="flex justify-between items-center border-b border-white/5 pb-2 mb-2">
             <span>{{ $t("nav.language") }}</span>

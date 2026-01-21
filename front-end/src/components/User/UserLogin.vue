@@ -152,7 +152,7 @@ onMounted(async () => {
               v-model="user.password"
               :type="showPassword ? 'text' : 'password'"
               required
-              :placeholder="$t('auth.placeholder_password')"
+              :placeholder="$t('auth.placeholder_password_login')"
               class="w-full px-4 py-3 bg-[#2b2122] text-[#e5e5e5] rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#9a203e] placeholder-[#555] pr-10 transition-all" />
 
             <button
