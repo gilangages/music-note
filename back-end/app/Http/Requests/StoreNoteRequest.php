@@ -17,7 +17,7 @@ class StoreNoteRequest extends FormRequest
         return [
             'parent_id' => 'nullable|exists:notes,id', // Pastikan ID induk valid
             // 1. CONTENT (Pesan): Wajib
-            'content' => ['required', 'string', 'max:1000', new NoBadWords],
+            'content' => ['required', 'string', new NoBadWords],
 
             // 2. RECIPIENT (Kepada): Wajib (Sesuai UI kamu)
             'recipient' => 'required|string|max:50',
