@@ -9,6 +9,9 @@ import { noteBulkDelete } from "../../../lib/api/NoteApi";
 import DashboardToolbar from "./DashboardToolbar.vue";
 import { useCardTheme } from "../../../lib/useCardTheme";
 import { useNow, useWindowSize } from "@vueuse/core";
+import { useI18n } from "vue-i18n"; // 1. Import i18n
+
+const { t, locale } = useI18n(); // 2. Inisialisasi
 
 // Emit ke Parent
 const emit = defineEmits(["open-modal", "is-empty", "edit-note"]);
@@ -50,7 +53,11 @@ const formatDateDetail = (dateString) => {
   const optionsDate = { weekday: "long", day: "numeric", month: "short", year: "numeric" };
   const hours = String(date.getHours()).padStart(2, "0");
   const minutes = String(date.getMinutes()).padStart(2, "0");
-  return `${date.toLocaleDateString("id-ID", optionsDate)} • ${hours}:${minutes} WIB`;
+
+  // Gunakan locale dari i18n agar format tanggal menyesuaikan bahasa
+  const currentLocale = locale.value === "id" ? "id-ID" : "en-US";
+
+  return `${date.toLocaleDateString(currentLocale, optionsDate)} • ${hours}:${minutes} WIB`;
 };
 
 const formatTimeMusic = (time) => {
@@ -122,16 +129,19 @@ const toggleSelectAll = () => {
 const handleBulkDelete = async () => {
   if (selectedIds.value.length === 0) return;
 
-  if (!(await alertConfirm(`Hapus ${selectedIds.value.length} pesan terpilih?`))) return;
+  // Translate confirm alert
+  if (!(await alertConfirm(t("dashboard_user.alert.confirm_bulk_delete", { count: selectedIds.value.length })))) return;
 
   try {
     const response = await noteBulkDelete(token.value, selectedIds.value);
     if (response.ok) {
-      alertSuccess("Pesan terpilih berhasil dihapus.");
+      // Translate success alert
+      alertSuccess(t("dashboard_user.alert.success_bulk_delete"));
       isSelectionMode.value = false;
       await fetchNoteList(true); // Refresh data
     } else {
-      await alertError("Gagal menghapus pesan.");
+      // Translate error alert
+      await alertError(t("dashboard_user.alert.error_bulk_delete"));
     }
   } catch (e) {
     console.error(e);
@@ -140,14 +150,16 @@ const handleBulkDelete = async () => {
 
 // --- DELETE LOGIC ---
 async function handleDelete(id) {
-  if (!(await alertConfirm("Are you sure you want to delete this note?"))) return;
+  // Translate confirm alert
+  if (!(await alertConfirm(t("dashboard_user.alert.confirm_delete")))) return;
 
   try {
     const response = await noteDelete(token.value, id);
     const responseBody = await response.json();
 
     if (response.ok) {
-      alertSuccess("Pesan berhasil dihapus.");
+      // Translate success alert
+      alertSuccess(t("dashboard_user.alert.success_delete"));
       const index = notes.value.findIndex((n) => n.id === id);
       if (index !== -1) notes.value.splice(index, 1);
       if (notes.value.length === 0) emit("is-empty");
@@ -157,7 +169,8 @@ async function handleDelete(id) {
     }
   } catch (error) {
     console.error("Gagal delete:", error);
-    await alertError("Terjadi kesalahan saat menghapus note.");
+    // Translate error alert
+    await alertError(t("dashboard_user.alert.error_delete"));
   }
 }
 
@@ -267,7 +280,7 @@ defineExpose({
         v-model:searchQuery="searchQuery"
         v-model:sortBy="sortBy"
         @search="handleSearch"
-        placeholder="Cari pesan, lagu, atau artis...">
+        :placeholder="$t('dashboard_user.search_placeholder')">
         <template #actions>
           <button
             @click="toggleSelectionMode"
@@ -277,7 +290,7 @@ defineExpose({
                 ? 'bg-[#2c2021] border-[#3f3233] text-white hover:border-[#9a203e]'
                 : 'bg-transparent border-[#3f3233] text-[#8c8a8a] hover:border-[#9a203e]'
             ">
-            {{ isSelectionMode ? "Batal" : "Pilih" }}
+            {{ isSelectionMode ? $t("dashboard_user.btn_cancel") : $t("dashboard_user.btn_select") }}
           </button>
         </template>
       </DashboardToolbar>
@@ -313,7 +326,7 @@ defineExpose({
       </div>
 
       <div v-else-if="notes.length === 0" class="w-full flex flex-col items-center justify-center py-20 text-[#8c8a8a]">
-        <div class="mb-4 text-lg">Belum ada pesan yang dibuat.</div>
+        <div class="mb-4 text-lg">{{ $t("dashboard_user.empty_state") }}</div>
         <button
           @click="$emit('open-modal')"
           class="hidden md:flex items-center gap-2 bg-[#9a203e] hover:bg-[#821c35] text-white px-6 py-3 rounded-full font-bold text-sm uppercase tracking-wider transition-all shadow-lg hover:shadow-[#9a203e]/20">
@@ -330,7 +343,7 @@ defineExpose({
             <line x1="12" y1="5" x2="12" y2="19"></line>
             <line x1="5" y1="12" x2="19" y2="12"></line>
           </svg>
-          Buat Pesan Baru
+          {{ $t("dashboard_user.btn_create") }}
         </button>
       </div>
 
@@ -359,7 +372,9 @@ defineExpose({
                 class="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"></div>
 
               <div class="mb-5 relative z-10">
-                <p class="text-[11px] text-[#666] font-bold uppercase tracking-wider mb-1">UNTUK</p>
+                <p class="text-[11px] text-[#666] font-bold uppercase tracking-wider mb-1">
+                  {{ $t("dashboard_user.card.to") }}
+                </p>
                 <h2
                   :class="getTheme(note.id).text_hover"
                   class="text-2xl font-bold text-white transition-colors break-words leading-tight">
@@ -392,7 +407,9 @@ defineExpose({
                     :src="note.author_avatar || note.author_photo_url"
                     class="w-6 h-6 rounded-full border border-[#333] object-cover" />
                   <div class="flex flex-col">
-                    <span class="text-[10px] text-[#666] uppercase font-bold">Dari</span>
+                    <span class="text-[10px] text-[#666] uppercase font-bold">
+                      {{ $t("dashboard_user.card.from") }}
+                    </span>
                     <div class="flex items-center gap-1.5">
                       <span class="text-xs text-[#999] font-medium leading-none">
                         {{ note.author_name }}
@@ -400,7 +417,7 @@ defineExpose({
                       <span
                         v-if="note.is_admin"
                         class="bg-[#9a203e] text-white text-[9px] px-1.5 py-0.5 rounded-[4px] font-bold uppercase tracking-wider border border-white/10 shadow-[0_0_10px_rgba(154,32,62,0.6)]">
-                        Admin
+                        {{ $t("dashboard_user.card.admin") }}
                       </span>
                     </div>
                   </div>
@@ -410,7 +427,7 @@ defineExpose({
                       v-if="isEdited(note.created_at, note.updated_at)"
                       :class="getTheme(note.id).text"
                       class="italic ml-1 block sm:inline">
-                      (diedit)
+                      {{ $t("dashboard_user.card.edited") }}
                     </span>
                   </span>
                 </div>
@@ -430,7 +447,7 @@ defineExpose({
                       'hover:bg-white/10 hover:text-white',
                     ]"
                     class="flex-1 py-2 rounded-lg border text-xs font-bold uppercase tracking-wider transition-colors">
-                    Edit
+                    {{ $t("dashboard_user.card.btn_edit") }}
                   </button>
 
                   <button
@@ -443,7 +460,7 @@ defineExpose({
                       'hover:text-white',
                     ]"
                     class="flex-1 py-2 rounded-lg border text-xs font-bold uppercase tracking-wider transition-colors">
-                    Hapus
+                    {{ $t("dashboard_user.card.btn_delete") }}
                   </button>
                 </div>
               </div>
@@ -459,7 +476,7 @@ defineExpose({
           @click="loadMore"
           :disabled="isLoadingMore"
           class="bg-transparent font-semibold uppercase hover:underline cursor-pointer disabled:opacity-50 tracking-widest text-sm">
-          {{ isLoadingMore ? "Memuat..." : "Lihat Lebih Banyak" }}
+          {{ isLoadingMore ? $t("dashboard_user.load_more.loading") : $t("dashboard_user.load_more.load") }}
         </button>
         <svg
           v-if="!isLoadingMore"
@@ -482,7 +499,7 @@ defineExpose({
           @click="$emit('open-modal')"
           class="cursor-pointer fixed bottom-24 right-6 md:bottom-18 md:right-8 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[#9a203e] text-white shadow-[0_0_30px_rgba(154,32,62,0.4)] transition-all duration-300 hover:scale-110 hover:bg-[#821c35] active:scale-95 focus:outline-none sm:bottom-12 sm:right-12 sm:h-16 sm:w-16 group"
           :class="{ 'md:hidden': notes.length === 0 }"
-          title="Buat Cerita Baru">
+          :title="$t('dashboard_user.fab_title')">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -507,7 +524,9 @@ defineExpose({
                   :checked="selectedIds.length === notes.length && notes.length > 0"
                   @change="toggleSelectAll"
                   class="w-4 h-4 accent-[#9a203e] cursor-pointer" />
-                <span class="text-sm font-medium whitespace-nowrap">{{ selectedIds.length }} Terpilih</span>
+                <span class="text-sm font-medium whitespace-nowrap">
+                  {{ selectedIds.length }} {{ $t("dashboard_user.selection_bar.selected") }}
+                </span>
               </div>
             </div>
             <div class="h-6 w-[1px] bg-[#2c2021] hidden sm:block"></div>
@@ -530,12 +549,12 @@ defineExpose({
                   <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
                   <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
                 </svg>
-                <span class="hidden sm:inline">Hapus</span>
+                <span class="hidden sm:inline">{{ $t("dashboard_user.selection_bar.delete") }}</span>
               </button>
               <button
                 @click="cancelSelectionMode"
                 class="text-gray-400 hover:text-white text-sm font-medium px-2 py-1 ml-1">
-                Batal
+                {{ $t("dashboard_user.selection_bar.cancel") }}
               </button>
             </div>
           </div>
@@ -616,7 +635,7 @@ defineExpose({
                       src="https://cdn.brandfetch.io/idEUKgCNtu/theme/dark/symbol.svg?c=1dxbfHSJFAPEGdCLU4o5B"
                       alt="Deezer"
                       class="w-4 h-4 object-contain filter brightness-0 invert" />
-                    <span>Putar Lagu Penuh</span>
+                    <span>{{ $t("dashboard_user.modal.play_full") }}</span>
                   </a>
                 </div>
               </div>
@@ -632,13 +651,15 @@ defineExpose({
                         class="w-12 h-12 rounded-full border border-white/10 object-cover transition-transform group-hover/avatar:scale-110" />
                     </div>
                     <div>
-                      <p class="text-[10px] text-white/50 uppercase tracking-wide font-bold">DARI</p>
+                      <p class="text-[10px] text-white/50 uppercase tracking-wide font-bold">
+                        {{ $t("dashboard_user.modal.from") }}
+                      </p>
                       <div class="flex items-center gap-2">
                         <p class="text-base font-bold text-white">{{ selectedNote?.author_name }}</p>
                         <span
                           v-if="selectedNote?.is_admin"
                           class="bg-[#9a203e] text-white text-[9px] px-1.5 py-0.5 rounded-[4px] font-bold uppercase tracking-wider border border-white/10">
-                          Admin
+                          {{ $t("dashboard_user.card.admin") }}
                         </span>
                       </div>
                     </div>
@@ -657,7 +678,9 @@ defineExpose({
                     <path d="M5 12h14M12 5l7 7-7 7" />
                   </svg>
                   <div class="text-right">
-                    <p class="text-[10px] text-white/50 uppercase tracking-wide font-bold">UNTUK</p>
+                    <p class="text-[10px] text-white/50 uppercase tracking-wide font-bold">
+                      {{ $t("dashboard_user.modal.to") }}
+                    </p>
                     <p :class="selectedTheme.text" class="text-base font-bold">{{ selectedNote?.recipient }}</p>
                   </div>
                 </div>
@@ -684,12 +707,12 @@ defineExpose({
                     <polyline points="12 6 12 12 16 14"></polyline>
                   </svg>
                   <span>
-                    Dikirim: {{ formatDateDetail(selectedNote?.created_at) }}
+                    {{ $t("dashboard_user.modal.sent_at") }} {{ formatDateDetail(selectedNote?.created_at) }}
                     <span
                       v-if="isEdited(selectedNote?.created_at, selectedNote?.updated_at)"
                       :class="selectedTheme.text"
                       class="italic ml-1 font-bold">
-                      (diedit)
+                      {{ $t("dashboard_user.card.edited") }}
                     </span>
                   </span>
                 </div>
@@ -703,7 +726,7 @@ defineExpose({
                       'hover:text-white hover:border-transparent',
                     ]"
                     class="flex-1 py-3 rounded-[14px] border font-bold text-xs uppercase tracking-widest transition-all cursor-pointer">
-                    Tutup
+                    {{ $t("dashboard_user.modal.btn_close") }}
                   </button>
 
                   <button
@@ -713,7 +736,7 @@ defineExpose({
                     "
                     :class="selectedTheme.modal_btn"
                     class="flex-1 py-3 rounded-[14px] text-white font-bold text-xs uppercase tracking-widest hover:brightness-110 transition-all cursor-pointer">
-                    Edit Pesan
+                    {{ $t("dashboard_user.modal.btn_edit") }}
                   </button>
                 </div>
               </div>
@@ -748,7 +771,9 @@ defineExpose({
                 :src="previewImageUrl"
                 class="w-auto h-auto max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
                 @click.stop />
-              <p class="text-white/50 text-sm tracking-widest uppercase font-bold mt-4" @click.stop>Foto Profil</p>
+              <p class="text-white/50 text-sm tracking-widest uppercase font-bold mt-4" @click.stop>
+                {{ $t("dashboard_user.modal.preview") }}
+              </p>
             </div>
           </div>
         </Transition>

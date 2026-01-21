@@ -124,7 +124,7 @@
       "name_label": "Name",
       "name_placeholder": "Your Name",
       "email_label": "Email",
-      "email_placeholder": "youremail@gmail.com",
+      "email_placeholder": "{'youremail@gmail.com'}",
       "category_label": "Category",
       "message_label": "Message",
       "message_placeholder": "Write your detailed message here...",
@@ -154,16 +154,16 @@
     }
   },
   "auth": {
-    "login_title": "Welcome Back",
+    "login_title": "Login",
     "login_subtitle": "Login to continue your musical journey.",
     "register_title": "Create New Account",
     "register_subtitle": "Join the Resonate community today.",
-    "label_name": "Full Name",
-    "label_email": "Email Address",
+    "label_name": "Name",
+    "label_email": "Email",
     "label_password": "Password",
     "label_confirm_password": "Confirm Password",
-    "placeholder_name": "Enter full name",
-    "placeholder_email": "example@email.com",
+    "placeholder_name": "Enter your name",
+    "placeholder_email": "{'example@gmail.com'}",
     "placeholder_password": "Enter password",
     "placeholder_confirm_password": "Repeat password",
     "btn_login": "Login",
@@ -208,6 +208,299 @@
       "system_error": "System error occurred.",
       "reset_success": "Password successfully reset. Please login.",
       "reset_failed": "Failed to reset password."
+    }
+  },
+  "user_profile": {
+    "title": "Edit Profile",
+    "back_dashboard": "Back to Dashboard",
+    "change_photo": "Change Photo",
+    "basic_info": "Basic Information",
+    "label_name": "Name",
+    "btn_save_profile": "Save Profile",
+    "security": "Security",
+    "label_email": "Email",
+    "locked": "(Locked)",
+    "label_new_password": "New Password",
+    "google_hint": "You signed up with Google. Fill this password if you want to login manually later.",
+    "placeholder_password": "Leave blank if you don't want to change",
+    "view_password": "View Password",
+    "label_confirm_password": "Confirm Password",
+    "placeholder_confirm_password": "Re-enter password",
+    "btn_change_password": "Change Password",
+    "danger_zone": "Danger Zone",
+    "danger_text": "Deleting account will remove all your data permanently. This action cannot be undone.",
+    "btn_delete_account": "Delete My Account",
+    "modal_photo": "Profile Photo",
+    "alert": {
+      "load_error": "Failed to load user data.",
+      "photo_success": "Profile photo updated successfully!",
+      "photo_error": "Failed to upload photo",
+      "name_success": "Name changed successfully.",
+      "password_mismatch": "Passwords do not match!",
+      "password_success": "Password updated successfully!",
+      "system_error": "System error occurred.",
+      "delete_confirm_title": "Are you sure you want to delete account?",
+      "delete_confirm_text": "This action is permanent! All your notes and data will be lost forever.",
+      "delete_success": "Account deleted successfully. Goodbye!",
+      "delete_error": "Failed to delete account."
+    }
+  },
+  "note": {
+    "edit": {
+      "title": "Edit Message",
+      "subtitle": "Edit your song and message.",
+      "label_pick_song": "Select Song",
+      "btn_change_song": "Change Song",
+      "placeholder_search_song": "Type song title...",
+      "searching": "Searching...",
+      "search_by": "Search results by",
+      "label_recipient": "To",
+      "placeholder_recipient": "Who is this for?",
+      "label_message": "Message",
+      "placeholder_message": "Write your message",
+      "label_sender": "Send As",
+      "sender_real": "(Real)",
+      "sender_anonymous": "Pseudonym",
+      "label_anonymous_name": "PSEUDONYM NAME",
+      "placeholder_anonymous_name": "Ex: Secret Admirer...",
+      "btn_back": "Back",
+      "btn_save": "Save Changes",
+      "alert": {
+        "no_song": "You haven't selected a song!",
+        "no_anonymous_name": "Pseudonym name is required!",
+        "success_update": "Message updated successfully."
+      }
+    },
+    "create": {
+      "title": "Create New Message",
+      "subtitle": "Pick a song and write a message for someone.",
+      "label_pick_song": "Select Song",
+      "btn_change_song": "Change Song",
+      "placeholder_search_song": "Search song title...",
+      "searching": "Searching...",
+      "search_by": "Search results by",
+      "label_recipient": "To",
+      "placeholder_recipient": "Who is this for?",
+      "label_message": "Message",
+      "placeholder_message": "Write your message",
+      "label_sender": "Send As",
+      "sender_real": "(Real)",
+      "sender_anonymous": "Pseudonym",
+      "label_anonymous_name": "PSEUDONYM NAME",
+      "placeholder_anonymous_name": "Ex: Secret Admirer...",
+      "btn_back": "Back",
+      "btn_create": "Create Message",
+      "alert": {
+        "no_song": "You haven't selected a song! Please search and click one.",
+        "no_anonymous_name": "Pseudonym name is required!",
+        "success_create": "Message created successfully."
+      }
+    }
+  },
+  "dashboard_user": {
+    "search_placeholder": "Search message, song, or artist...",
+    "btn_select": "Select",
+    "btn_cancel": "Cancel",
+    "empty_state": "No messages created yet.",
+    "btn_create": "Create New Message",
+    "card": {
+      "to": "TO",
+      "from": "From",
+      "admin": "Admin",
+      "edited": "(edited)",
+      "btn_edit": "Edit",
+      "btn_delete": "Delete"
+    },
+    "load_more": {
+      "loading": "Loading...",
+      "load": "Load More"
+    },
+    "fab_title": "Create New Story",
+    "selection_bar": {
+      "selected": "Selected",
+      "delete": "Delete",
+      "cancel": "Cancel"
+    },
+    "modal": {
+      "play_full": "Play Full Song",
+      "preview": "Profile Photo",
+      "from": "FROM",
+      "to": "TO",
+      "sent_at": "Sent:",
+      "btn_close": "Close",
+      "btn_edit": "Edit Message"
+    },
+    "alert": {
+      "confirm_bulk_delete": "Delete {count} selected messages?",
+      "success_bulk_delete": "Selected messages deleted successfully.",
+      "error_bulk_delete": "Failed to delete messages.",
+      "confirm_delete": "Are you sure you want to delete this message?",
+      "success_delete": "Message deleted successfully.",
+      "error_delete": "An error occurred while deleting the note."
+    }
+  },
+  "welcome_overlay": {
+    "greeting": "Welcome, <span style=\"color: #9a203e; font-weight: bold; font-style: normal;\">{name}</span>",
+    "question": "How are you today?",
+    "instruction": "Start writing a message and don't forget to attach a song ^_^"
+  },
+  "global_content": {
+    "search_placeholder": "Explore global messages...",
+    "empty_state": "No messages created yet.",
+    "card": {
+      "to": "TO",
+      "from": "From",
+      "admin": "Admin",
+      "edited": "(edited)",
+      "btn_open": "OPEN"
+    },
+    "load_more": {
+      "loading": "Loading...",
+      "load": "Load More"
+    },
+    "modal": {
+      "play_full": "Play Full Song",
+      "from": "FROM",
+      "to": "TO",
+      "sent_at": "Sent:",
+      "reply_header": "Resonance Replies",
+      "btn_reply_add": "+ Reply with Song",
+      "form": {
+        "label_song": "Select Reply Song",
+        "placeholder_search": "Type song title...",
+        "search_by": "Search results by",
+        "label_message": "Message (Optional)",
+        "placeholder_message": "Write a short message...",
+        "label_sender": "From Who?",
+        "placeholder_sender": "Type name (or leave blank for Anonymous)",
+        "btn_cancel": "Cancel",
+        "btn_submit": "Send Reply"
+      },
+      "loading_replies": "Loading latest replies...",
+      "empty_replies": "No one has replied with a song yet.",
+      "reply_from": "From:",
+      "limit_info": "Showing latest 25 replies.",
+      "limit_sub": "This message is very popular! 🔥",
+      "btn_close": "Close",
+      "btn_share": "Share",
+      "processing": "Processing..."
+    },
+    "share_modal": {
+      "title": "Share Message",
+      "app": "Share to Apps",
+      "gallery": "Save to Gallery",
+      "link": "Copy Message Link",
+      "cancel": "Cancel"
+    },
+    "alert": {
+      "confirm_delete_reply": "Delete this song reply?",
+      "delete_success": "Reply deleted.",
+      "delete_error": "Failed to delete.",
+      "select_song_error": "Please select a song first!",
+      "reply_sent": "Reply sent!",
+      "connection_error": "Connection error occurred.",
+      "image_saved": "Image saved to gallery!",
+      "link_copied": "Link copied successfully!"
+    },
+    "share_text": {
+      "title": "Music Note Card",
+      "body": "Listen to a song message from {author} for {recipient} 🎵",
+      "filename_prefix": "message-from-"
+    },
+    "defaults": {
+      "secret_friend": "Secret Friend",
+      "reply_content": "Replying with a song...",
+      "anonymous": "Anonymous"
+    }
+  },
+  "notifications_page": {
+    "title": "All Notifications",
+    "subtitle": "Your activity history and notifications.",
+    "mark_all_read": "✓ Mark All as Read",
+    "loading": "Loading notifications...",
+    "empty_state": "No notifications to display.",
+    "new_info_default": "New Info",
+    "admin_reason": "⚠️ Admin Reason:",
+    "user_message_label": "User Message:",
+    "btn_prev": "Previous",
+    "btn_next": "Next",
+    "pagination_info": "Page {current} / {last}",
+    "alert": {
+      "confirm_mark_all": "Mark all notifications (including on other pages) as read?"
+    }
+  },
+  "notification_dropdown": {
+    "title": "Notifications",
+    "mark_all_read": "Mark all as read",
+    "loading": "Loading...",
+    "empty_state": "No notifications yet.",
+    "new_notification_default": "New Notification",
+    "reason_label": "⚠️ Reason:",
+    "user_message_label": "User Message:",
+    "view_all": "View All Notifications"
+  },
+  "dashboard_toolbar": {
+    "search_placeholder": "Search messages...",
+    "tooltip_theme": "Change Card Theme",
+    "theme_header": "Select Vibe",
+    "theme_random": "Random (Colorful)",
+    "theme_red_default": "Red (Default)",
+    "sort_newest": "Newest",
+    "sort_oldest": "Oldest"
+  },
+  "user_logout": {
+    "processing": "Logging out..."
+  },
+  "admin_dashboard": {
+    "title": "Admin Dashboard",
+    "subtitle": "Community Safety & Content Moderation",
+    "search_users": "Search name/email...",
+    "search_notes": "Search content...",
+    "tabs": {
+      "users": "User Management",
+      "notes": "Content Moderation"
+    },
+    "loading": "Syncing data...",
+    "empty_state": "No data found.",
+    "table_headers": {
+      "user_profile": "User Profile",
+      "status": "Status",
+      "date": "Date",
+      "content": "Message Content (Anonymous)",
+      "actions": "Actions"
+    },
+    "status": {
+      "admin": "Admin",
+      "banned": "Banned",
+      "active": "Active"
+    },
+    "buttons": {
+      "ban_user": "Ban User",
+      "restore": "Restore",
+      "delete_note": "Delete Message",
+      "ban_sender": "Ban Sender",
+      "prev": "Previous",
+      "next": "Next"
+    },
+    "pagination": "Total Data: {total}",
+    "alert": {
+      "restore_confirm": "Restore access for this user?",
+      "restore_success": "Account restored.",
+      "ban_user_confirm": "Are you sure you want to ban this user?",
+      "ban_user_success": "User banned.",
+      "ban_sender_title": "Ban This Author?",
+      "ban_sender_text": "System will track and ban the author of this message. Author identity remains hidden from you.",
+      "ban_sender_placeholder": "Ban reason (Optional)",
+      "ban_sender_confirm_btn": "Yes, Ban User",
+      "ban_sender_success": "User banned successfully.",
+      "delete_note_title": "Delete Note?",
+      "delete_note_text": "Enter reason (required):",
+      "delete_note_placeholder": "Ex: Spam / Abusive language",
+      "delete_note_confirm_btn": "Delete",
+      "delete_note_success": "Note deleted.",
+      "copy_id_success": "User ID copied",
+      "error_generic": "An error occurred",
+      "error_server": "Failed to contact server"
     }
   }
 }

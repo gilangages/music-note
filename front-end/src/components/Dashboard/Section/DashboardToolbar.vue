@@ -1,11 +1,15 @@
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useCardTheme } from "../../../lib/useCardTheme";
+import { useI18n } from "vue-i18n"; // 1. Import i18n
 
-defineProps({
+const { t } = useI18n(); // 2. Inisialisasi
+
+const props = defineProps({
   searchQuery: { type: String, default: "" },
   sortBy: { type: String, default: "newest" },
-  placeholder: { type: String, default: "Cari pesan..." },
+  // Ubah default jadi null agar bisa handle fallback i18n di template
+  placeholder: { type: String, default: null },
 });
 
 const emit = defineEmits(["update:searchQuery", "update:sortBy", "search"]);
@@ -16,7 +20,11 @@ const { cardThemes, globalThemePreference, setTheme } = useCardTheme();
 const showSortDropdown = ref(false);
 const showThemeDropdown = ref(false);
 
-const sortLabel = { newest: "TERBARU", oldest: "TERLAMA" };
+// Ubah sortLabel jadi computed agar reaktif ganti bahasa
+const sortLabel = computed(() => ({
+  newest: t("dashboard_toolbar.sort_newest"),
+  oldest: t("dashboard_toolbar.sort_oldest"),
+}));
 
 const onSearchInput = (e) => {
   emit("update:searchQuery", e.target.value);
@@ -36,7 +44,7 @@ const handleSelectTheme = (themeId) => {
 
 // --- TAMBAHAN BARU: Helper untuk format nama tema ---
 const getThemeLabel = (themeId) => {
-  if (themeId === "red") return "Red (Default)";
+  if (themeId === "red") return t("dashboard_toolbar.theme_red_default");
   // Ubah huruf pertama jadi kapital (blue -> Blue)
   return themeId.charAt(0).toUpperCase() + themeId.slice(1);
 };
@@ -62,7 +70,7 @@ const getThemeLabel = (themeId) => {
         :value="searchQuery"
         @input="onSearchInput"
         type="text"
-        :placeholder="placeholder"
+        :placeholder="props.placeholder || $t('dashboard_toolbar.search_placeholder')"
         class="w-full bg-[#1c1516] hover:bg-[#251a1c] border border-[#2c2021] rounded-full py-2.5 pl-10 pr-4 text-white text-sm focus:outline-none focus:border-[#9a203e] transition-all placeholder-[#555]" />
     </div>
 
@@ -74,7 +82,7 @@ const getThemeLabel = (themeId) => {
             showSortDropdown = false;
           "
           class="tooltip-container-mid w-full bg-[#1c1516] text-[#e5e5e5] border border-[#2c2021] rounded-lg px-3 py-2.5 focus:outline-none focus:border-[#9a203e] cursor-pointer flex items-center justify-center gap-2 hover:bg-[#251a1c] transition-colors"
-          data-title="Ganti Tema Kartu">
+          :data-title="$t('dashboard_toolbar.tooltip_theme')">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="18"
@@ -107,7 +115,7 @@ const getThemeLabel = (themeId) => {
             v-if="showThemeDropdown"
             class="absolute top-full mt-2 right-0 md:right-0 left-0 md:left-auto w-[200px] bg-[#1c1516] border border-[#2c2021] rounded-lg shadow-xl overflow-hidden z-50 flex flex-col max-h-[400px] overflow-y-auto custom-scrollbar">
             <div class="px-4 py-2 text-[10px] text-[#666] font-bold uppercase tracking-wider bg-[#150f10]">
-              Pilih Suasana
+              {{ $t("dashboard_toolbar.theme_header") }}
             </div>
 
             <button
@@ -116,7 +124,7 @@ const getThemeLabel = (themeId) => {
               :class="{ 'bg-[#2c2021]': globalThemePreference === 'random' }">
               <div
                 class="w-4 h-4 rounded-full bg-gradient-to-tr from-blue-500 via-purple-500 to-orange-500 border border-white/20"></div>
-              <span>Acak (Warna-Warni)</span>
+              <span>{{ $t("dashboard_toolbar.theme_random") }}</span>
             </button>
 
             <button
@@ -144,7 +152,7 @@ const getThemeLabel = (themeId) => {
             showThemeDropdown = false;
           "
           class="w-full bg-[#1c1516] text-[#e5e5e5] text-xs font-bold uppercase tracking-wider border border-[#2c2021] rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#9a203e] cursor-pointer flex items-center justify-center gap-2 hover:bg-[#251a1c] transition-colors">
-          <span class="truncate">{{ sortLabel[sortBy] || "TERBARU" }}</span>
+          <span class="truncate">{{ sortLabel[sortBy] || sortLabel.newest }}</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="14"
@@ -169,13 +177,13 @@ const getThemeLabel = (themeId) => {
               @click="handleSelectSort('newest')"
               class="px-4 py-3 text-xs font-bold text-[#e5e5e5] uppercase tracking-wider hover:bg-[#9a203e] hover:text-white transition-colors text-center border-b border-[#2c2021]/50 last:border-0"
               :class="{ 'bg-[#2c2021]': sortBy === 'newest' }">
-              Terbaru
+              {{ $t("dashboard_toolbar.sort_newest") }}
             </button>
             <button
               @click="handleSelectSort('oldest')"
               class="px-4 py-3 text-xs font-bold text-[#e5e5e5] uppercase tracking-wider hover:bg-[#9a203e] hover:text-white transition-colors text-center"
               :class="{ 'bg-[#2c2021]': sortBy === 'oldest' }">
-              Terlama
+              {{ $t("dashboard_toolbar.sort_oldest") }}
             </button>
           </div>
         </Transition>

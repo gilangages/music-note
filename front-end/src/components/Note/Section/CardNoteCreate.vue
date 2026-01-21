@@ -4,7 +4,9 @@ import { noteCreate, searchMusic } from "../../../lib/api/NoteApi";
 import { useLocalStorage } from "@vueuse/core";
 import { alertSuccess, alertError } from "../../../lib/alert";
 import { userDetail } from "../../../lib/api/UserApi";
+import { useI18n } from "vue-i18n"; // 1. Import i18n
 
+const { t } = useI18n(); // 2. Inisialisasi
 const emit = defineEmits(["create-success", "go-back"]);
 
 // --- STATE DATA ---
@@ -81,14 +83,16 @@ const removeSelectedSong = () => {
 // --- 3. LOGIC SUBMIT ---
 async function handleSubmit() {
   if (!selectedSong.value) {
-    await alertError("Kamu belum memilih lagu! Silakan cari dan klik lagunya.");
+    // Translate alert
+    await alertError(t("note.create.alert.no_song"));
     return;
   }
 
   let finalInitialName = null;
   if (kirimSebagai.value === "samaran") {
     if (!namaSamaran.value) {
-      await alertError("Nama samaran wajib diisi!");
+      // Translate alert
+      await alertError(t("note.create.alert.no_anonymous_name"));
       return;
     }
     finalInitialName = namaSamaran.value;
@@ -109,7 +113,8 @@ async function handleSubmit() {
   const responseBody = await response.json();
 
   if (response.ok) {
-    alertSuccess("Pesan berhasil dibuat.");
+    // Translate alert
+    alertSuccess(t("note.create.alert.success_create"));
     emit("create-success");
   } else {
     const pesanError = responseBody.errors ? Object.values(responseBody.errors)[0][0] : responseBody.message;
@@ -132,11 +137,11 @@ onBeforeMount(async () => {
     class="custom-scrollbar w-full max-w-[420px] rounded-[20px] bg-[#1c1516] p-4 sm:max-w-[560px] max-h-[90vh] overflow-y-auto"
     @click.stop>
     <form @submit.prevent="handleSubmit" class="flex flex-col text-[#e5e5e5] font-poppins relative">
-      <h1 class="text-center text-[#9a203e] text-3xl font-bold m-0">Buat Pesan Baru</h1>
-      <p class="mt-0 mb-[3em] text-center text-[12px] text-[#8c8a8a]">Pilih lagu dan tulis pesan untuk seseorang.</p>
+      <h1 class="text-center text-[#9a203e] text-3xl font-bold m-0">{{ $t("note.create.title") }}</h1>
+      <p class="mt-0 mb-[3em] text-center text-[12px] text-[#8c8a8a]">{{ $t("note.create.subtitle") }}</p>
 
       <div class="text-[14px] relative mb-[20px]">
-        <label class="block mb-[6px]">Pilih Lagu</label>
+        <label class="block mb-[6px]">{{ $t("note.create.label_pick_song") }}</label>
 
         <div
           v-if="selectedSong"
@@ -150,7 +155,7 @@ onBeforeMount(async () => {
             type="button"
             @click="removeSelectedSong"
             class="p-2 text-[#8c8a8a] hover:text-[#e5e5e5] hover:bg-[#9a203e] rounded-full transition-colors cursor-pointer"
-            title="Ganti Lagu">
+            :title="$t('note.create.btn_change_song')">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="18"
@@ -172,10 +177,12 @@ onBeforeMount(async () => {
             type="text"
             v-model="queryLagu"
             @input="handleSearchInput"
-            placeholder="Cari judul lagu..."
+            :placeholder="$t('note.create.placeholder_search_song')"
             class="w-full rounded-[10px] bg-[#2b2122] p-4 text-[#e5e5e5] caret-[#e5e5e5] focus:outline focus:outline-2 focus:outline-[#9a203e]" />
 
-          <div v-if="isSearching" class="absolute top-[14px] right-4 text-xs text-gray-400">Searching...</div>
+          <div v-if="isSearching" class="absolute top-[14px] right-4 text-xs text-gray-400">
+            {{ $t("note.create.searching") }}
+          </div>
 
           <div
             v-if="searchResults.length > 0"
@@ -199,7 +206,9 @@ onBeforeMount(async () => {
                 rel="noopener noreferrer"
                 class="flex items-center gap-1.5 opacity-60 hover:opacity-100 transition-opacity cursor-pointer group"
                 title="Search powered by Deezer">
-                <span class="text-[9px] text-gray-400 group-hover:text-gray-200">Search results by</span>
+                <span class="text-[9px] text-gray-400 group-hover:text-gray-200">
+                  {{ $t("note.create.search_by") }}
+                </span>
                 <img
                   src="https://cdn.brandfetch.io/idEUKgCNtu/theme/light/logo.svg?c=1dxbfHSJFAPEGdCLU4o5B"
                   class="h-3 w-auto grayscale group-hover:grayscale-0 transition-all"
@@ -211,44 +220,50 @@ onBeforeMount(async () => {
       </div>
 
       <div class="text-[14px]">
-        <label>Kepada</label>
+        <label>{{ $t("note.create.label_recipient") }}</label>
         <input
           type="text"
           required
           v-model="note.recipient"
-          placeholder="Kepada siapa pesanmu"
+          :placeholder="$t('note.create.placeholder_recipient')"
           class="mt-[6px] mb-[20px] w-full rounded-[10px] bg-[#2b2122] p-4 text-[#e5e5e5] caret-[#e5e5e5] focus:outline focus:outline-2 focus:outline-[#9a203e]" />
       </div>
 
       <div class="text-[14px]">
-        <label>Pesan</label>
+        <label>{{ $t("note.create.label_message") }}</label>
         <textarea
           required
           v-model="note.content"
-          placeholder="Tulis pesanmu"
+          :placeholder="$t('note.create.placeholder_message')"
           class="custom-scrollbar mt-[6px] mb-[20px] h-[120px] w-full resize-y rounded-[10px] bg-[#2b2122] p-4 text-[#e5e5e5] focus:outline focus:outline-2 focus:outline-[#9a203e]"></textarea>
       </div>
 
       <div class="text-[14px]">
-        <label>Kirim Sebagai</label>
+        <label>{{ $t("note.create.label_sender") }}</label>
 
         <div class="mt-[6px] mb-[10px] flex items-center gap-2">
           <input type="radio" value="asli" v-model="kirimSebagai" class="cursor-pointer w-5 h-5 accent-[#9a203e]" />
-          <span class="mr-[2em] cursor-pointer" @click="kirimSebagai = 'asli'">{{ name }} (Asli)</span>
+          <span class="mr-[2em] cursor-pointer" @click="kirimSebagai = 'asli'">
+            {{ name }} {{ $t("note.create.sender_real") }}
+          </span>
 
           <input type="radio" value="samaran" v-model="kirimSebagai" class="cursor-pointer w-5 h-5 accent-[#9a203e]" />
-          <span class="cursor-pointer" @click="kirimSebagai = 'samaran'">Nama Samaran</span>
+          <span class="cursor-pointer" @click="kirimSebagai = 'samaran'">
+            {{ $t("note.create.sender_anonymous") }}
+          </span>
         </div>
 
         <Transition name="expand">
           <div v-if="kirimSebagai === 'samaran'" class="overflow-hidden -mx-1 px-1">
             <div class="mt-2">
-              <label class="text-[#9a203e] text-xs font-bold uppercase tracking-wider mb-1 block">Nama Samaran</label>
+              <label class="text-[#9a203e] text-xs font-bold uppercase tracking-wider mb-1 block">
+                {{ $t("note.create.label_anonymous_name") }}
+              </label>
               <input
                 type="text"
                 v-model="namaSamaran"
                 required
-                placeholder="Contoh: Secret Admirer..."
+                :placeholder="$t('note.create.placeholder_anonymous_name')"
                 class="mb-[20px] w-full rounded-[10px] bg-[#2b2122] p-4 text-[#e5e5e5] caret-[#e5e5e5] focus:outline focus:outline-2 focus:outline-[#9a203e]" />
             </div>
           </div>
@@ -260,13 +275,13 @@ onBeforeMount(async () => {
           type="button"
           @click="handleKembali"
           class="w-full rounded-[10px] border border-[#8c8a8a] bg-[#1c1516] px-3 py-3 text-xs font-medium text-[#8c8a8a] hover:border-[#666565] hover:bg-[#120e0e] cursor-pointer">
-          Kembali
+          {{ $t("note.create.btn_back") }}
         </button>
 
         <button
           type="submit"
           class="w-full rounded-[10px] bg-[#9a203e] px-3 py-3 text-xs font-medium text-[#e5e5e5] hover:bg-[#7d1a33] cursor-pointer">
-          Buat Pesan
+          {{ $t("note.create.btn_create") }}
         </button>
       </div>
     </form>

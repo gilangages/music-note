@@ -124,7 +124,7 @@
       "name_label": "Nama",
       "name_placeholder": "Nama Kamu",
       "email_label": "Email",
-      "email_placeholder": "emailkamu@gmail.com",
+      "email_placeholder": "{'emailkamu@gmail.com'}",
       "category_label": "Kategori",
       "message_label": "Pesan",
       "message_placeholder": "Tulis pesanmu di sini secara detail...",
@@ -154,16 +154,16 @@
     }
   },
   "auth": {
-    "login_title": "Selamat Datang Kembali",
+    "login_title": "Masuk",
     "login_subtitle": "Masuk untuk melanjutkan perjalanan musikmu.",
     "register_title": "Buat Akun Baru",
     "register_subtitle": "Bergabunglah dengan komunitas Resonate sekarang.",
-    "label_name": "Nama Lengkap",
-    "label_email": "Alamat Email",
+    "label_name": "Nama",
+    "label_email": "Email",
     "label_password": "Kata Sandi",
     "label_confirm_password": "Konfirmasi Kata Sandi",
-    "placeholder_name": "Masukkan nama lengkap",
-    "placeholder_email": "contoh@email.com",
+    "placeholder_name": "Masukkan namamu",
+    "placeholder_email": "{'contoh@gmail.com'}",
     "placeholder_password": "Masukkan kata sandi",
     "placeholder_confirm_password": "Ulangi kata sandi",
     "btn_login": "Masuk",
@@ -208,6 +208,299 @@
       "system_error": "Terjadi kesalahan sistem.",
       "reset_success": "Password berhasil direset. Silakan login.",
       "reset_failed": "Gagal mereset password."
+    }
+  },
+  "user_profile": {
+    "title": "Edit Profil",
+    "back_dashboard": "Kembali ke Dashboard",
+    "change_photo": "Ganti Foto",
+    "basic_info": "Informasi Dasar",
+    "label_name": "Nama",
+    "btn_save_profile": "Simpan Profile",
+    "security": "Keamanan",
+    "label_email": "Email",
+    "locked": "(Terkunci)",
+    "label_new_password": "Password Baru",
+    "google_hint": "Kamu mendaftar dengan Google. Isi password ini jika ingin bisa login secara manual nanti.",
+    "placeholder_password": "Kosongkan jika tidak ingin mengganti",
+    "view_password": "Lihat Password",
+    "label_confirm_password": "Konfirmasi Password",
+    "placeholder_confirm_password": "Masukkan ulang kata sandi",
+    "btn_change_password": "Ganti Password",
+    "danger_zone": "Zona Bahaya",
+    "danger_text": "Menghapus akun akan menghilangkan semua data secara permanen. Tindakan ini tidak dapat dibatalkan.",
+    "btn_delete_account": "Hapus Akun Saya",
+    "modal_photo": "Foto Profil",
+    "alert": {
+      "load_error": "Gagal memuat data user.",
+      "photo_success": "Foto profil berhasil diperbarui!",
+      "photo_error": "Gagal upload foto",
+      "name_success": "Nama berhasil diubah.",
+      "password_mismatch": "Password tidak sama!",
+      "password_success": "Password berhasil diperbarui!",
+      "system_error": "Terjadi kesalahan sistem.",
+      "delete_confirm_title": "Yakin hapus akun?",
+      "delete_confirm_text": "Tindakan ini permanen! Semua notes dan data kamu akan hilang selamanya.",
+      "delete_success": "Akun berhasil dihapus. Sampai jumpa!",
+      "delete_error": "Gagal menghapus akun."
+    }
+  },
+  "note": {
+    "edit": {
+      "title": "Edit Pesan",
+      "subtitle": "Edit lagu dan pesanmu.",
+      "label_pick_song": "Pilih Lagu",
+      "btn_change_song": "Ganti Lagu",
+      "placeholder_search_song": "Ketik judul lagu...",
+      "searching": "Mencari...",
+      "search_by": "Hasil pencarian oleh",
+      "label_recipient": "Kepada",
+      "placeholder_recipient": "Kepada siapa pesanmu",
+      "label_message": "Pesan",
+      "placeholder_message": "Tulis pesanmu",
+      "label_sender": "Kirim Sebagai",
+      "sender_real": "(Asli)",
+      "sender_anonymous": "Nama Samaran",
+      "label_anonymous_name": "NAMA SAMARAN",
+      "placeholder_anonymous_name": "Contoh: Secret Admirer...",
+      "btn_back": "Kembali",
+      "btn_save": "Simpan Perubahan",
+      "alert": {
+        "no_song": "Kamu belum memilih lagu!",
+        "no_anonymous_name": "Nama samaran wajib diisi!",
+        "success_update": "Pesan berhasil diperbarui."
+      }
+    },
+    "create": {
+      "title": "Buat Pesan Baru",
+      "subtitle": "Pilih lagu dan tulis pesan untuk seseorang.",
+      "label_pick_song": "Pilih Lagu",
+      "btn_change_song": "Ganti Lagu",
+      "placeholder_search_song": "Cari judul lagu...",
+      "searching": "Mencari...",
+      "search_by": "Hasil pencarian oleh",
+      "label_recipient": "Kepada",
+      "placeholder_recipient": "Kepada siapa pesanmu",
+      "label_message": "Pesan",
+      "placeholder_message": "Tulis pesanmu",
+      "label_sender": "Kirim Sebagai",
+      "sender_real": "(Asli)",
+      "sender_anonymous": "Nama Samaran",
+      "label_anonymous_name": "NAMA SAMARAN",
+      "placeholder_anonymous_name": "Contoh: Secret Admirer...",
+      "btn_back": "Kembali",
+      "btn_create": "Buat Pesan",
+      "alert": {
+        "no_song": "Kamu belum memilih lagu! Silakan cari dan klik lagunya.",
+        "no_anonymous_name": "Nama samaran wajib diisi!",
+        "success_create": "Pesan berhasil dibuat."
+      }
+    }
+  },
+  "dashboard_user": {
+    "search_placeholder": "Cari pesan, lagu, atau artis...",
+    "btn_select": "Pilih",
+    "btn_cancel": "Batal",
+    "empty_state": "Belum ada pesan yang dibuat.",
+    "btn_create": "Buat Pesan Baru",
+    "card": {
+      "to": "UNTUK",
+      "from": "Dari",
+      "admin": "Admin",
+      "edited": "(diedit)",
+      "btn_edit": "Edit",
+      "btn_delete": "Hapus"
+    },
+    "load_more": {
+      "loading": "Memuat...",
+      "load": "Lihat Lebih Banyak"
+    },
+    "fab_title": "Buat Cerita Baru",
+    "selection_bar": {
+      "selected": "Terpilih",
+      "delete": "Hapus",
+      "cancel": "Batal"
+    },
+    "modal": {
+      "play_full": "Putar Lagu Penuh",
+      "preview": "Foto Profil",
+      "from": "DARI",
+      "to": "UNTUK",
+      "sent_at": "Dikirim:",
+      "btn_close": "Tutup",
+      "btn_edit": "Edit Pesan"
+    },
+    "alert": {
+      "confirm_bulk_delete": "Hapus {count} pesan terpilih?",
+      "success_bulk_delete": "Pesan terpilih berhasil dihapus.",
+      "error_bulk_delete": "Gagal menghapus pesan.",
+      "confirm_delete": "Apakah kamu yakin ingin menghapus pesan ini?",
+      "success_delete": "Pesan berhasil dihapus.",
+      "error_delete": "Terjadi kesalahan saat menghapus note."
+    }
+  },
+  "welcome_overlay": {
+    "greeting": "Selamat Datang, <span style=\"color: #9a203e; font-weight: bold; font-style: normal;\">{name}</span>",
+    "question": "Apa kabarmu hari ini?",
+    "instruction": "Mulailah menulis pesan dan jangan lupa sisipkan lagu ya ^_^"
+  },
+  "global_content": {
+    "search_placeholder": "Jelajahi pesan dunia...",
+    "empty_state": "Belum ada pesan yang dibuat.",
+    "card": {
+      "to": "UNTUK",
+      "from": "Dari",
+      "admin": "Admin",
+      "edited": "(diedit)",
+      "btn_open": "BUKA"
+    },
+    "load_more": {
+      "loading": "Memuat...",
+      "load": "Lihat Lebih Banyak"
+    },
+    "modal": {
+      "play_full": "Putar Lagu Penuh",
+      "from": "DARI",
+      "to": "UNTUK",
+      "sent_at": "Dikirim:",
+      "reply_header": "Resonansi Balasan",
+      "btn_reply_add": "+ Balas Lagu",
+      "form": {
+        "label_song": "Pilih Lagu Balasan",
+        "placeholder_search": "Ketik judul lagu...",
+        "search_by": "Search results by",
+        "label_message": "Pesan (Opsional)",
+        "placeholder_message": "Tulis pesan singkat...",
+        "label_sender": "Dari Siapa?",
+        "placeholder_sender": "Ketik nama (atau kosongkan utk Anonim)",
+        "btn_cancel": "Batal",
+        "btn_submit": "Kirim Balasan"
+      },
+      "loading_replies": "Memuat balasan terbaru...",
+      "empty_replies": "Belum ada yang membalas dengan lagu.",
+      "reply_from": "Dari:",
+      "limit_info": "Menampilkan 25 balasan terbaru.",
+      "limit_sub": "Pesan ini sangat populer! 🔥",
+      "btn_close": "Tutup",
+      "btn_share": "Bagikan",
+      "processing": "Memproses..."
+    },
+    "share_modal": {
+      "title": "Bagikan Pesan",
+      "app": "Bagikan ke Aplikasi",
+      "gallery": "Simpan ke Galeri",
+      "link": "Salin Link Pesan",
+      "cancel": "Batal"
+    },
+    "alert": {
+      "confirm_delete_reply": "Hapus balasan lagu ini?",
+      "delete_success": "Balasan dihapus.",
+      "delete_error": "Gagal menghapus.",
+      "select_song_error": "Pilih lagu dulu dong!",
+      "reply_sent": "Balasan terkirim!",
+      "connection_error": "Terjadi kesalahan koneksi.",
+      "image_saved": "Gambar berhasil disimpan ke galeri!",
+      "link_copied": "Link berhasil disalin!"
+    },
+    "share_text": {
+      "title": "Music Note Card",
+      "body": "Dengerin pesan lagu dari {author} buat {recipient} 🎵",
+      "filename_prefix": "pesan-dari-"
+    },
+    "defaults": {
+      "secret_friend": "Teman Rahasia",
+      "reply_content": "Membalas dengan lagu...",
+      "anonymous": "Anonim"
+    }
+  },
+  "notifications_page": {
+    "title": "Semua Notifikasi",
+    "subtitle": "Riwayat aktivitas dan pemberitahuan Anda.",
+    "mark_all_read": "✓ Tandai Semua Dibaca",
+    "loading": "Memuat notifikasi...",
+    "empty_state": "Tidak ada notifikasi untuk ditampilkan.",
+    "new_info_default": "Info Baru",
+    "admin_reason": "⚠️ Alasan Admin:",
+    "user_message_label": "Pesan User:",
+    "btn_prev": "Sebelumnya",
+    "btn_next": "Berikutnya",
+    "pagination_info": "Hal {current} / {last}",
+    "alert": {
+      "confirm_mark_all": "Tandai semua notifikasi (termasuk di halaman lain) sebagai sudah dibaca?"
+    }
+  },
+  "notification_dropdown": {
+    "title": "Notifikasi",
+    "mark_all_read": "Tandai semua dibaca",
+    "loading": "Memuat...",
+    "empty_state": "Belum ada notifikasi.",
+    "new_notification_default": "Notifikasi Baru",
+    "reason_label": "⚠️ Alasan:",
+    "user_message_label": "Pesan User:",
+    "view_all": "Lihat Semua Notifikasi"
+  },
+  "dashboard_toolbar": {
+    "search_placeholder": "Cari pesan...",
+    "tooltip_theme": "Ganti Tema Kartu",
+    "theme_header": "Pilih Suasana",
+    "theme_random": "Acak (Warna-Warni)",
+    "theme_red_default": "Red (Default)",
+    "sort_newest": "Terbaru",
+    "sort_oldest": "Terlama"
+  },
+  "user_logout": {
+    "processing": "Sedang mengeluarkan akun..."
+  },
+  "admin_dashboard": {
+    "title": "Admin Dashboard",
+    "subtitle": "Community Safety & Content Moderation",
+    "search_users": "Cari nama/email...",
+    "search_notes": "Cari isi konten...",
+    "tabs": {
+      "users": "Manajemen User",
+      "notes": "Moderasi Konten"
+    },
+    "loading": "Sinkronisasi data...",
+    "empty_state": "Tidak ada data ditemukan.",
+    "table_headers": {
+      "user_profile": "Profil User",
+      "status": "Status",
+      "date": "Tanggal",
+      "content": "Isi Pesan (Anonim)",
+      "actions": "Tindakan"
+    },
+    "status": {
+      "admin": "Admin",
+      "banned": "Diblokir",
+      "active": "Aktif"
+    },
+    "buttons": {
+      "ban_user": "Blokir User",
+      "restore": "Pulihkan",
+      "delete_note": "Hapus Pesan",
+      "ban_sender": "Blokir Pengirim",
+      "prev": "Sebelumnya",
+      "next": "Berikutnya"
+    },
+    "pagination": "Total Data: {total}",
+    "alert": {
+      "restore_confirm": "Pulihkan akses akun user ini?",
+      "restore_success": "Akun dipulihkan.",
+      "ban_user_confirm": "Yakin ingin memblokir user ini?",
+      "ban_user_success": "User diblokir.",
+      "ban_sender_title": "Blokir Penulis Ini?",
+      "ban_sender_text": "Sistem akan melacak dan memblokir penulis pesan ini. Identitas penulis tetap disembunyikan dari Anda.",
+      "ban_sender_placeholder": "Alasan pemblokiran (Opsional)",
+      "ban_sender_confirm_btn": "Ya, Hukum User",
+      "ban_sender_success": "User berhasil diblokir.",
+      "delete_note_title": "Hapus Note?",
+      "delete_note_text": "Masukkan alasan (wajib):",
+      "delete_note_placeholder": "Contoh: Spam / Kata kasar",
+      "delete_note_confirm_btn": "Hapus",
+      "delete_note_success": "Note dihapus.",
+      "copy_id_success": "ID User disalin",
+      "error_generic": "Terjadi kesalahan",
+      "error_server": "Gagal menghubungi server"
     }
   }
 }

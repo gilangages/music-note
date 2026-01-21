@@ -3,6 +3,9 @@ import { ref, onMounted } from "vue";
 import { getNotifications, markNotificationsRead, markAllNotificationsRead } from "../../../lib/api/NotificationApi";
 import { useLocalStorage } from "@vueuse/core";
 import { formatTime } from "../../../lib/dateFormatter";
+import { useI18n } from "vue-i18n"; // 1. Import i18n
+
+const { t } = useI18n(); // 2. Inisialisasi
 
 const token = useLocalStorage("token", "");
 const notifications = ref([]);
@@ -72,22 +75,22 @@ onMounted(() => {
   <div
     class="absolute -right-4 sm:right-0 mt-[12px] w-[85vw] sm:w-[360px] bg-[#1e1e1e] border border-[#4b1a1a] rounded-xl shadow-2xl overflow-hidden z-50 ring-1 ring-white/10">
     <div class="p-4 border-b border-[#4b1a1a] bg-[#2c0f0f] flex justify-between items-center">
-      <h3 class="font-bold text-[#e5e5e5] text-sm">Notifikasi</h3>
+      <h3 class="font-bold text-[#e5e5e5] text-sm">{{ $t("notification_dropdown.title") }}</h3>
 
       <button
         v-if="notifications.some((n) => !n.read_at)"
         @click="markAllRead"
         class="text-[10px] text-red-400 hover:text-white underline cursor-pointer">
-        Tandai semua dibaca
+        {{ $t("notification_dropdown.mark_all_read") }}
       </button>
     </div>
 
     <div class="max-h-[350px] overflow-y-auto custom-scrollbar">
-      <div v-if="loading" class="p-6 text-center text-gray-400 text-xs">Loading...</div>
+      <div v-if="loading" class="p-6 text-center text-gray-400 text-xs">{{ $t("notification_dropdown.loading") }}</div>
 
       <div v-else-if="notifications.length === 0" class="p-8 text-center flex flex-col items-center gap-2">
         <span class="text-2xl">📭</span>
-        <span class="text-gray-500 text-xs">Belum ada notifikasi.</span>
+        <span class="text-gray-500 text-xs">{{ $t("notification_dropdown.empty_state") }}</span>
       </div>
 
       <ul v-else>
@@ -108,7 +111,7 @@ onMounted(() => {
 
             <div class="flex-1">
               <p class="text-sm font-semibold text-[#e5e5e5] mb-0.5">
-                {{ notif.data.title || "Notifikasi Baru" }}
+                {{ notif.data.title || $t("notification_dropdown.new_notification_default") }}
               </p>
               <p class="text-xs text-[#cdcccc] leading-relaxed">
                 {{ notif.data.message }}
@@ -116,14 +119,16 @@ onMounted(() => {
               <p
                 v-if="notif.data.reason"
                 class="text-[10px] text-red-400 mt-1 font-medium bg-red-900/10 px-1.5 py-0.5 rounded border border-red-900/30 inline-block">
-                ⚠️ Alasan: {{ notif.data.reason }}
+                {{ $t("notification_dropdown.reason_label") }} {{ notif.data.reason }}
               </p>
 
               <div
                 v-if="notif.data.appeal_message"
                 class="mt-2 p-2 rounded bg-[#2c1a1a] border border-[#4b1a1a] relative">
                 <p class="text-[11px] text-gray-300 italic">
-                  <span class="font-bold text-[#9a203e] not-italic">Pesan User:</span>
+                  <span class="font-bold text-[#9a203e] not-italic">
+                    {{ $t("notification_dropdown.user_message_label") }}
+                  </span>
                   "{{ notif.data.appeal_message }}"
                 </p>
               </div>
@@ -140,7 +145,7 @@ onMounted(() => {
       <router-link
         to="/dashboard/notifications"
         class="text-[11px] text-red-400 hover:text-red-300 font-medium transition flex items-center justify-center gap-1">
-        Lihat Semua Notifikasi
+        {{ $t("notification_dropdown.view_all") }}
         <span>→</span>
       </router-link>
     </div>

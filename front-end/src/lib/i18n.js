@@ -11,6 +11,7 @@ const i18n = createI18n({
   fallbackLocale: "id",
   globalInjection: true, // Agar $t bisa dipakai langsung di template
   warnHtmlInMessage: "off",
+  warnHtmlMessage: false,
   messages: {
     id,
     en,

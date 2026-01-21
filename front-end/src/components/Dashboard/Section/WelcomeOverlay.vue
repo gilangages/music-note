@@ -2,7 +2,9 @@
 // 1. Tambahkan 'watch' di import
 import { ref, watch, defineEmits, onMounted } from "vue";
 import { userState } from "../../../lib/store";
+import { useI18n } from "vue-i18n"; // Import i18n
 
+const { t } = useI18n(); // Inisialisasi
 const emit = defineEmits(["animation-complete"]);
 
 const displayDetail = ref("");
@@ -53,25 +55,27 @@ async function checkAnimationRequirement() {
   }
 }
 
-// ... (kode handleAnimation biarkan sama) ...
+// ... (kode handleAnimation biarkan sama, hanya teks diganti t()) ...
 async function handleAnimation(userName) {
   showIntro.value = true;
   isTextVisible.value = true;
 
-  const welcomeText = `Selamat Datang, <span style="color: #9a203e; font-weight: bold; font-style: normal;">${userName}</span>`;
+  // Menggunakan i18n dengan parameter {name} untuk interpolasi nama
+  const welcomeText = t("welcome_overlay.greeting", { name: userName });
+
   await typeWriter(welcomeText, 50);
   await wait(400);
   isTextVisible.value = false;
   await wait(300);
 
   isTextVisible.value = true;
-  await typeWriter("Apa kabarmu hari ini?", 50);
+  await typeWriter(t("welcome_overlay.question"), 50);
   await wait(400);
   isTextVisible.value = false;
   await wait(300);
 
   isTextVisible.value = true;
-  await typeWriter("Mulailah menulis pesan dan jangan lupa sisipkan lagu ya ^_^", 40);
+  await typeWriter(t("welcome_overlay.instruction"), 40);
   await wait(500);
 
   isTextVisible.value = false;
@@ -90,7 +94,7 @@ watch(
     if (newVal) {
       checkAnimationRequirement();
     }
-  }
+  },
 );
 
 onMounted(() => {

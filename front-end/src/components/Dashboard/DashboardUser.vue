@@ -3,10 +3,6 @@ import { ref } from "vue"; // Hapus onMounted jika tidak dipakai logic lain
 import FillContent from "./Section/FillContent.vue";
 import NoteCreate from "../Note/NoteCreate.vue";
 import NoteEdit from "../Note/NoteEdit.vue";
-// Hapus import yang tidak diperlukan lagi
-// import { getNotifications, markNotificationsRead } from "../../lib/api/NotificationApi";
-// import { alertError } from "../../lib/alert";
-// import { useLocalStorage } from "@vueuse/core";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
@@ -14,7 +10,6 @@ const showModal = ref(false);
 const modalType = ref("create");
 const selectedNoteData = ref(null);
 const fillContentRef = ref(null);
-// const token = useLocalStorage("token", ""); // Tidak perlu token di sini lagi
 
 const openCreateModal = () => {
   modalType.value = "create";
