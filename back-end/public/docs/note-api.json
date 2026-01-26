@@ -1,0 +1,673 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "Notes & Music API",
+        "description": "API for Notes interactions, Music data, and Replies.",
+        "version": "1.3.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000"
+        }
+    ],
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "Token"
+            }
+        },
+        "schemas": {
+            "NoteReply": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "user_id": {
+                        "type": "integer"
+                    },
+                    "note_id": {
+                        "type": "integer"
+                    },
+                    "content": {
+                        "type": "string"
+                    },
+                    "initial_name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "music_track_name": {
+                        "type": "string"
+                    },
+                    "music_artist_name": {
+                        "type": "string"
+                    },
+                    "music_album_image": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "user": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "avatar": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "Note": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 10
+                    },
+                    "parent_id": {
+                        "type": "integer",
+                        "nullable": true,
+                        "description": "ID of parent note if this is a reply (or null)"
+                    },
+                    "content": {
+                        "type": "string",
+                        "example": "Lagu ini buat kamu yang jauh disana."
+                    },
+                    "recipient": {
+                        "type": "string",
+                        "example": "Si Dia"
+                    },
+                    "initial_name": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": "Secret Admirer"
+                    },
+                    "author": {
+                        "type": "string",
+                        "example": "Gilang (User)"
+                    },
+                    "author_avatar": {
+                        "type": "string",
+                        "example": "http://.../avatar.jpg"
+                    },
+                    "music_track_name": {
+                        "type": "string",
+                        "example": "Yellow"
+                    },
+                    "music_artist_name": {
+                        "type": "string",
+                        "example": "Coldplay"
+                    },
+                    "music_album_image": {
+                        "type": "string",
+                        "example": "https://i.scdn.co/..."
+                    },
+                    "music_preview_url": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "music_track_link": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": "https://open.spotify.com/track/..."
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "replies": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/NoteReply"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "paths": {
+        "/api/notes": {
+            "get": {
+                "summary": "Get All Notes (Protected)",
+                "description": "Filter available: search, sort=oldest.",
+                "tags": [
+                    "Notes"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "latest",
+                                "oldest"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Note"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create New Note",
+                "tags": [
+                    "Notes"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "content",
+                                    "recipient",
+                                    "music_track_id",
+                                    "music_track_name",
+                                    "music_artist_name",
+                                    "music_album_image"
+                                ],
+                                "properties": {
+                                    "content": {
+                                        "type": "string",
+                                        "maxLength": 1000
+                                    },
+                                    "recipient": {
+                                        "type": "string",
+                                        "maxLength": 50
+                                    },
+                                    "initial_name": {
+                                        "type": "string",
+                                        "nullable": true,
+                                        "maxLength": 50
+                                    },
+                                    "music_track_id": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "music_track_name": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "music_artist_name": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "music_album_image": {
+                                        "type": "string",
+                                        "format": "url"
+                                    },
+                                    "music_preview_url": {
+                                        "type": "string",
+                                        "format": "url",
+                                        "nullable": true
+                                    },
+                                    "music_track_link": {
+                                        "type": "string",
+                                        "format": "url",
+                                        "nullable": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Note Created"
+                    },
+                    "422": {
+                        "description": "Validation Failed"
+                    }
+                }
+            }
+        },
+        "/api/notes/my": {
+            "get": {
+                "summary": "Get My Notes",
+                "description": "Get notes created by the logged-in user.",
+                "tags": [
+                    "Notes"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of user notes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Note"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/notes/bulk-delete": {
+            "post": {
+                "summary": "Bulk Delete Notes",
+                "tags": [
+                    "Notes"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2,
+                                            5
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Notes deleted successfully"
+                    }
+                }
+            }
+        },
+        "/api/notes/{id}": {
+            "get": {
+                "summary": "Get Single Note (with Replies)",
+                "tags": [
+                    "Notes"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Note"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update Note",
+                "tags": [
+                    "Notes"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "content": {
+                                        "type": "string"
+                                    },
+                                    "recipient": {
+                                        "type": "string"
+                                    },
+                                    "initial_name": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "music_track_id": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete Note",
+                "tags": [
+                    "Notes"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deleted"
+                    }
+                }
+            }
+        },
+        "/api/notes/{id}/reply": {
+            "post": {
+                "summary": "Reply to a Note",
+                "tags": [
+                    "Replies"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "music_track_id",
+                                    "music_track_name",
+                                    "music_artist_name"
+                                ],
+                                "properties": {
+                                    "content": {
+                                        "type": "string",
+                                        "nullable": true,
+                                        "max": 500
+                                    },
+                                    "initial_name": {
+                                        "type": "string",
+                                        "nullable": true,
+                                        "max": 50
+                                    },
+                                    "music_track_id": {
+                                        "type": "string"
+                                    },
+                                    "music_track_name": {
+                                        "type": "string"
+                                    },
+                                    "music_artist_name": {
+                                        "type": "string"
+                                    },
+                                    "music_album_image": {
+                                        "type": "string"
+                                    },
+                                    "music_preview_url": {
+                                        "type": "string",
+                                        "nullable": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Reply sent",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NoteReply"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/replies/{id}": {
+            "delete": {
+                "summary": "Delete Reply",
+                "tags": [
+                    "Replies"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Reply deleted successfully"
+                    }
+                }
+            }
+        },
+        "/api/notes/global": {
+            "get": {
+                "summary": "Get Global Notes (Public)",
+                "tags": [
+                    "Notes"
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Note"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/music/search": {
+            "get": {
+                "summary": "Search Music",
+                "tags": [
+                    "Music"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Search Results"
+                    }
+                }
+            }
+        },
+        "/api/stream/{trackId}": {
+            "get": {
+                "summary": "Stream Audio",
+                "description": "Stream audio file directly from storage/cloud via backend proxy.",
+                "tags": [
+                    "Music"
+                ],
+                "parameters": [
+                    {
+                        "name": "trackId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Audio stream",
+                        "content": {
+                            "audio/mpeg": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Track not found."
+                    }
+                }
+            }
+        },
+        "/api/image-proxy": {
+            "get": {
+                "summary": "Image Proxy",
+                "description": "Bypass CORS for external images.",
+                "tags": [
+                    "Utility"
+                ],
+                "parameters": [
+                    {
+                        "name": "url",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uri"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Image data",
+                        "content": {
+                            "image/*": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
