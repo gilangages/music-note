@@ -3,6 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Resonate API Documentation</title>
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css" />
     <style>
@@ -15,19 +17,34 @@
             background-color: #1e293b !important;
         }
 
-        /* Sesuaikan tema Resonate */
+        /* Hilangkan tombol Explore */
         .swagger-ui .topbar .download-url-wrapper .download-url-button {
             display: none !important;
         }
 
-        /* Supaya dropdown-nya terlihat lebih rapi dan lebar */
+        /* Hilangkan input text url bawaan */
         .swagger-ui .topbar .download-url-wrapper input[type=text] {
             display: none !important;
         }
 
-        /* Sembunyikan input text jika ada glitch */
+        /* Style Dropdown */
         .swagger-ui .topbar .download-url-wrapper select {
             min-width: 200px;
+            /* Agar di HP tidak terlalu mepet pinggir */
+            max-width: 90vw;
+        }
+
+        /* 🔥 TAMBAHAN RESPONSIVE: Agar Logo & Dropdown rapi di HP */
+        @media (max-width: 600px) {
+            .swagger-ui .topbar .wrapper {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .swagger-ui .topbar .download-url-wrapper {
+                margin-left: 0 !important;
+            }
         }
     </style>
 </head>
@@ -39,7 +56,6 @@
     <script>
         window.onload = function() {
             const ui = SwaggerUIBundle({
-                // KONFIGURASI PENTING DI SINI
                 urls: [{
                         url: "/docs/user-api.json",
                         name: "User & Auth API"
@@ -53,7 +69,7 @@
                         name: "Admin API"
                     },
                 ],
-                "dom_id": "#swagger-ui",
+                dom_id: "#swagger-ui",
                 deepLinking: true,
                 presets: [
                     SwaggerUIBundle.presets.apis,
