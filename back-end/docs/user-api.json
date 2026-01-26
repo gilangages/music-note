@@ -412,6 +412,210 @@
                     }
                 }
             }
+        },
+        "/api/forgot-password": {
+            "post": {
+                "summary": "Send Reset Password Link",
+                "tags": [
+                    "Auth"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Reset link sent to your email."
+                    },
+                    "422": {
+                        "description": "Validation error (invalid email)."
+                    }
+                }
+            }
+        },
+        "/api/reset-password": {
+            "post": {
+                "summary": "Reset Password",
+                "tags": [
+                    "Auth"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "token",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "token": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "minLength": 8
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password has been reset."
+                    }
+                }
+            }
+        },
+        "/api/contact": {
+            "post": {
+                "summary": "Contact Support / Report Bug",
+                "tags": [
+                    "User Support"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "message"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "subject": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Message sent successfully."
+                    }
+                }
+            }
+        },
+        "/api/auth/google/redirect": {
+            "get": {
+                "summary": "Redirect to Google Login",
+                "tags": [
+                    "Auth"
+                ],
+                "responses": {
+                    "302": {
+                        "description": "Redirects to Google OAuth page."
+                    }
+                }
+            }
+        },
+        "/api/auth/google/callback": {
+            "get": {
+                "summary": "Google Login Callback",
+                "description": "Handled by frontend usually, but backend processes the code.",
+                "tags": [
+                    "Auth"
+                ],
+                "parameters": [
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Login success, returns token."
+                    }
+                }
+            }
+        },
+        "/api/notifications/all": {
+            "get": {
+                "summary": "Get All Notifications (Paginated)",
+                "tags": [
+                    "Notifications"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginated list of all notifications.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Notification"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

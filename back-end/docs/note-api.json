@@ -600,6 +600,74 @@
                     }
                 }
             }
+        },
+        "/api/stream/{trackId}": {
+            "get": {
+                "summary": "Stream Audio",
+                "description": "Stream audio file directly from storage/cloud via backend proxy.",
+                "tags": [
+                    "Music"
+                ],
+                "parameters": [
+                    {
+                        "name": "trackId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Audio stream",
+                        "content": {
+                            "audio/mpeg": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Track not found."
+                    }
+                }
+            }
+        },
+        "/api/image-proxy": {
+            "get": {
+                "summary": "Image Proxy",
+                "description": "Bypass CORS for external images.",
+                "tags": [
+                    "Utility"
+                ],
+                "parameters": [
+                    {
+                        "name": "url",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uri"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Image data",
+                        "content": {
+                            "image/*": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
