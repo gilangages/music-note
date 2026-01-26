@@ -120,7 +120,7 @@ onMounted(async () => {
       class="bg-[#1c1516] text-[#e5e5e5] text-[14px] rounded-[30px] w-full max-w-[560px] px-4 py-8 shadow-2xl border border-[#2c2021]">
       <div class="flex flex-col items-center text-[#9a203e] mb-6">
         <h1 class="text-[28px] font-bold leading-tight">{{ $t("auth.login_title") }}</h1>
-        <p class="mt-1 text-[13px] text-[#8c8a8a]">{{ $t("auth.login_subtitle") }}</p>
+        <p class="mt-1 text-[13px] text-center text-[#8c8a8a]">{{ $t("auth.login_subtitle") }}</p>
       </div>
 
       <form v-on:submit.prevent="handleSubmit" class="space-y-5">
