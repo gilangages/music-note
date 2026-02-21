@@ -38,6 +38,19 @@
 
 Ikuti langkah-langkah berikut untuk menjalankan Resonate di lingkungan lokal Anda.
 
+### 0. Clone Repository
+Clone repository melalui terminal atau CMD:
+```
+# Clone repo
+git clone https://github.com/gilangages/resonate.git
+
+# Buka folder hasil clone
+cd resonate
+
+# Buka di IDE kamu (misal: VS Code)
+code .
+```
+
 ### 1. Persiapan Back-end
 
 Masuk ke folder `back-end`, lalu jalankan:
@@ -80,9 +93,10 @@ MAIL_FROM_NAME="${APP_NAME}"
 ```
 
 ### 3. Migrasi & Storage Link (Penting!)
+- Migrasi dan jalankan seeder, pastikan di .env kamu membuat key ADMIN_EMAIL=email@untukadmin.com dan key ADMIN_PASS=passwordadmin (atur semaumu),
 - Agar foto profil/avatar bisa tampil, Anda wajib menjalankan perintah link storage.
 ```
-# Jalankan migrasi database dan seeder
+# Jalankan migrasi database dan seeder admin
 php artisan migrate --seed
 
 # Hubungkan folder storage ke publik (Wajib agar foto muncul)

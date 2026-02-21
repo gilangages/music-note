@@ -14,6 +14,11 @@ return [
     |
      */
 
+    'admin' => [
+        'email' => env('ADMIN_EMAIL'), // Default value jika .env kosong
+        'password' => env('ADMIN_PASS'),
+    ],
+
     'postmark' => [
         'key' => env('POSTMARK_API_KEY'),
     ],

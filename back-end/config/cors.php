@@ -28,8 +28,6 @@ return [
         'http://localhost:*', // Buat local development
     ],
 
-    'allowed_origins_patterns' => [],
-
     'allowed_headers' => ['*'],
 
     'exposed_headers' => [],

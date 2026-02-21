@@ -13,12 +13,21 @@ class SuperAdminSeeder extends Seeder
      */
     public function run(): void
     {
+
+        $email = config('services.admin.email');
+        $password = config('services.admin.password');
+
+        if (!$email || !$password) {
+            $this->command->error('Please filll ADMIN_EMAIL and ADMIN_PASS in file .env!');
+            return;
+        }
+
         // Buat Akun Super Admin
-        User::firstOrCreate(
-            ['email' => 'qbdian@gmail.com'], // Cek berdasarkan email agar tidak duplikat
+        $user = User::firstOrCreate(
+            ['email' => $email], // Cek berdasarkan email agar tidak duplikat
             [
                 'name' => 'Super Admin Abdian',
-                'password' => Hash::make('abdian123'), // Ganti dengan password yang aman
+                'password' => Hash::make($password), // Ganti dengan password yang aman
                 'role' => 'admin',
                 'avatar' => null,
                 'email_verified_at' => now(),
@@ -28,6 +37,6 @@ class SuperAdminSeeder extends Seeder
         // Opsi: Tambahkan beberapa user dummy untuk testing moderasi
         // User::factory(10)->create();
 
-        echo "Selesai! Akun admin: qbdian@gmail.com | password: abdian123 \n";
+        $this->command->info("Admin Ready: $email");
     }
 }
