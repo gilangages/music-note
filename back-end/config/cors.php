@@ -26,10 +26,7 @@ return [
     'allowed_origins_patterns' => [
         'https://resonate-*.vercel.app', // <--- INI KUNCINYA
         'http://localhost:*', // Buat local development
-        'http://localhost:5174',
     ],
-
-    'allowed_origins_patterns' => [],
 
     'allowed_headers' => ['*'],
 
