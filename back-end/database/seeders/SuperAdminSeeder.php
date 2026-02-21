@@ -17,7 +17,7 @@ class SuperAdminSeeder extends Seeder
         $email = config('services.admin.email');
         $password = config('services.admin.password');
 
-        if (!$email || $password) {
+        if (!$email || !$password) {
             $this->command->error('Please filll ADMIN_EMAIL and ADMIN_PASS in file .env!');
             return;
         }

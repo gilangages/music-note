@@ -12,10 +12,7 @@ class ReplySystemRefactoredTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * @test
-     */
-    public function user_can_reply_to_a_note_using_new_table()
+    public function test_user_can_reply_to_a_note_using_new_table()
     {
         // 1. Setup User & Note Induk
         $user = User::factory()->create();
@@ -54,10 +51,7 @@ class ReplySystemRefactoredTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
-    public function replies_are_included_in_note_detail()
+    public function test_replies_are_included_in_note_detail()
     {
         $note = Note::factory()->create();
         $user = User::factory()->create();
@@ -82,10 +76,7 @@ class ReplySystemRefactoredTest extends TestCase
         $response->assertJsonPath('data.replies.0.content', 'Reply Manual');
     }
 
-    /**
-     * @test
-     */
-    public function user_can_delete_their_own_reply()
+    public function test_user_can_delete_their_own_reply()
     {
         $user = User::factory()->create();
         $note = Note::factory()->create();
