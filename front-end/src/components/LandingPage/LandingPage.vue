@@ -12,6 +12,7 @@ import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Swal from "sweetalert2";
 import FAQ from "./Section/FAQ.vue";
+import CaraKerja from "./Section/CaraKerja.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -116,6 +117,7 @@ onMounted(() => {
     <Navbar />
     <Hero id="home" />
     <Fitur id="fitur" />
+    <CaraKerja id="cara-kerja" />
     <PesanLain id="pesan-lain" v-on:loaded="handleDataLoaded" />
     <FAQ id="faq" />
     <Ajakan />

@@ -526,5 +526,21 @@
     "title": "MENYIAPKAN RESONATE...",
     "subtitle": "Tunggu sebentar ya. Mengambil data memori.",
     "server_notice": "Proses ini mungkin memakan waktu jika server sedang bangun dari mode istirahat."
+  },
+  "cara_kerja": {
+    "title": "Bagaimana Resonate Bekerja?",
+    "subtitle": "Hanya butuh tiga langkah sederhana untuk mengabadikan memori dan perasaanmu ke dalam sebuah melodi dan tulisan.",
+    "step1": {
+      "title": "Tulis Perasaanmu",
+      "desc": "Tuangkan isi hatimu ke dalam catatan kecil. Tidak ada batasan, jadilah dirimu sendiri secara bebas."
+    },
+    "step2": {
+      "title": "Sematkan Lagu",
+      "desc": "Pilih lagu favorit dari Deezer yang paling mewakili emosi atau memori dari pesan yang kamu tulis."
+    },
+    "step3": {
+      "title": "Kirim & Bagikan",
+      "desc": "Lempar pesanmu ke lautan publik secara anonim, atau bagikan link rahasia khusus ke orang tersayang."
+    }
   }
 }
