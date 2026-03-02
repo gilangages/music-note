@@ -111,7 +111,7 @@ const scrollToSection = async (sectionId) => {
 
         <RouterLink
           to="/register"
-          class="cursor-pointer hidden sm:block text-[#e5e5e5] text-[14px] font-semibold hover:text-[#ff4d6d] transition-colors">
+          class="cursor-pointer hidden sm:block text-[#e5e5e5] text-[14px] font-semibold hover:text-[#b92b4a] transition-colors">
           {{ $t("nav.register") }}
         </RouterLink>
         <RouterLink

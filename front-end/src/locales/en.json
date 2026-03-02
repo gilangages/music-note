@@ -521,5 +521,26 @@
     "title": "Page Not Found",
     "desc": "Oops! It seems the tone you are looking for is false or this page has vanished from circulation.",
     "btn_home": "Back to Home"
+  },
+  "loading": {
+    "title": "PREPARING RESONATE...",
+    "subtitle": "Please wait a moment. Retrieving memory data.",
+    "server_notice": "This process may take a while if the server is waking up from idle mode."
+  },
+  "cara_kerja": {
+    "title": "How Does Resonate Work?",
+    "subtitle": "It only takes three simple steps to immortalize your memories and feelings into a melody and writing.",
+    "step1": {
+      "title": "Write Your Feelings",
+      "desc": "Pour your heart out into a small note. There are no limits, just be your true self freely."
+    },
+    "step2": {
+      "title": "Embed a Song",
+      "desc": "Choose a favorite song from Deezer that best represents the emotion or memory of your message."
+    },
+    "step3": {
+      "title": "Send & Share",
+      "desc": "Cast your message into the public sea anonymously, or share a special secret link with a loved one."
+    }
   }
 }

@@ -10,6 +10,7 @@ import { computed } from "vue";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n"; // <--- 1. Import ini
 
+const emit = defineEmits(["loaded"]);
 //useTheme
 const { getTheme, getSelectedTheme } = useCardTheme();
 
@@ -49,6 +50,8 @@ async function fetchNoteGlobal() {
     }
   } catch (error) {
     console.error(error);
+  } finally {
+    emit("loaded");
   }
 }
 
