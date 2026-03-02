@@ -521,5 +521,10 @@
     "title": "Halaman Tidak Ditemukan",
     "desc": "Oops! Sepertinya nada yang kamu cari fals atau halaman ini sudah menghilang dari peredaran.",
     "btn_home": "Kembali ke Beranda"
+  },
+  "loading": {
+    "title": "MENYIAPKAN RESONATE...",
+    "subtitle": "Tunggu sebentar ya. Mengambil data memori.",
+    "server_notice": "Proses ini mungkin memakan waktu jika server sedang bangun dari mode istirahat."
   }
 }

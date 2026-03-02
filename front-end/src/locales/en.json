@@ -521,5 +521,10 @@
     "title": "Page Not Found",
     "desc": "Oops! It seems the tone you are looking for is false or this page has vanished from circulation.",
     "btn_home": "Back to Home"
+  },
+  "loading": {
+    "title": "PREPARING RESONATE...",
+    "subtitle": "Please wait a moment. Retrieving memory data.",
+    "server_notice": "This process may take a while if the server is waking up from idle mode."
   }
 }
