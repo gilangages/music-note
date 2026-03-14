@@ -6,6 +6,7 @@ import Fitur from "./Section/Fitur.vue";
 import PesanLain from "./Section/PesanLain.vue";
 import Ajakan from "./Section/Ajakan.vue";
 import Footer from "./Section/Footer.vue";
+import GlobalLoading from "../GlobalLoading.vue";
 
 // --- LOGIKA BARU UNTUK SHARE LINK ---
 import { ref, onMounted } from "vue";
@@ -20,9 +21,7 @@ const router = useRouter();
 const isGlobalLoading = ref(true);
 
 const handleDataLoaded = () => {
-  setTimeout(() => {
-    isGlobalLoading.value = false;
-  }, 500);
+  isGlobalLoading.value = false;
 };
 
 // State untuk Modal
@@ -88,32 +87,7 @@ onMounted(() => {
 
 <template>
   <div class="relative min-h-screen bg-[#0f0505]">
-    <Transition name="fade-loader">
-      <div
-        v-if="isGlobalLoading"
-        class="fixed inset-0 z-[999999] bg-[#0f0505] flex flex-col items-center justify-center">
-        <div class="relative flex items-center justify-center">
-          <div
-            class="absolute w-20 h-20 border-4 border-[#3f3233] border-t-[#9a203e] border-b-[#9a203e] rounded-full animate-spin"></div>
-
-          <div class="w-12 h-12 flex items-center justify-center bg-[#0f0505] rounded-full z-10 p-2 animate-pulse">
-            <img src="/resonate.svg" alt="Resonate Logo" class="w-full h-full object-contain" />
-          </div>
-        </div>
-
-        <h2 class="mt-8 text-[#e5e5e5] font-bold tracking-widest text-sm animate-pulse uppercase">
-          {{ $t("loading.title") }}
-        </h2>
-
-        <p class="mt-3 text-gray-500 text-[11px] sm:text-xs max-w-xs text-center px-4 leading-relaxed font-medium">
-          {{ $t("loading.subtitle") }}
-          <br />
-          <span class="text-[#9a203e]/70 text-[10px] block mt-1">
-            {{ $t("loading.server_notice") }}
-          </span>
-        </p>
-      </div>
-    </Transition>
+    <GlobalLoading :isLoading="isGlobalLoading" />
     <Navbar />
     <Hero id="home" />
     <Fitur id="fitur" />
@@ -251,13 +225,5 @@ onMounted(() => {
   animation: fadeIn 0.3s ease-out forwards;
 }
 
-/* Animasi untuk Fade Out Loading Screen */
-.fade-loader-enter-active,
-.fade-loader-leave-active {
-  transition: opacity 0.6s ease;
-}
-.fade-loader-enter-from,
-.fade-loader-leave-to {
-  opacity: 0;
-}
+
 </style>
